@@ -8,7 +8,7 @@ export default class CCBasket extends Component {
 
   render() {
     return (
-      <div style={{position:'fixed',top:'10px',right:'10px',color:'white',border:'rgb(255, 81, 0) solid 5px',backgroundColor:'orange',padding:'5px',borderRadius:'10px',width:'380px'}}>
+      <div style={{position:'fixed',top:'10px',right:'10px',color:'white',border:'rgb(255, 81, 0) solid 5px',backgroundColor:'orange',padding:'5px',borderRadius:'10px',width:'420px'}}>
         <h1>My basket</h1>
       <div style={{display:'flex',flexDirection:'column',gap:"5px",width:'100%', color:'black'}}>
         {this.props.items.map((item,index) => (
