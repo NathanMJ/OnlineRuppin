@@ -5,6 +5,7 @@ export default class CCShop extends Component {
     constructor() {
         super();
         this.state = {
+            totalPrice:0,
             items: [{ name: "Hat", price: 22, sale: true }, { name: "T-Shirt", price: 62, sale: true }, { name: "Jeans", price: 54, sale: true }]
         }
 
@@ -14,7 +15,8 @@ export default class CCShop extends Component {
         this.setState((prevS) => {
             const updatedItems = [...prevS.items]
             updatedItems[index].sale = false
-            return { items: updatedItems }
+            const newTotalPrice = prevS.totalPrice + updatedItems[index].price
+            return { items: updatedItems, totalPrice: newTotalPrice}
         })
     }
 
@@ -23,7 +25,8 @@ export default class CCShop extends Component {
         this.setState((prevS) => {
             const updatedItems = [...prevS.items]
             updatedItems[index].sale = true
-            return { items: updatedItems }
+            const newTotalPrice = prevS.totalPrice - updatedItems[index].price
+            return { items: updatedItems, totalPrice: newTotalPrice}
         })
     }
 
@@ -38,7 +41,7 @@ export default class CCShop extends Component {
                         ) : null)}
                 </div>
 
-                <CCBasket items={this.state.items} removeFromTheBasket={this.removeFromTheBasket}/>
+                <CCBasket items={this.state.items} removeFromTheBasket={this.removeFromTheBasket} totalPrice={this.state.totalPrice}/>
             </div>
         )
     }
