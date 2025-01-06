@@ -13,7 +13,7 @@ export default class CCItemBasket extends Component {
 
     render() {
     return (
-      <div style={{width:'350px',backgroundColor:'green',display:'flex',gap:'15px',alignItems:'center',justifyContent:'center',alignContent:'center'}} >
+      <div style={{padding:'3px',margin:'5px',border:'black solid 3px',borderRadius:'5px',backgroundColor:'white',display:'grid',gridTemplateColumns:'2fr 1fr 1fr 2fr',gap:'15px',alignItems:'center',justifyContent:'center',alignContent:'center'}} >
         <h4>{this.props.name}</h4>
         <img style={{width:75}} src={this.setImg()}></img>
         <h4>{this.props.price} ₪</h4>

@@ -25,10 +25,15 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  place-items:center;
   min-width: 320px;
   min-height: 100vh;
+  background-image: url('./Pictures/Zara-Background.jpg');
+  background-position: center;
+  height: 100vh;
+  background-size: cover;
 }
+
 
 h1 {
   font-size: 3.2em;

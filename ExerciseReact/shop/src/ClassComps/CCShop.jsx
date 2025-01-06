@@ -31,14 +31,19 @@ export default class CCShop extends Component {
     }
 
     render() {
+        const saleItemsCount = this.state.items.filter(item => item.sale === true).length;
+
         return (
-            <div style={{display:'flex',flexDirection:'column',gap:'15px',backgroundColor:'gray',padding:'15px'}}>
+            <div style={{display:'flex',flexDirection:'column',gap:'15px',backgroundColor:'cyan',border:'blue solid 5px',borderRadius:'20px',padding:'15px'}}>
                 <h1>SHOP</h1>
                 <div style={{ display: 'flex', flexDirection: 'rows', gap: 5 }}>
-                    {this.state.items.map((item, index) =>
-                        item.sale ? (
-                            <CCItemsShop key={index} index={index} sendToBasket={this.setToBasket} name={item.name} price={item.price} sale={item.sale} />
-                        ) : null)}
+                    {
+                    saleItemsCount != 0?(
+                        this.state.items.map((item, index) =>
+                            item.sale ? (
+                                <CCItemsShop key={index} index={index} sendToBasket={this.setToBasket} name={item.name} price={item.price} sale={item.sale} />
+                            ) : null)
+                    ): <h2>The shop is empty</h2>}
                 </div>
 
                 <CCBasket items={this.state.items} removeFromTheBasket={this.removeFromTheBasket} totalPrice={this.state.totalPrice}/>
