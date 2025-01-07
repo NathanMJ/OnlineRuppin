@@ -8,7 +8,6 @@ export default class CCShop extends Component {
             totalPrice:0,
             items: [{ name: "Hat", price: 22, sale: true }, { name: "T-Shirt", price: 62, sale: true }, { name: "Jeans", price: 54, sale: true }]
         }
-
     }
 
     setToBasket = (index) => {
