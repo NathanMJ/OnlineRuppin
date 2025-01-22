@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte 3D</title>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-inner">
+            <div class="card-front">
+                <img id="goldCard" src="./Pokemon/shay-gold.png" alt="Front">
+                <img id="goldCardDup" src="./Pokemon/shay-gold.png" alt="Front">
+            </div>
+            <div class="card-back">
+                <img src="./Pokemon/back-card.png" alt="Back">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const card = document.querySelector('.card');
+        card.addEventListener('click', () => {
+            if(card.classList.contains('flipped')){
+                card.classList.toggle('flipped')
+                card.classList.toggle('unflipped')
+            }
+            else if(card.classList.contains('unflipped')){
+                card.classList.toggle('flipped')
+                card.classList.toggle('unflipped')
+            }
+            else{                
+                card.classList.toggle('flipped');
+            }
+            // card.classList.toggle('flipped');
+        });
+    </script>
+
+    <style>
+
+
+        .card-front #goldCard {
+            animation: goldCardAnim 1.5s infinite;
+            z-index: 1;
+        }
+
+        .card-front #goldCardDup{
+            position: absolute;
+            z-index: 2;
+            filter: blur(20px) ;
+            /* mix-blend-mode: color-dodge;
+            opacity: 25%; */
+            
+            mix-blend-mode: screen;
+            opacity: 50%;
+        }
+
+        @keyframes goldCardAnim {
+
+            0%,100% {
+                filter: brightness(1);
+                box-shadow: 0 0 30px rgba(255, 223, 0, 0.8); 
+            }
+
+           50% {
+                filter: brightness(1.2);
+                box-shadow: 0 0 100px rgba(255, 223, 0, 0.8); 
+            }
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: antiquewhite;
+        }
+
+        .card {
+            perspective: 850px;
+            width: 40vh;
+            height: 56vh;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s;
+            /* the transformation is with transition of 0.5s*/
+            transform-style: preserve-3d;
+            /*back is hidden (real 3d)*/
+            animation: cardAppear 2s ease-in-out;
+        }
+
+        
+        @keyframes cardAppear {
+            0%,37.5%,100%{
+                transform: '';
+                filter: brightness(1) contrast(1);
+            }    
+            25%{
+                transform: rotateY(-30deg);
+                filter: brightness(1.1) contrast(1.1) ;
+            } 
+            50%{
+                transform: rotateY(60deg);
+                filter: brightness(1.5) contrast(1.5);
+            }          
+            
+        }
+
+        .card.flipped .card-inner {
+            /* transform: rotateY(-540deg); */
+            animation: flippedCard 1s ease-in-out forwards;
+        }
+
+        @keyframes flippedCard {
+            0%{
+                transform: '';
+            }   
+            100%{
+                transform: rotateY(-180deg);
+            }            
+        }
+
+        .card.flipped .card-inner .card-front{
+            /* transform: rotateY(-540deg); */
+            animation: flippedCardLight 1s ease-in-out forwards;
+        }
+
+        .card.unflipped .card-inner .card-front{
+            /* transform: rotateY(-540deg); */
+            animation: flippedCardLight 1s ease-in-out alternate;
+        }
+
+        @keyframes flippedCardLight {
+            0%,100%{
+                transform: '';
+            }   
+            50%{
+                filter: brightness(1.5) contrast(1.5);
+            }     
+        }
+
+
+
+        .card.unflipped .card-inner {
+            /* transform: rotateY(-540deg); */
+            animation: unflippedCard 1s ease-in-out forwards;
+        }
+
+        @keyframes unflippedCard {
+            0%{
+                transform: rotateY(180deg);
+            }
+            100%{
+                transform: '';
+            }   
+            
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            /* each face can hide the other one */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-front img,
+        .card-back img {
+            border-radius: 15px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+</body>
+
+</html>
