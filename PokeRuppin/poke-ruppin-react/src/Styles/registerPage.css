@@ -1,0 +1,48 @@
+.registerPage{
+    width: 100vw;
+    height: 100vh;
+    max-width: 150vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.registerPageContainer{
+    display: grid;
+    grid-template-areas: 'gender born robotCheck'
+                          'gender happy happy';
+    grid-template-rows: 2fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    gap: 1vh;
+    width: 90%;
+    height: 90%;
+}
+
+.registerPageContainer div{
+    background-color: rgb(16, 111, 194);
+    width: 100%;
+    height: 100%;
+}
+
+.registerPageContainer .gender{
+    grid-area: gender;
+}
+
+.registerPageContainer .born{
+    grid-area: born;
+}
+
+.registerPageContainer .robotCheck{
+    grid-area: robotCheck;
+}
+
+.registerPageContainer .happy{
+    grid-area: happy;
+}
+
+.registerPageContainer .radios{
+    display: flex;
+    flex-direction: column;
+}

@@ -12,21 +12,19 @@ function App() {
   const location = useLocation()
 
   useEffect(() => {
-
-    switch (location.pathname) {
-      case '/':
+    
+    switch (location.pathname.split('/')[1]) {
+      case '':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/menu.jpg')"
         break;
-      case '/loginRegisterPage':
+      case 'loginRegisterPage':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/forest.jpg')"
         break;        
-      case '/registerPage':
+      case 'registerPage':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/glacier.jpg')"
         break;
     }
-    console.log('changed the background');
-
-  }, [location])
+  }, [location.pathname])
 
   const transition = (activation) => {
     console.log(activation ? 'activate' : 'deactivate');
@@ -50,7 +48,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage goto={goToWithTransition} />} />
         <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} />} />
-        <Route path="/registerPage" element={<RegisterPage goto={goToWithTransition} />} />
+        <Route path="/registerPage/:name/:email/:password" element={<RegisterPage goto={goToWithTransition} />} />
       </Routes>
 
     
