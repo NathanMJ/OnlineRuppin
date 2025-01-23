@@ -47,15 +47,13 @@ function App() {
       
       <Routes>
         <Route path="/" element={<MainPage goto={goToWithTransition} />} />
-        <Route path="/loginRegisterPage" element={<LoginRegisterPage />} />
+        <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} />} />
       </Routes>
 
 
 
       <div id='links' style={{ display: 'flex',backgroundColor:'white', fontSize:'30px',gap: '10px', position:'fixed',bottom:0,left:0}}>
         <Link to="/">MainPage</Link>
-        <Link to="/loginRegisterPage">Login/Register</Link>
-        <button onClick={() => goToWithTransition('/')}>Go to main page with animation</button>
         <button onClick={() => goToWithTransition('/loginRegisterPage')}>Go to loginRegister with animation</button>
       </div>
       <style>

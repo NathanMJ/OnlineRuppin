@@ -5,26 +5,24 @@
     height: 100vh;
 }
 
-.loginSide,
-.registerSide {
-    width: 100%;
-    max-width: 60vh;
-    margin: auto;
+.loginRegisterPage div{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 2vw;
+    height: 25vh;
 }
 
 .loginRegisterPage img {
     width: 100%;
+    margin: auto;
 }
 
 .loginRegisterPage input {
     width: 66%;
     font-size: 4vh;
     padding: 3px;
+    margin: auto;
 }
 
 .loginRegisterPage .errorMessage{
@@ -39,6 +37,7 @@
     font-size: 4vh;
     padding: 10px;
     border-radius: 40px;
+    margin: auto;
 }
 
 .loginRegisterPage .registerButton {
@@ -51,4 +50,14 @@
     color: white;
     background-color: rgb(29, 103, 187);
     cursor: pointer;
+}
+
+.separationLine{
+    position: fixed;
+    background-color: rgb(7, 10, 36);
+    width: 3px;
+    height: 80vh;
+    top: 50vh;
+    left: 50vw;
+    transform: translateY(-50%);
 }
