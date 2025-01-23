@@ -3,6 +3,7 @@ import MainPage from './Pages/MainPage'
 import LoginRegisterPage from './Pages/LoginRegisterPage'
 import PokeTransition from "./FuncComps/PokeTransition.jsx";
 import { useEffect, useState } from 'react';
+import RegisterPage from './Pages/RegisterPage.jsx';
 
 
 function App() {
@@ -15,11 +16,12 @@ function App() {
     switch (location.pathname) {
       case '/':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/menu.jpg')"
-        console.log('main back');
         break;
       case '/loginRegisterPage':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/forest.jpg')"
-        console.log('main back');
+        break;        
+      case '/registerPage':
+        document.body.style.backgroundImage = "url('/src/Pictures/Background/glacier.jpg')"
         break;
     }
     console.log('changed the background');
@@ -48,13 +50,15 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage goto={goToWithTransition} />} />
         <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} />} />
+        <Route path="/registerPage" element={<RegisterPage goto={goToWithTransition} />} />
       </Routes>
 
-
+    
 
       <div id='links' style={{ display: 'flex',backgroundColor:'white', fontSize:'30px',gap: '10px', position:'fixed',bottom:0,left:0}}>
         <Link to="/">MainPage</Link>
-        <button onClick={() => goToWithTransition('/loginRegisterPage')}>Go to loginRegister with animation</button>
+        <Link to="/loginRegisterPage">LoginRegister</Link>
+        <Link to="/registerPage">Register</Link>
       </div>
       <style>
         

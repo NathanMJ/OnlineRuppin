@@ -1,11 +1,15 @@
 .loginRegisterPage {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-content: center;
     width: 100vw;
     height: 100vh;
+    max-width: 150vh;
+    margin: auto;
+    gap: 15px;
 }
 
-.loginRegisterPage div{
+.loginRegisterPage div:not(.separationLine){
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -14,8 +18,10 @@
 }
 
 .loginRegisterPage img {
-    width: 100%;
+    width: 75%;
+    aspect-ratio: initial;
     margin: auto;
+    padding-bottom: 3vh;
 }
 
 .loginRegisterPage input {
@@ -25,11 +31,13 @@
     margin: auto;
 }
 
-.loginRegisterPage .errorMessage{
+.loginRegisterPage .errorRegisterMessage,
+.loginRegisterPage .errorLoginMessage{
     color: red;
     font-size: 2vh;
     text-shadow: rgb(255, 255, 255) 0 0 5px;
     font-weight: 700;
+    margin: auto;
 }
 
 .loginRegisterPage button {
@@ -56,8 +64,8 @@
     position: fixed;
     background-color: rgb(7, 10, 36);
     width: 3px;
-    height: 80vh;
+    height: 66vh;
     top: 50vh;
     left: 50vw;
-    transform: translateY(-50%);
+    transform: translate(-50%,-50%);
 }
