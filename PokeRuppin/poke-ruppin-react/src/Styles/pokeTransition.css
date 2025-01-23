@@ -1,0 +1,149 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    background-image: url('../Pictures/canyon.jpg');
+    background-position: center;
+    background-size: cover;
+}
+
+#pokeRuppinTransition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    animation: transitionChangeDisplay 1.5s forwards;
+}
+
+#pokeRuppinTransition div {
+    position: absolute;
+}
+
+#pokeRuppinTransition div img {
+    height: 100vh;
+}
+
+#pokeRuppinTransition #top {
+    z-index: 1;
+    animation: topAnim 1.5s ease-in-out forwards;
+}
+
+#pokeRuppinTransition #backgroundTop {
+    background-color: rgb(3, 78, 109);
+    width: 1000vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0px;
+    transform: translate(-50%, -74.4%);
+    border: white solid 1vw;
+    z-index: -1;
+}
+
+#pokeRuppinTransition #backgroundBottomRight {
+    background-color: rgb(3, 78, 109);
+    width: 1000vw;
+    height: 200vh;
+    position: fixed;
+    top: 50%;
+    left: 80%;
+    border: white solid 1vw;
+    z-index: -1;
+}
+
+#pokeRuppinTransition #backgroundBottomLeft {
+    background-color: rgb(3, 78, 109);
+    width: 1000vw;
+    height: 200vh;
+    position: fixed;
+    top: 50%;
+    right: 80%;
+    border: white solid 1vw;
+    z-index: -1;
+}
+
+#pokeRuppinTransition #backgroundBottomBottom {
+    background-color: rgb(3, 78, 109);
+    width: 1000vw;
+    height: 200vh;
+    position: fixed;
+    top: 0;
+    left: 0px;
+    transform: translate(-50%, 50%);
+    z-index: -1;
+}
+
+#pokeRuppinTransition #bottom {
+    z-index: 0;
+    animation: bottomAnim 1.5s ease-in-out forwards;
+}
+
+
+@keyframes transitionChangeDisplay {
+    0% {
+        display: flex;
+    }
+    100% {
+        display: none;
+    }
+}
+
+@keyframes topAnim {
+    0% {
+        transform: rotate(90deg) translateY(-150%);
+    }
+
+    33% {
+        transform: rotate(90deg) translateY(0%);
+    }
+
+    66% {
+        transform: rotate(0deg) translateY(0%);
+    }
+
+    100% {
+        transform: rotate(0deg) translateY(-100%);
+    }
+}
+
+@keyframes bottomAnim {
+    0% {
+        transform: rotate(90deg) translateY(100%);
+    }
+
+    33% {
+        transform: rotate(90deg) translateY(0%);
+    }
+
+    66% {
+        transform: rotate(0deg) translateY(0%);
+    }
+
+    100% {
+        transform: rotate(0deg) translateY(100%);
+    }
+}
+
+
+#backgroundVideo {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -1;
+
+    display: none;
+}
