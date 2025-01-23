@@ -1,0 +1,54 @@
+.loginRegisterPage {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100vw;
+    height: 100vh;
+}
+
+.loginSide,
+.registerSide {
+    width: 100%;
+    max-width: 60vh;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2vw;
+}
+
+.loginRegisterPage img {
+    width: 100%;
+}
+
+.loginRegisterPage input {
+    width: 66%;
+    font-size: 4vh;
+    padding: 3px;
+}
+
+.loginRegisterPage .errorMessage{
+    color: red;
+    font-size: 2vh;
+    text-shadow: rgb(255, 255, 255) 0 0 5px;
+    font-weight: 700;
+}
+
+.loginRegisterPage button {
+    width: 85%;
+    font-size: 4vh;
+    padding: 10px;
+    border-radius: 40px;
+}
+
+.loginRegisterPage .registerButton {
+    color: white;
+    background-color: green;
+    cursor: pointer;
+}
+
+.loginRegisterPage .loginButton {
+    color: white;
+    background-color: rgb(29, 103, 187);
+    cursor: pointer;
+}

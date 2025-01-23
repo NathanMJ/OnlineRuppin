@@ -1,3 +1,4 @@
+import '../Styles/MainPage.css'
 import topImage from '../Pictures/Transition/top.png';
 import bottomImage from '../Pictures/Transition/bottom.png';
 

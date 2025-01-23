@@ -1,37 +1,66 @@
-// import './Styles/reset.css'
-// import './Styles/PokeTransition.css' 
-import { Link, Route, Routes } from 'react-router-dom'
+import { Link, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import MainPage from './Pages/MainPage'
 import LoginRegisterPage from './Pages/LoginRegisterPage'
 import PokeTransition from "./FuncComps/PokeTransition.jsx";
-import { act, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 function App() {
   const [rendTransition, setRendTransition] = useState(false)
+  const navigate = useNavigate();
+  const location = useLocation()
 
+  useEffect(() => {
 
+    switch (location.pathname) {
+      case '/':
+        document.body.style.backgroundImage = "url('/src/Pictures/Background/menu.jpg')"
+        console.log('main back');
+        break;
+      case '/loginRegisterPage':
+        document.body.style.backgroundImage = "url('/src/Pictures/Background/forest.jpg')"
+        console.log('main back');
+        break;
+    }
+    console.log('changed the background');
 
-  const transition = (activation) =>{
-    console.log(activation?'activate':'deactivate');
+  }, [location])
+
+  const transition = (activation) => {
+    console.log(activation ? 'activate' : 'deactivate');
     setRendTransition(activation)
+    //animation is 1500 ms
   }
+
+  const goToWithTransition = (link) => {
+    transition('true')
+    setTimeout(() => {
+      navigate(link)
+    }, 750)
+  }
+
 
   return (
     <>
       <PokeTransition transition={transition} rendTransition={rendTransition}></PokeTransition>
+      
+      
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<MainPage goto={goToWithTransition} />} />
         <Route path="/loginRegisterPage" element={<LoginRegisterPage />} />
       </Routes>
-      
 
-      <button onClick={() => transition(true)}>Active the transition</button>
-     
-      <div id='links' style={{display:'flex',gap:'10px'}}>
+
+
+      <div id='links' style={{ display: 'flex',backgroundColor:'white', fontSize:'30px',gap: '10px', position:'fixed',bottom:0,left:0}}>
         <Link to="/">MainPage</Link>
         <Link to="/loginRegisterPage">Login/Register</Link>
+        <button onClick={() => goToWithTransition('/')}>Go to main page with animation</button>
+        <button onClick={() => goToWithTransition('/loginRegisterPage')}>Go to loginRegister with animation</button>
       </div>
+      <style>
+        
+      </style>
     </>
   )
 }

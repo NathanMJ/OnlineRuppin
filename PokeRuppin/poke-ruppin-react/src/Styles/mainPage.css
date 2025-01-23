@@ -1,12 +1,27 @@
-/* * {
-    margin: 0;
-    padding: 0;
-}
-
-body{
-    background-image: url('../Pictures/Background/21-1-2025\ at\ 7_50_53.jpg');
+.mainPage{
     height: 100vh;
     width: 100vw;
     background-position: center;
     background-size: cover;
-} */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#link{
+    background-color: aliceblue;
+}
+
+.logo{
+width: 100vh;
+}
+
+h1{
+    font-size: 6vh;
+    max-width: fit-content;
+    text-align: center;
+    margin: auto;
+    cursor: pointer;
+}
+
