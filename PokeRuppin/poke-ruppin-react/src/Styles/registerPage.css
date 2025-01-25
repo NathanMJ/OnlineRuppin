@@ -11,9 +11,10 @@
 .registerPageContainer{
     display: grid;
     grid-template-areas: 'gender born robotCheck'
-                          'gender happy happy'
+                          'gender happy happy'                          
+                          'message message message'
                           'button button button';
-    grid-template-rows: 2fr 1fr 0.5fr;
+    grid-template-rows: 2fr 1fr 0.1fr 0.5fr;
     grid-template-columns: 1fr 1fr 1fr;
 
     gap: 1vh;
@@ -34,6 +35,14 @@
     margin: 0px;
     font-size: 4vh;
 }
+
+.registerPageContainer .message{
+    grid-area: message;
+    margin: auto;
+    font-size: 3vh;
+}
+
+
 
 .registerPageContainer h1{
     margin: 0px;
@@ -69,9 +78,6 @@
     align-items: center;
 }
 
-.registerPageContainer .happy{
-    grid-area: happy;
-}
 
 .registerPageContainer .buttonContainer{
     grid-area: button;
@@ -88,7 +94,6 @@
     background-color: green;
     color: white;
     border: white solid 3px;
-    cursor: pointer;
 }
 
 .registerPageContainer .buttonContainer button:hover{    
@@ -136,4 +141,32 @@
     height: 33%;
     width: 75%;
     margin: auto;
+    margin-block: 10%;
+    font-size: 8vh;
+    border-radius: 25px;
+    cursor: pointer;
 }
+
+.robotCheck .notRobot,
+.robotCheck .isRobot{
+    font-size: 8vh;
+}
+
+.registerPageContainer .happy{
+    grid-area: happy;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.happy label{
+    font-size: 4vh;
+    cursor: pointer;
+}
+
+.registerPageContainer .happy input[type="checkbox"] {
+    width: 3vh; 
+    height: 3vh; 
+    cursor: pointer;
+  }

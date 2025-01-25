@@ -1,3 +1,4 @@
+import { use } from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
@@ -7,9 +8,12 @@ const labels = labelTxt.split(' ')
 export default function RegisterPage() {
   const params = useParams()
 
+
   const [genders, setGender] = useState([])
   const [birthDate, setBirthDate] = useState()
   const [isRobot, setIsRobot] = useState()
+  const [cursorType, setCursorType] = useState('pointer');
+
 
 
   const genderChange = (event) => {
@@ -28,12 +32,6 @@ export default function RegisterPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (birthDate) {
-      console.log('correct age : ', legalAge());
-    }
-  }, [birthDate])
 
   const legalAge = () => {
     // Vérifie si birthDate est une date valide
@@ -54,9 +52,18 @@ export default function RegisterPage() {
     return adjustedAge >= 13; // Vérifie si l'âge est supérieur ou égal à l'âge requis
   };
 
-  const checkRobot = () => {    
-    setIsRobot(!genders.includes('Robot'))
+  const checkRobot = () => {
+    setCursorType('wait')
+    
+    setTimeout(() => {
+      setIsRobot(!genders.includes('Robot'))
+      setCursorType('pointer')
+    }, 2000)
   }
+
+  useEffect(()=>{
+    console.log(cursorType);
+  },[cursorType])
 
   return (
 
@@ -89,11 +96,16 @@ export default function RegisterPage() {
         </div>
         <div className="robotCheck">
           <h1>I am not a robot :</h1>
-          <button className="checkRobotBtn" onClick={checkRobot}>Check</button>
+          <button className="checkRobotBtn" style={{ cursor: cursorType }} onClick={checkRobot}>Check</button>
           <h1 className="notRobot" style={{ color: isRobot != undefined ? (isRobot ? 'green' : 'gray') : 'grey' }}>Correct !</h1>
           <h1 className="isRobot" style={{ color: isRobot != undefined ? (isRobot ? 'gray' : 'red') : 'grey' }}>Liar !</h1>
         </div>
-        <div className="happy"></div>
+        <div className="happy">
+          <label>
+            <input type="checkbox" />I am happy to play at the PokeRuppin Game !
+          </label>
+        </div>
+        <div className="message">You forgot</div>
         <div className="buttonContainer">
           <button>Start the adventure !</button>
         </div>
