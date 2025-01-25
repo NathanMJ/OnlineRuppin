@@ -11,8 +11,9 @@
 .registerPageContainer{
     display: grid;
     grid-template-areas: 'gender born robotCheck'
-                          'gender happy happy';
-    grid-template-rows: 2fr 1fr;
+                          'gender happy happy'
+                          'button button button';
+    grid-template-rows: 2fr 1fr 0.5fr;
     grid-template-columns: 1fr 1fr 1fr;
 
     gap: 1vh;
@@ -20,29 +21,119 @@
     height: 90%;
 }
 
-.registerPageContainer div{
-    background-color: rgb(16, 111, 194);
-    width: 100%;
-    height: 100%;
+.registerPageContainer > div:not(.buttonContainer){
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    padding: 15px;
 }
 
 .registerPageContainer .gender{
     grid-area: gender;
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    font-size: 4vh;
+}
+
+.registerPageContainer h1{
+    margin: 0px;
+    font-size: 5.5vh;
 }
 
 .registerPageContainer .born{
     grid-area: born;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    gap: 2vh;
+}
+
+.registerPageContainer .born input{
+    height: 50%;
+    font-size: 4vh;
+}
+
+.registerPageContainer .born div{
+    display: flex;
+    flex-direction: column;
+    font-size: 6vh;
+    align-items: center;
+    gap: 1vw;
 }
 
 .registerPageContainer .robotCheck{
     grid-area: robotCheck;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .registerPageContainer .happy{
     grid-area: happy;
 }
 
+.registerPageContainer .buttonContainer{
+    grid-area: button;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.registerPageContainer .buttonContainer button{
+    width: 75%;
+    height: 75%;
+    font-size: 7vh;
+    border-radius: 25px;
+    background-color: green;
+    color: white;
+    border: white solid 3px;
+    cursor: pointer;
+}
+
+.registerPageContainer .buttonContainer button:hover{    
+    background-color: rgb(26, 192, 26);
+    transform: translateY(-2px);
+    box-shadow: rgba(0, 0, 0, 0.267) 0px 10px 5px ;
+}
+
 .registerPageContainer .radios{
     display: flex;
     flex-direction: column;
+    gap: 1.5vh;
+    padding-block: 1vh;
+    padding-inline: 2vw;
+}
+
+.registerPageContainer .radios input[type="checkbox"] {
+    width: 20px; 
+    height: 20px; 
+    cursor: pointer;
+  }
+
+.date-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.date-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.date-input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.robotCheck .checkRobotBtn{
+    height: 33%;
+    width: 75%;
+    margin: auto;
 }

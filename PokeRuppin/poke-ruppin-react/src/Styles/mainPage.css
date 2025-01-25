@@ -13,11 +13,11 @@
     background-color: aliceblue;
 }
 
-.logo{
+.mainPage .logo{
 width: 100vh;
 }
 
-h1{
+.mainPage h1{
     font-size: 6vh;
     max-width: fit-content;
     text-align: center;

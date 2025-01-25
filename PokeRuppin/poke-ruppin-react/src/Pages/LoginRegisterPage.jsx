@@ -33,7 +33,7 @@ export default function LoginRegisterPage(props) {
       setRegMess('Wrong email')
     }
     else {
-      navigate(`/registerPage/${registerName}/${registerEmail}/${registerPassword}`)
+      props.goto(`/registerPage/${registerName}/${registerEmail}/${registerPassword}`)
     }
     
     setTimeout(() => { setLogMess('') }, 2000)

@@ -13,6 +13,7 @@ function App() {
 
   useEffect(() => {
     
+    //set the background according to the pathname
     switch (location.pathname.split('/')[1]) {
       case '':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/menu.jpg')"
@@ -27,7 +28,6 @@ function App() {
   }, [location.pathname])
 
   const transition = (activation) => {
-    console.log(activation ? 'activate' : 'deactivate');
     setRendTransition(activation)
     //animation is 1500 ms
   }
@@ -56,7 +56,6 @@ function App() {
       <div id='links' style={{ display: 'flex',backgroundColor:'white', fontSize:'30px',gap: '10px', position:'fixed',bottom:0,left:0}}>
         <Link to="/">MainPage</Link>
         <Link to="/loginRegisterPage">LoginRegister</Link>
-        <Link to="/registerPage">Register</Link>
       </div>
       <style>
         
