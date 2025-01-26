@@ -22,7 +22,7 @@
     height: 90%;
 }
 
-.registerPageContainer > div:not(.buttonContainer){
+.registerPageContainer > div:not(.buttonContainer,.message) {
     background-color: rgb(255, 255, 255);
     border-radius: 15px;
     padding: 15px;
@@ -40,6 +40,9 @@
     grid-area: message;
     margin: auto;
     font-size: 3vh;
+    color: rgb(238, 255, 1);
+    font-weight: 700;
+    text-shadow: red 1px 1px 0px, red 1px -1px 0px, red -1px -1px 0px, red -1px 1px 0px ;
 }
 
 
@@ -170,3 +173,5 @@
     height: 3vh; 
     cursor: pointer;
   }
+
+  

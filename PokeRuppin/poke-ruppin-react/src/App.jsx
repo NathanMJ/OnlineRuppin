@@ -4,6 +4,7 @@ import LoginRegisterPage from './Pages/LoginRegisterPage'
 import PokeTransition from "./FuncComps/PokeTransition.jsx";
 import { useEffect, useState } from 'react';
 import RegisterPage from './Pages/RegisterPage.jsx';
+import MenuPage from './Pages/MenuPage.jsx';
 
 
 function App() {
@@ -23,6 +24,9 @@ function App() {
         break;        
       case 'registerPage':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/glacier.jpg')"
+        break;        
+      case 'menuPage':
+        document.body.style.backgroundImage = "url('/src/Pictures/Background/volcano.jpg')"
         break;
     }
   }, [location.pathname])
@@ -49,6 +53,7 @@ function App() {
         <Route path="/" element={<MainPage goto={goToWithTransition} />} />
         <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} />} />
         <Route path="/registerPage/:name/:email/:password" element={<RegisterPage goto={goToWithTransition} />} />
+        <Route path="/menuPage/:name" element={<MenuPage goto={goToWithTransition} />} />
       </Routes>
 
     

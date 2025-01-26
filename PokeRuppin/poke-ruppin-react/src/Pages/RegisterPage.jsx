@@ -1,18 +1,19 @@
-import { use } from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 const labelTxt = 'Boy Girl Semi-Boy Semi-Girl Wizard Robot Alien Unicorn Potato Dinosaur Spy'
 const labels = labelTxt.split(' ')
 
-export default function RegisterPage() {
+export default function RegisterPage(props) {
   const params = useParams()
-
 
   const [genders, setGender] = useState([])
   const [birthDate, setBirthDate] = useState()
   const [isRobot, setIsRobot] = useState()
+  const [isHappy, setIsHappy] = useState(false)
   const [cursorType, setCursorType] = useState('pointer');
+  
+  const [message, setMessage] = useState();
 
 
 
@@ -56,17 +57,56 @@ export default function RegisterPage() {
     setCursorType('wait')
     
     setTimeout(() => {
-      setIsRobot(!genders.includes('Robot'))
+      setIsRobot(genders.includes('Robot'))
       setCursorType('pointer')
     }, 2000)
   }
 
+  const tryToRegister = () => {
+    if(genders.length == 0){
+      setMessage('Please enter your gender')
+    }
+    else if(genders.length < 2){
+      setMessage('Please enter at least two genders. We are in 2025...')
+    }
+    else if(!birthDate){
+      setMessage("Please enter your birthdate")
+    }
+    else if(!legalAge()){
+      setMessage("You don't have the age to play a this game")
+    }
+    else if(isRobot == undefined){
+      setMessage("We didn't check if you were a robot")
+    }    
+    else if(isRobot && !genders.includes('Robot')){
+      setMessage("Please check again if you are a robot")
+    }    
+    else if(isRobot){
+      setMessage('Robot are not allowed to play at this game...')
+    }
+    else if(genders.includes('Robot')){
+      setMessage("You are trying to lie to me !")
+    }
+    else if(!isHappy){
+      setMessage('You have to be happy to play at this game.')
+    }
+
+    if(false){
+      
+    }
+    else{
+      setMessage('Connecting...')
+      setTimeout(()=>{
+        props.goto(`/menuPage/${params.name}`)
+      }, 1000 )
+    }
+  }
+
   useEffect(()=>{
-    console.log(cursorType);
-  },[cursorType])
+    console.log(isHappy);    
+  },[isHappy])
 
   return (
-
     <div className="registerPage">
       <div className="registerPageContainer">
         <div className="gender">
@@ -97,17 +137,17 @@ export default function RegisterPage() {
         <div className="robotCheck">
           <h1>I am not a robot :</h1>
           <button className="checkRobotBtn" style={{ cursor: cursorType }} onClick={checkRobot}>Check</button>
-          <h1 className="notRobot" style={{ color: isRobot != undefined ? (isRobot ? 'green' : 'gray') : 'grey' }}>Correct !</h1>
-          <h1 className="isRobot" style={{ color: isRobot != undefined ? (isRobot ? 'gray' : 'red') : 'grey' }}>Liar !</h1>
+          <h1 className="notRobot" style={{ color: isRobot != undefined ? (!isRobot ? 'green' : 'gray') : 'grey' }}>Correct !</h1>
+          <h1 className="isRobot" style={{ color: isRobot != undefined ? (!isRobot ? 'gray' : 'red') : 'grey' }}>Liar !</h1>
         </div>
         <div className="happy">
           <label>
-            <input type="checkbox" />I am happy to play at the PokeRuppin Game !
+            <input type="checkbox" onChange={(e)=>{setIsHappy(e.target.checked)}}/>I am happy to play at the PokeRuppin Game !
           </label>
         </div>
-        <div className="message">You forgot</div>
+        <div className="message">{message}</div>
         <div className="buttonContainer">
-          <button>Start the adventure !</button>
+          <button onClick={tryToRegister}>Start the adventure !</button>
         </div>
       </div>
     </div>
