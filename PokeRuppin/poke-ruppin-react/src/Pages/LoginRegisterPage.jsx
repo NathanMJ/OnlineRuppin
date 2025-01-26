@@ -57,9 +57,9 @@ export default function LoginRegisterPage(props) {
       <img src="./src/Pictures/Logos/login.png" alt="login-logo" />
 
       <div>
-        <input type="text" onChange={(e) => { setRegisterName(e.target.value) }} maxLength={12} placeholder='PokeName' />
-        <input type="text" onChange={(e) => { setRegisterEmail(e.target.value) }} maxLength={12} placeholder='PokeEmail' />
-        <input type="password" onChange={(e) => { setRegisterPassword(e.target.value) }} maxLength={12} placeholder='PokePassword' />
+        <input type="text" onChange={(e) => { setRegisterName(e.target.value) }} maxLength={18} placeholder='PokeName' />
+        <input type="text" onChange={(e) => { setRegisterEmail(e.target.value) }} placeholder='PokeEmail' />
+        <input type="password" onChange={(e) => { setRegisterPassword(e.target.value) }} maxLength={18} placeholder='PokePassword' />
       </div>
       <div>
         <input type="text" maxLength={12} placeholder='PokeEmail' />

@@ -46,7 +46,6 @@
 }
 
 
-
 .registerPageContainer h1{
     margin: 0px;
     font-size: 5.5vh;
@@ -97,6 +96,7 @@
     background-color: green;
     color: white;
     border: white solid 3px;
+    cursor: pointer;
 }
 
 .registerPageContainer .buttonContainer button:hover{    
