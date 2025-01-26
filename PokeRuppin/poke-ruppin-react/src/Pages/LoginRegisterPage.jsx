@@ -11,7 +11,8 @@ export default function LoginRegisterPage(props) {
   const [registerPassword, setRegisterPassword] = useState('12345')
 
 
-  const [loginName, setLoginName] = useState('')
+  const [loginName, setLoginName] = useState('Nathan')
+  const [loginPassword, setLoginPassword] = useState('')
 
 
   const [regMess, setRegMess] = useState(' ')
@@ -46,6 +47,10 @@ export default function LoginRegisterPage(props) {
     return regex.test(email)
   }
 
+  const tryLogin = () =>{
+    props.goto(`/menuPage/${loginName}`)
+  }
+
   return (
     <div className="loginRegisterPage">
       {/* <RegisterSide></RegisterSide>
@@ -62,15 +67,15 @@ export default function LoginRegisterPage(props) {
         <input type="password" onChange={(e) => { setRegisterPassword(e.target.value) }} maxLength={18} placeholder='PokePassword' />
       </div>
       <div>
-        <input type="text" maxLength={12} placeholder='PokeEmail' />
-        <input type="password" maxLength={12} placeholder='PokePassword' />
+        <input type="text" onChange={(e) => {setLoginName(e.target.value) }} maxLength={18} placeholder='PokeName' />
+        <input type="password" onChange={(e) => {setLoginPassword(e.target.value) }} maxLength={18} placeholder='PokePassword' />
       </div>
 
       <p className='errorRegisterMessage'>{regMess}</p>
       <p className='errorLoginMessage'>{logMess}</p>
 
       <button onClick={tryRegister} className='registerButton'>Start the adventure !</button>
-      <button className='loginButton'>Continu the adventure !</button>
+      <button onClick={tryLogin} className='loginButton'>Continu the adventure !</button>
 
 
 

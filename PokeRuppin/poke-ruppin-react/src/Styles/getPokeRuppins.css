@@ -1,0 +1,79 @@
+.getPokeRuppinsPage {
+    height: 100vh;
+    width: 100vw;
+    background-position: center;
+    background-size: cover;
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+    align-items: center;
+}
+
+.getPokeRuppinsPage .h1Container {
+    text-align: center;
+    background-color: aliceblue;
+    font-size: 5vh;
+    width: 100vw;
+    height: 15vh;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.getPokeRuppinsPage .everypokeRuppinBallContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-inline: 10vw;
+    margin-bottom: 20vh;
+}
+
+.getPokeRuppinsPage .pokeRuppinBallsContainer {
+    background-color: aliceblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.getPokeRuppinsPage .everypokeRuppinBallContainer .pokeRuppinBallsContainer img {
+    width: 25vh;
+    height: 25vh;
+    cursor: pointer;
+    position: absolute;
+}
+
+
+.getPokeRuppinsPage .pokeBallClose {
+    z-index: 3;
+}
+
+.getPokeRuppinsPage .pokeBallOpen {
+    z-index: 2;
+}
+
+
+.pokeBallMoving {
+    animation: pokeBallMoving 1s 3 ease-in-out;
+}
+
+
+@keyframes pokeBallMoving {
+
+    0%,
+    40%,
+    80%,
+    100% {
+        transform: translate(0%) rotate(0deg);
+    }
+
+    20% {
+        transform: translate(-10%) rotate(-20deg);
+    }
+
+    60% {
+        transform: translate(10%) rotate(20deg);
+    }
+
+}

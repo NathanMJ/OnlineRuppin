@@ -20,7 +20,7 @@ export default function MenuPage(props) {
                 <h1 className="reflectMsg">Hello {params.name} !</h1>
             </div>
             <div className="centerPage">
-                <div className="getPokeRuppins"><h1>Get</h1><h2>PokeRuppins</h2><div className="creditStyle"><h3>Cost 15 credits</h3></div></div>
+                <div onClick={() => props.goto(`/getPokeRuppins/${params.name}`)} className="getPokeRuppins"><h1>Get</h1><h2>PokeRuppins</h2><div className="creditStyle"><h3>Cost 15 credits</h3></div></div>
                 <div className="myPokeRuppinDex"><h1>My</h1><h2>PokeRuppinDex</h2></div>
                 <div className="buyCredits"><h1>Get</h1><h2>Credits</h2></div>
                 <div className="buyPokeRuppins"><h1>Buy</h1><h2>PokeRuppins</h2></div>
