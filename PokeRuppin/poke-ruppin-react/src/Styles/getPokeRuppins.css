@@ -51,11 +51,13 @@
 
 .getPokeRuppinsPage .pokeBallOpen {
     z-index: 2;
+    width: 40vh !important;
+    height: 40vh !important;
 }
 
 
 .pokeBallMoving {
-    animation: pokeBallMoving 1s 3 ease-in-out;
+    animation: pokeBallMoving 0.75s 1 ease-in-out;
 }
 
 
@@ -76,4 +78,42 @@
         transform: translate(10%) rotate(20deg);
     }
 
+}
+
+.getPokeRuppinsPage .whiteAllPage{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    animation: allWhiteAnim 2s forwards;
+    z-index: 10;
+}
+
+.pokeRuppinBallsContainer .pokeCard{
+    height: 35vh !important;
+    z-index: 5;
+}
+
+
+@keyframes allWhiteAnim {
+
+    0%,100%{
+        opacity: 0;
+    }
+    50%{
+        opacity: 1;
+    }
+    
+}
+
+.getPokeRuppinsPage .returnMenu{
+    position: absolute;
+    bottom: 3vh;
+    right: 3vh; 
+    color: white;
+    background-color: orange;
+    border: 5px rgb(167, 67, 0) solid;
+    border-radius: 5px;
+    font-size: 5vh;
+    cursor: pointer;
 }
