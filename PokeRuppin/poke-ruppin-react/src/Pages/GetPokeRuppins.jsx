@@ -111,17 +111,22 @@ export default function GetPokeRuppins(props) {
         setTimeout(() => {
             setWhiteAllPage(false)
 
-            switch (indexChoosen) {
-                case 1:
-                    setFirstBall({ ...firstBall, text: 'Nice' })
-                    break
-                case 2:
-                    setSecondBall({ ...secondBall, text: 'Great' })
-                    break
-                case 3:
-                    setThirdBall({ ...thirdBall, text: 'Amazing' })
-                    break
-            }
+
+            //see with nir   !!!
+
+            // switch (indexChoosen) {
+            //     case 1:
+            //         setFirstBall({ ...firstBall, text: 'Nice' })
+            //         break
+            //     case 2:
+            //         setSecondBall({ ...secondBall, text: 'Great' })
+            //         break
+            //     case 3:
+            //         setThirdBall({ ...thirdBall, text: 'Amazing' })
+            //         break
+            // }
+
+            
         }, 6000)
     }
 
