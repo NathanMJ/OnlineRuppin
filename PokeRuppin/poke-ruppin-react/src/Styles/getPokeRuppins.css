@@ -117,3 +117,32 @@
     font-size: 5vh;
     cursor: pointer;
 }
+
+
+.pokeRuppinBallsContainer:has(.pokeBallChoosen)  {
+    animation: pokeBallChoosen 0.25s 1 ease-in-out;
+}
+
+
+@keyframes pokeBallChoosen {
+
+    0%,100% {
+        filter: brightness(1);
+        box-shadow: 0 0 0px white;
+    }
+
+    25% {
+        filter: brightness(2);
+    }
+    
+}
+
+.pokeRuppinBallsContainer h1{
+    position: absolute;
+    z-index: 50;
+    transform: translateY(25vh);
+    font-size: 5vh;
+    color: aliceblue;
+    font-weight: 700;
+    text-shadow: 0 0 25px black,0 0 25px black,0 0 25px black;
+}

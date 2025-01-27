@@ -1,19 +1,24 @@
+import { use } from "react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 export default function GetPokeRuppins(props) {
     const params = useParams()
 
-    const [indexChoosen, setIndexChoosen] = useState(0)
+    const [whiteAllPage, setWhiteAllPage] = useState(false)
+    const [showButton, setShowButton] = useState(false)
 
 
     const [firstBall, setFirstBall] = useState({ open: false, moving: false })
-    const [secondBall, setSecondBall] = useState({ open: false, moving: false })
+    const [secondBall, setSecondBall] = useState({ open: false, moving: false,src : undefined,text : undefined})
     const [thirdBall, setThirdBall] = useState({ open: false, moving: false })
 
-    const [whiteAllPage, setWhiteAllPage] = useState(false)
-    
-    const [showButton, setShowButton] = useState(false)
+    const [indexChoosen, setIndexChoosen] = useState(0)
+    const [avaibleCards, setAvaibleCards] = useState([])
+
+    useEffect(() => {
+        randomCard()
+    }, [])
 
     const choosePokeRuppin = (index) => {
         if (indexChoosen == 0) {
@@ -103,51 +108,100 @@ export default function GetPokeRuppins(props) {
             setShowButton(true)
         }, 5000)
 
-        setTimeout(()=>{
+        setTimeout(() => {
             setWhiteAllPage(false)
-        },6000)
 
-
+            switch (indexChoosen) {
+                case 1:
+                    setFirstBall({ ...firstBall, text: 'Nice' })
+                    break
+                case 2:
+                    setSecondBall({ ...secondBall, text: 'Great' })
+                    break
+                case 3:
+                    setThirdBall({ ...thirdBall, text: 'Amazing' })
+                    break
+            }
+        }, 6000)
     }
+
+    const randomCard = () => {
+        const everyCard = [
+            '../src/Pictures/PokeCards/sasha-gold.png',
+            '../src/Pictures/PokeCards/shay-gold.png',
+            '../src/Pictures/PokeCards/habib-gold.png'
+        ];
+
+        let tempAvaibleCards = [...everyCard];
+        let selectedCards = [];
+
+        for (let i = 0; i < 3; i++) {
+            let randomNumber = Math.floor(Math.random() * tempAvaibleCards.length);
+            selectedCards.push(tempAvaibleCards[randomNumber]);
+            tempAvaibleCards.splice(randomNumber, 1);
+        }
+
+        setAvaibleCards(selectedCards);
+
+    };
 
 
     const setCard = () => {
-        const firstCardSrc = '../src/Pictures/PokeCards/sasha-gold.png'
-        const secondCardSrc = '../src/Pictures/PokeCards/shay-gold.png'
-        const thirdCardSrc = '../src/Pictures/PokeCards/habib-gold.png'
-        
+
+        let tempAvaibleCards = avaibleCards
+        let nowCards = []
+        //firstCard is one random
+
+        for (let i = 0; i < 3; i++) {
+            let randomNumber = Math.floor(Math.random() * tempAvaibleCards.length);
+            nowCards.push(tempAvaibleCards[randomNumber]);
+            tempAvaibleCards.splice(randomNumber, 1);
+        }
+
+        const firstCardSrc = nowCards[0]
+        const secondCardSrc = nowCards[1]
+        const thirdCardSrc = nowCards[2]
+
         setFirstBall({ ...firstBall, src: firstCardSrc })
         setSecondBall({ ...secondBall, src: secondCardSrc })
         setThirdBall({ ...thirdBall, src: thirdCardSrc })
     }
 
+    useEffect(() => {
+        console.log('sec Ball:', secondBall);
+    }, [secondBall]);
+    
 
     return (
         <div className="getPokeRuppinsPage">
 
             <div className="whiteAllPage" style={{ display: whiteAllPage ? 'block' : 'none' }}></div>
 
-            <button className="returnMenu" onClick={()=>{props.goto(`/menuPage/${params.name}`)}} style={{display: showButton? 'block':'none'}}>Return to the menu</button>
+            <button className="returnMenu" onClick={() => { props.goto(`/menuPage/${params.name}`) }} style={{ display: showButton ? 'block' : 'none' }}>Return to the menu</button>
 
             <div className="h1Container">
                 <h1>Choose one of the three PokeRuppinBall !</h1>
             </div>
             <div className="everypokeRuppinBallContainer">
                 <div className="pokeRuppinBallsContainer">
-                    <img style={{ display: firstBall.open ? 'none' : 'block' }} className={`pokeBallClose ${firstBall.moving ? 'pokeBallMoving' : ''}`} onClick={() => choosePokeRuppin(1)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
+                    <img style={{ display: firstBall.open ? 'none' : 'block' }} className={`pokeBallClose ${firstBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 1 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(1)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: firstBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: firstBall.src ? 'block' : 'none' }} className="pokeCard" src={firstBall.src} alt="pokeCard" />
+                    <h1>{firstBall.text}</h1>
                 </div>
                 <div className="pokeRuppinBallsContainer">
-                    <img style={{ display: secondBall.open ? 'none' : 'block' }} className={`pokeBallClose ${secondBall.moving ? 'pokeBallMoving' : ''}`} onClick={() => choosePokeRuppin(2)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
+                    <img style={{ display: secondBall.open ? 'none' : 'block' }} className={`pokeBallClose ${secondBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 2 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(2)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: secondBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: secondBall.src ? 'block' : 'none' }} className="pokeCard" src={secondBall.src} alt="pokeCard" />
+                    <h1>{secondBall.text}</h1>
 
                 </div>
                 <div className="pokeRuppinBallsContainer">
-                    <img style={{ display: thirdBall.open ? 'none' : 'block' }} className={`pokeBallClose ${thirdBall.moving ? 'pokeBallMoving' : ''}`} onClick={() => choosePokeRuppin(3)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
+                    <img style={{ display: thirdBall.open ? 'none' : 'block' }} className={`pokeBallClose ${thirdBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 3 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(3)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: thirdBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: thirdBall.src ? 'block' : 'none' }} className="pokeCard" src={thirdBall.src} alt="pokeCard" />
+                    <h1>{thirdBall.text}</h1>
+
                 </div>
             </div>
 
