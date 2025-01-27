@@ -1,7 +1,10 @@
 @import url('./reset.css');
+@import url('./returnMenuBtn.css');
+@import url('./fullscreenBtn.css');
 @import url('./pokeTransition.css');
 @import url('./mainPage.css');
 @import url('./loginRegisterPage.css');
 @import url('./registerPage.css');
 @import url('./menuPage.css');
 @import url('./getPokeRuppins.css');
+@import url('./myRuppinDexPage.css');

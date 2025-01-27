@@ -92,19 +92,18 @@ export default function RegisterPage(props) {
     }
 
     if(false){
-      
+
     }
     else{
       setMessage('Connecting...')
+      const newUser = {name:params.name,email:params.email,password:params.password,credits:100}
+      props.addUser(newUser)
       setTimeout(()=>{
         props.goto(`/menuPage/${params.name}`)
       }, 1000 )
     }
   }
 
-  useEffect(()=>{
-    console.log(isHappy);    
-  },[isHappy])
 
   return (
     <div className="registerPage">

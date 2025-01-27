@@ -1,14 +1,31 @@
-import { useState } from "react"
-import { useParams} from "react-router-dom"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import pokemonCenterVideo from "../Videos/Background/pokemon-center.mp4";
 
 export default function MenuPage(props) {
     const params = useParams()
 
-    const [credits, setCredits] = useState(15)
+    const [credits, setCredits] = useState(0)
+
+    useEffect(() => {
+        if (params) {
+            setCredits(props.getUser(params.name).credits)
+        }
+    }, [params, props.pokeUsers])
+
+    // console.log(props.getUser(params.name).credits);
+
+    // setCredits(props.getUser(params.name).credits)
 
     const disconnect = () => {
         props.goto('/')
+    }
+
+    const tryToGoToBuyPokeRuppins = () => {
+        if (credits >= 15) {
+            props.useCredits(params.name, 15)
+            props.goto(`/getPokeRuppins/${params.name}`)
+        }
     }
 
     return (
@@ -20,8 +37,13 @@ export default function MenuPage(props) {
                 <h1 className="reflectMsg">Hello {params.name} !</h1>
             </div>
             <div className="centerPage">
-                <div onClick={() => props.goto(`/getPokeRuppins/${params.name}`)} className="getPokeRuppins"><h1>Get</h1><h2>PokeRuppins</h2><div className="creditStyle"><h3>Cost 15 credits</h3></div></div>
-                <div className="myPokeRuppinDex"><h1>My</h1><h2>PokeRuppinDex</h2></div>
+                <div onClick={tryToGoToBuyPokeRuppins} className="getPokeRuppins">
+                    <h1>Get</h1><h2>PokeRuppins</h2>
+                    <div className="creditStyle" style={credits < 15 ? { color: 'yellow', background: 'red', border: 'black solid 4px' } : {}}>
+                        <h3>Cost 15 credits</h3>
+                    </div>
+                </div>
+                <div onClick={() => props.goto(`/myRuppinDex/${params.name}`)} className="myPokeRuppinDex"><h1>My</h1><h2>PokeRuppinDex</h2></div>
                 <div className="buyCredits"><h1>Get</h1><h2>Credits</h2></div>
                 <div className="buyPokeRuppins"><h1>Buy</h1><h2>PokeRuppins</h2></div>
             </div>

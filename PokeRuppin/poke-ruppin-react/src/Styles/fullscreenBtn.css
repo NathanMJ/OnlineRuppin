@@ -1,0 +1,12 @@
+.fullscreenBtn{
+    width: 10vh;
+    top: 2vh;
+    left: 2vh;
+    position: fixed;
+    cursor: pointer;
+    opacity: 0.25;
+}
+
+.fullscreenBtn:hover{
+    opacity: 0.8;
+}

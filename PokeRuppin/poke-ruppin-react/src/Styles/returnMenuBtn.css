@@ -1,0 +1,19 @@
+.returnMenuBtn {
+    position: absolute;
+    bottom: 3vh;
+    right: 3vh;
+    font-size: 3.5vh;
+    font-weight: 600;
+    padding: 4px 20px;
+    background-color: rgb(252, 167, 56);
+    border: 3px rgb(146, 98, 9) solid;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+
+.returnMenuBtn:hover {
+    background-color: rgb(255, 255, 255);
+    border: 3px rgb(68, 45, 3) solid;
+    color: rgb(146, 146, 146);
+}

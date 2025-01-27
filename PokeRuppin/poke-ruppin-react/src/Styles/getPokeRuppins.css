@@ -106,18 +106,6 @@
     
 }
 
-.getPokeRuppinsPage .returnMenu{
-    position: absolute;
-    bottom: 3vh;
-    right: 3vh; 
-    color: white;
-    background-color: orange;
-    border: 5px rgb(167, 67, 0) solid;
-    border-radius: 5px;
-    font-size: 5vh;
-    cursor: pointer;
-}
-
 
 .pokeRuppinBallsContainer:has(.pokeBallChoosen)  {
     animation: pokeBallChoosen 0.25s 1 ease-in-out;
@@ -139,7 +127,7 @@
 
 .pokeRuppinBallsContainer h1{
     position: absolute;
-    z-index: 50;
+    z-index: 2;
     transform: translateY(25vh);
     font-size: 5vh;
     color: aliceblue;

@@ -92,13 +92,13 @@ export default function GetPokeRuppins(props) {
 
         setTimeout(() => {
             setThirdBall({ ...thirdBall, open: true })
-        }, 4300)
+        }, 4200)
 
         //fastly the middle one too
 
         setTimeout(() => {
             setSecondBall({ ...secondBall, open: true })
-        }, 4600)
+        }, 4400)
 
 
         //we can see the cards now
@@ -109,24 +109,7 @@ export default function GetPokeRuppins(props) {
         }, 5000)
 
         setTimeout(() => {
-            setWhiteAllPage(false)
-
-
-            //see with nir   !!!
-
-            // switch (indexChoosen) {
-            //     case 1:
-            //         setFirstBall({ ...firstBall, text: 'Nice' })
-            //         break
-            //     case 2:
-            //         setSecondBall({ ...secondBall, text: 'Great' })
-            //         break
-            //     case 3:
-            //         setThirdBall({ ...thirdBall, text: 'Amazing' })
-            //         break
-            // }
-
-            
+            setWhiteAllPage(false)            
         }, 6000)
     }
 
@@ -172,17 +155,12 @@ export default function GetPokeRuppins(props) {
         setThirdBall({ ...thirdBall, src: thirdCardSrc })
     }
 
-    useEffect(() => {
-        console.log('sec Ball:', secondBall);
-    }, [secondBall]);
-    
-
     return (
         <div className="getPokeRuppinsPage">
 
             <div className="whiteAllPage" style={{ display: whiteAllPage ? 'block' : 'none' }}></div>
 
-            <button className="returnMenu" onClick={() => { props.goto(`/menuPage/${params.name}`) }} style={{ display: showButton ? 'block' : 'none' }}>Return to the menu</button>
+            <button className="returnMenuBtn" style={{ display: showButton ? 'block' : 'none' }} onClick={() => { props.goto(`/menuPage/${params.name}`) }} >Return to the menu</button>
 
             <div className="h1Container">
                 <h1>Choose one of the three PokeRuppinBall !</h1>
@@ -192,20 +170,20 @@ export default function GetPokeRuppins(props) {
                     <img style={{ display: firstBall.open ? 'none' : 'block' }} className={`pokeBallClose ${firstBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 1 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(1)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: firstBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: firstBall.src ? 'block' : 'none' }} className="pokeCard" src={firstBall.src} alt="pokeCard" />
-                    <h1>{firstBall.text}</h1>
+                    <h1 style={{ display: firstBall.src && indexChoosen == 1 ? ' block': 'none'}}>Great</h1>
                 </div>
                 <div className="pokeRuppinBallsContainer">
                     <img style={{ display: secondBall.open ? 'none' : 'block' }} className={`pokeBallClose ${secondBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 2 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(2)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: secondBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: secondBall.src ? 'block' : 'none' }} className="pokeCard" src={secondBall.src} alt="pokeCard" />
-                    <h1>{secondBall.text}</h1>
+                    <h1 style={{ display: secondBall.src  && indexChoosen == 2 ? ' block': 'none'}}>Nice</h1>
 
                 </div>
                 <div className="pokeRuppinBallsContainer">
                     <img style={{ display: thirdBall.open ? 'none' : 'block' }} className={`pokeBallClose ${thirdBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 3 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(3)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: thirdBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: thirdBall.src ? 'block' : 'none' }} className="pokeCard" src={thirdBall.src} alt="pokeCard" />
-                    <h1>{thirdBall.text}</h1>
+                    <h1 style={{ display: thirdBall.src && indexChoosen == 3 ? ' block': 'none'}}>Amazing</h1>
 
                 </div>
             </div>
