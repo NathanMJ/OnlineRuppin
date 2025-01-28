@@ -10,7 +10,7 @@ export default function GetPokeRuppins(props) {
 
 
     const [firstBall, setFirstBall] = useState({ open: false, moving: false })
-    const [secondBall, setSecondBall] = useState({ open: false, moving: false,src : undefined,text : undefined})
+    const [secondBall, setSecondBall] = useState({ open: false, moving: false, src: undefined, text: undefined })
     const [thirdBall, setThirdBall] = useState({ open: false, moving: false })
 
     const [indexChoosen, setIndexChoosen] = useState(0)
@@ -109,7 +109,7 @@ export default function GetPokeRuppins(props) {
         }, 5000)
 
         setTimeout(() => {
-            setWhiteAllPage(false)            
+            setWhiteAllPage(false)
         }, 6000)
     }
 
@@ -117,6 +117,8 @@ export default function GetPokeRuppins(props) {
         const everyCard = [
             '../src/Pictures/PokeCards/sasha-gold.png',
             '../src/Pictures/PokeCards/shay-gold.png',
+            '../src/Pictures/PokeCards/yael-gold.png',
+            '../src/Pictures/PokeCards/sasha.png',
             '../src/Pictures/PokeCards/habib-gold.png'
         ];
 
@@ -153,6 +155,18 @@ export default function GetPokeRuppins(props) {
         setFirstBall({ ...firstBall, src: firstCardSrc })
         setSecondBall({ ...secondBall, src: secondCardSrc })
         setThirdBall({ ...thirdBall, src: thirdCardSrc })
+
+        let cardChoosen = nowCards[indexChoosen-1]
+
+        console.log(cardChoosen);
+        
+
+        cardChoosen = cardChoosen.split('/')[4].split('.')[0]
+
+        console.log("card : " ,cardChoosen);
+        
+        props.addPokeRuppins(params.name,cardChoosen,1)
+
     }
 
     return (
@@ -170,20 +184,20 @@ export default function GetPokeRuppins(props) {
                     <img style={{ display: firstBall.open ? 'none' : 'block' }} className={`pokeBallClose ${firstBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 1 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(1)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: firstBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: firstBall.src ? 'block' : 'none' }} className="pokeCard" src={firstBall.src} alt="pokeCard" />
-                    <h1 style={{ display: firstBall.src && indexChoosen == 1 ? ' block': 'none'}}>Great</h1>
+                    <h1 style={{ display: firstBall.src && indexChoosen == 1 ? ' block' : 'none' }}>Great</h1>
                 </div>
                 <div className="pokeRuppinBallsContainer">
                     <img style={{ display: secondBall.open ? 'none' : 'block' }} className={`pokeBallClose ${secondBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 2 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(2)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: secondBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: secondBall.src ? 'block' : 'none' }} className="pokeCard" src={secondBall.src} alt="pokeCard" />
-                    <h1 style={{ display: secondBall.src  && indexChoosen == 2 ? ' block': 'none'}}>Nice</h1>
+                    <h1 style={{ display: secondBall.src && indexChoosen == 2 ? ' block' : 'none' }}>Nice</h1>
 
                 </div>
                 <div className="pokeRuppinBallsContainer">
                     <img style={{ display: thirdBall.open ? 'none' : 'block' }} className={`pokeBallClose ${thirdBall.moving ? 'pokeBallMoving' : ''} ${indexChoosen == 3 ? 'pokeBallChoosen' : ''}`} onClick={() => choosePokeRuppin(3)} src="../src/Pictures/PokeRuppinBall/PokeRuppinBall.png" alt="pokeRuppinBallClose" />
                     <img style={{ display: thirdBall.open ? 'block' : 'none' }} className="pokeBallOpen" src="../src/Pictures/PokeRuppinBall/PokeRuppinBallOpen.png" alt="pokeRuppinBallOpen" />
                     <img style={{ display: thirdBall.src ? 'block' : 'none' }} className="pokeCard" src={thirdBall.src} alt="pokeCard" />
-                    <h1 style={{ display: thirdBall.src && indexChoosen == 3 ? ' block': 'none'}}>Amazing</h1>
+                    <h1 style={{ display: thirdBall.src && indexChoosen == 3 ? ' block' : 'none' }}>Amazing</h1>
 
                 </div>
             </div>

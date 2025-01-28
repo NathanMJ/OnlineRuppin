@@ -5,17 +5,7 @@ import pokemonCenterVideo from "../Videos/Background/pokemon-center.mp4";
 export default function MenuPage(props) {
     const params = useParams()
 
-    const [credits, setCredits] = useState(0)
-
-    useEffect(() => {
-        if (params) {
-            setCredits(props.getUser(params.name).credits)
-        }
-    }, [params, props.pokeUsers])
-
-    // console.log(props.getUser(params.name).credits);
-
-    // setCredits(props.getUser(params.name).credits)
+    const [credits, setCredits] = useState(props.getUser(params.name).credits)
 
     const disconnect = () => {
         props.goto('/')
@@ -44,11 +34,11 @@ export default function MenuPage(props) {
                     </div>
                 </div>
                 <div onClick={() => props.goto(`/myRuppinDex/${params.name}`)} className="myPokeRuppinDex"><h1>My</h1><h2>PokeRuppinDex</h2></div>
-                <div className="buyCredits"><h1>Get</h1><h2>Credits</h2></div>
+                <div onClick={() => props.goto(`/getCredits/${params.name}`)} className="buyCredits"><h1>Get</h1><h2>Credits</h2></div>
                 <div className="buyPokeRuppins"><h1>Buy</h1><h2>PokeRuppins</h2></div>
             </div>
 
-            <button className="creditsCount creditStyle">{credits}</button>
+            <button onClick={() => props.goto(`/getCredits/${params.name}`)} className="creditsCount creditStyle">{credits}</button>
             <button className="disconnectBtn" onClick={disconnect}>Disconnect</button>
 
             <video className="backgroundVideo" src={pokemonCenterVideo} autoPlay loop muted></video>

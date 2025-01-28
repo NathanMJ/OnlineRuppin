@@ -8,6 +8,7 @@ import MenuPage from './Pages/MenuPage.jsx';
 import GetPokeRuppins from './Pages/GetPokeRuppins.jsx';
 import MyRuppinDex from './Pages/MyRuppinDex.jsx';
 import FullScreenBtn from './FuncComps/FullScreenBtn.jsx';
+import GetCredits from './Pages/GetCredits.jsx';
 
 
 function App() {
@@ -38,19 +39,50 @@ function App() {
     );
   };
 
-  const buyCredits = (name, addCredit) => {
-    const currentUserIndex = pokeUsers.findIndex(eachPokeUser => eachPokeUser.name == name);
+  const addPokeRuppins = (name, pokeRuppinName, quantity) => {
+    // Trouver l'utilisateur
+    const currentUserIndex = pokeUsers.findIndex(eachPokeUser => eachPokeUser.name === name);
 
-    const updatedUser = {
-      ...pokeUsers[currentUserIndex],
-      credits: pokeUsers[currentUserIndex].credits + addCredit
-    };
+    if (currentUserIndex === -1) {
+      console.error(`Utilisateur ${name} non trouvé`);
+      return;
+    }
+
+    const currentUser = pokeUsers[currentUserIndex];
+    const currentPokeRuppins = currentUser.pokeRuppins || []; // S'assurer qu'on a un tableau
+
+    // Check if exist / find the index
+    const currentPokeRuppinIndex = currentPokeRuppins.findIndex(eachPokeRuppin => eachPokeRuppin.name === pokeRuppinName);
+
+    let updatedPokeRuppins;
+
+    if (currentPokeRuppinIndex !== -1) {
+      // If exist add quantity
+      updatedPokeRuppins = currentPokeRuppins.map((eachPokeRuppin, index) =>
+        index === currentPokeRuppinIndex
+          ? { ...eachPokeRuppin, quantity: eachPokeRuppin.quantity + quantity }
+          : eachPokeRuppin
+      );
+    } else {
+      // If not exist set the quantity
+      updatedPokeRuppins = [...currentPokeRuppins, { name: pokeRuppinName, quantity }];
+    }
+
+    const updatedUser = { ...currentUser, pokeRuppins: updatedPokeRuppins };
 
     const updatedPokeUsers = [...pokeUsers];
     updatedPokeUsers[currentUserIndex] = updatedUser;
 
-    //update users
     setPokeUsers(updatedPokeUsers);
+  };
+
+
+
+  const buyCredits = (name, addCredit) => {
+    console.log('buy', addCredit);
+    
+    const creditsBoughts = addCredit * (-1)
+    useCredits(name, creditsBoughts)
   };
 
   const getUser = (name) => {
@@ -72,14 +104,14 @@ function App() {
       case 'registerPage':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/glacier.jpg')"
         break;
-      case 'menuPage':
-        document.body.style.backgroundImage = "url('/src/Pictures/Background/volcano.jpg')"
-        break;
       case 'getPokeRuppins':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/cave.jpg')"
         break;
       case 'myRuppinDex':
         document.body.style.backgroundImage = "url('/src/Pictures/Background/coast.jpg')"
+        break;
+      case 'getCredits':
+        document.body.style.backgroundImage = "url('/src/Pictures/Background/volcano.jpg')"
         break;
     }
   }, [location.pathname])
@@ -95,6 +127,12 @@ function App() {
       navigate(link)
     }, 750)
   }
+
+  const getPokeRuppins = (name) => {
+    const currentUser = pokeUsers.find(eachPokeUser => eachPokeUser.name === name);
+    return currentUser.pokeRuppins || [];
+  };
+
 
   const useCredits = (name, quantity) => {
     const currentUserIndex = pokeUsers.findIndex(eachPokeUser => eachPokeUser.name == name);
@@ -121,11 +159,13 @@ function App() {
 
       <Routes>
         <Route path="/" element={<MainPage goto={goToWithTransition} />} />
-        <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} canLogin={canLogin} pokeUsers={pokeUsers}/>} />
-        <Route path="/registerPage/:name/:email/:password" element={<RegisterPage addUser={addUser} goto={goToWithTransition}/>} />
+        <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} canLogin={canLogin} pokeUsers={pokeUsers} />} />
+        <Route path="/registerPage/:name/:email/:password" element={<RegisterPage addUser={addUser} goto={goToWithTransition} />} />
         <Route path="/menuPage/:name" element={<MenuPage goto={goToWithTransition} getUser={getUser} useCredits={useCredits} />} />
-        <Route path="/getPokeRuppins/:name" element={<GetPokeRuppins goto={goToWithTransition} />} />
-        <Route path="/myRuppinDex/:name" element={<MyRuppinDex goto={goToWithTransition} />} />
+        <Route path="/getPokeRuppins/:name" element={<GetPokeRuppins goto={goToWithTransition} addPokeRuppins={addPokeRuppins} />} />
+        <Route path="/myRuppinDex/:name" element={<MyRuppinDex goto={goToWithTransition} getPokeRuppins={getPokeRuppins} />} />
+        <Route path="/getCredits/:name" element={<GetCredits goto={goToWithTransition} getUser={getUser} buyCredits={buyCredits} />} />
+
       </Routes>
 
 
