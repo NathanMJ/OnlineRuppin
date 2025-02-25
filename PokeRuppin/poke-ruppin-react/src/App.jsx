@@ -17,6 +17,18 @@ function App() {
   const location = useLocation()
   const [pokeUsers, setPokeUsers] = useState(localStorage.getItem('pokeUsers') ? JSON.parse(localStorage.getItem('pokeUsers')) : [])
 
+  const everyPokeRuppins = ['giorakazam',
+    'habib-gold',
+    'nir-gold',
+    'nir',
+    'sasha',
+    'sasha-gold',
+    'shay-gold',
+    'shay',
+    'tami-gold',
+    'tami',
+    'yael-gold'
+  ]
 
   useEffect(() => {
     localStorage.setItem('pokeUsers', JSON.stringify(pokeUsers))
@@ -162,7 +174,7 @@ function App() {
         <Route path="/loginRegisterPage" element={<LoginRegisterPage goto={goToWithTransition} canLogin={canLogin} pokeUsers={pokeUsers} />} />
         <Route path="/registerPage/:name/:email/:password" element={<RegisterPage addUser={addUser} goto={goToWithTransition} />} />
         <Route path="/menuPage/:name" element={<MenuPage goto={goToWithTransition} getUser={getUser} useCredits={useCredits} />} />
-        <Route path="/getPokeRuppins/:name" element={<GetPokeRuppins goto={goToWithTransition} addPokeRuppins={addPokeRuppins} />} />
+        <Route path="/getPokeRuppins/:name" element={<GetPokeRuppins goto={goToWithTransition} addPokeRuppins={addPokeRuppins} everyPokeRuppins={everyPokeRuppins}/>} />
         <Route path="/myRuppinDex/:name" element={<MyRuppinDex goto={goToWithTransition} getPokeRuppins={getPokeRuppins} />} />
         <Route path="/getCredits/:name" element={<GetCredits goto={goToWithTransition} getUser={getUser} buyCredits={buyCredits} />} />
 

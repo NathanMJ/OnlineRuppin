@@ -17,7 +17,9 @@ export default function GetPokeRuppins(props) {
     const [avaibleCards, setAvaibleCards] = useState([])
 
     useEffect(() => {
+        //when the page start it set 3 random card that you can get
         randomCard()
+        
     }, [])
 
     const choosePokeRuppin = (index) => {
@@ -114,17 +116,29 @@ export default function GetPokeRuppins(props) {
     }
 
     const randomCard = () => {
-        const everyCard = [
-            '../src/Pictures/PokeCards/sasha-gold.png',
-            '../src/Pictures/PokeCards/shay-gold.png',
-            '../src/Pictures/PokeCards/yael-gold.png',
-            '../src/Pictures/PokeCards/sasha.png',
-            '../src/Pictures/PokeCards/habib-gold.png'
-        ];
 
-        let tempAvaibleCards = [...everyCard];
+    
+        const everyCard = props.everyPokeRuppins.map(eachPokeRuppin => `../src/Pictures/PokeCards/${eachPokeRuppin}.png`)
+
+        let tempAvaibleCards = [];
+
+        //mult per 3 times regular card
+
+        everyCard.forEach(eachPokeRuppin => {
+
+            let times = eachPokeRuppin.includes('gold') ? 1 : 3;
+            
+            for(let i = 0; i < times; i++)
+                tempAvaibleCards.push(eachPokeRuppin)
+        
+        })
+
+        console.log(tempAvaibleCards);
+        
+
         let selectedCards = [];
 
+        //choose 3 card
         for (let i = 0; i < 3; i++) {
             let randomNumber = Math.floor(Math.random() * tempAvaibleCards.length);
             selectedCards.push(tempAvaibleCards[randomNumber]);
@@ -140,7 +154,6 @@ export default function GetPokeRuppins(props) {
 
         let tempAvaibleCards = avaibleCards
         let nowCards = []
-        //firstCard is one random
 
         for (let i = 0; i < 3; i++) {
             let randomNumber = Math.floor(Math.random() * tempAvaibleCards.length);
