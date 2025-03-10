@@ -6,11 +6,11 @@ export default function LoginRegisterPage(props) {
 
 
 
-  const [registerName, setRegisterName] = useState('Nathan')
-  const [registerEmail, setRegisterEmail] = useState('nathan@gmail.com')
-  const [registerPassword, setRegisterPassword] = useState('123')
+  const [registerName, setRegisterName] = useState('')
+  const [registerEmail, setRegisterEmail] = useState('')
+  const [registerPassword, setRegisterPassword] = useState('')
 
-  const [loginName, setLoginName] = useState('Nathan')
+  const [loginName, setLoginName] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
 
 

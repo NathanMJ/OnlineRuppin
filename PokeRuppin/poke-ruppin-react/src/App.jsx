@@ -181,11 +181,6 @@ function App() {
       </Routes>
 
 
-
-      <div id='links' style={{ display: 'flex', backgroundColor: 'white', fontSize: '30px', gap: '10px', position: 'fixed', bottom: 0, left: 0 }}>
-        <Link to="/">MainPage</Link>
-        <Link to="/loginRegisterPage">LoginRegister</Link>
-      </div>
       <style>
 
       </style>

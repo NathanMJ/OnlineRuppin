@@ -35,7 +35,6 @@ export default function MenuPage(props) {
                 </div>
                 <div onClick={() => props.goto(`/myRuppinDex/${params.name}`)} className="myPokeRuppinDex"><h1>My</h1><h2>PokeRuppinDex</h2></div>
                 <div onClick={() => props.goto(`/getCredits/${params.name}`)} className="buyCredits"><h1>Get</h1><h2>Credits</h2></div>
-                <div className="buyPokeRuppins"><h1>Buy</h1><h2>PokeRuppins</h2></div>
             </div>
 
             <button onClick={() => props.goto(`/getCredits/${params.name}`)} className="creditsCount creditStyle">{credits}</button>

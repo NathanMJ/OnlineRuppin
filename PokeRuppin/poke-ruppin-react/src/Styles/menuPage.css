@@ -51,6 +51,8 @@
     opacity: 50%;
 }
 
+
+
 .menuPage .centerPage {
     width: 50vh;
     height: 50vh;
@@ -59,6 +61,11 @@
     grid-template-rows: 1fr 1fr;
     gap: 7%;
     margin-bottom: 5vh;
+}
+
+/*For get Credits*/
+.centerPage > div:nth-child(3) {
+    grid-column: span 2;
 }
 
 .menuPage .centerPage>div {

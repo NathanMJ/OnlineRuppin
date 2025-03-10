@@ -12,19 +12,15 @@ export default function MyRuppinDex(props) {
 
   const goldCards = myCards.filter(pokeCard => pokeCard.name.includes('gold'))
 
-  //en mode moi j'ai que la quantity de pokemon en tout
-
-  //en mode en tout j'ai la quantity/total normal et nombre gold
-
   let keyCard = 0;
   return (
     <div className="myRuppinDexPage">
       <header className="myCollection">
         <h1>My collection</h1>
         <div className="normalCards">
-          <h1>Regular cards :{regularCards.length}/20</h1>
+          <h1>Regular cards :{regularCards.length}/5</h1>
         </div>
-        <div>Golds cards :{goldCards.length}/3</div>
+        <div>Golds cards :{goldCards.length}/6</div>
       </header>
       <div className="myCards">
       {(regularCards.length + goldCards.length) == 0 ? <><div></div> <h1>Empty</h1> </>: (
