@@ -1,9 +1,9 @@
 import { View, Text, TextInput,Button} from 'react-native'
 
-export default function Login() {
+export default function Register() {
     return (
         <View>
-            <Text>Login</Text>
+            <Text>Register</Text>
             <View style={{display: 'flex', flexDirection: 'row',justifyContent: 'center', alignItems: 'center'}}>
                 <Text>Your email :</Text>
                 <TextInput
@@ -19,7 +19,16 @@ export default function Login() {
                     secureTextEntry={true}
                 />
             </View>
-            <Button title='Login'></Button>
+            
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Text>Confirm password :</Text>
+                <TextInput
+                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 10 }}
+                    placeholder="Confirm password"
+                    secureTextEntry={true}
+                />
+            </View>
+            <Button title='Register'></Button>
         </View>
     )
 }
