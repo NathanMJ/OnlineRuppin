@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { Button, Text, View } from "react-native";
 
 export default function Index() {
@@ -17,6 +17,12 @@ export default function Index() {
       <Button title="register" onPress={() => router.navigate('./register')}></Button>
 
 
+      <Link href="(tabs)/register"
+        style={{
+          color: 'blue',
+          borderRadius: 2,
+          borderColor: 'black', borderWidth: 2, padding: 5, margin: 5
+        }}>Tabs</Link>
 
     </View>
   );
