@@ -9,21 +9,26 @@ export default function Index() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        gap: 25
       }}
     >
-      <Text>Welcome to THE shop !</Text>
-
-      <Button title="login" onPress={() => router.navigate('./login')}></Button>
-      <Button title="register" onPress={() => router.navigate('./register')}></Button>
-
+      <Text style={{
+        fontSize: 20
+      }}>Welcome to THE shop !</Text>
 
       <Link href="(tabs)/register"
         style={{
-          color: 'blue',
-          borderRadius: 2,
-          borderColor: 'black', borderWidth: 2, padding: 5, margin: 5
-        }}>Tabs</Link>
+          color: 'white',
+          backgroundColor: 'orange',
+          borderRadius: 10,
+          fontWeight: 'bold',
+          fontSize: 20,
+          borderColor: 'rgb(122, 56, 12)', 
+          borderWidth: 2, 
+          padding: 5, 
+          margin: 5,
+        }}>Enter the shop</Link>
 
-    </View>
+    </View >
   );
 }
