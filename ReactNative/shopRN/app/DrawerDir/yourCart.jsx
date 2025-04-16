@@ -1,6 +1,10 @@
 import { View, Text, Image } from 'react-native'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { use } from 'react';
+import { getUsersByEmail } from '../dbUsers';
+import { useFocusEffect } from 'expo-router';
 
 
 const styles = StyleSheet.create({
@@ -44,28 +48,44 @@ const products = [
     IMG   Quantity x Price = Total Price
     Name  Quantity x Price = Total Price
 
-*/  
+*/
 export default function yourCart() {
 
-  // TEMP :
-  const customerId = 0
-  
-  //TO DO : replace with a new cart
-  const customer = {"cart": [{"id": 0, "name": "Shoes", "price": 50, "quantity": 2}, {"id": 2, "name": "Car", "price": 2500, "quantity": 1}, {"id": 3, "name": "Boat", "price": 5000, "quantity": 1}], "id": 1, "name": "John"}
-  return (
+  const [cart, setCart ] = useState([])
+
+      
+  useFocusEffect(
+  useCallback(() => {
+    const fetchCart = async () => {
+      const storedEmail = await AsyncStorage.getItem('email');        
+      if (storedEmail) {
+        const user = await getUsersByEmail(storedEmail);
+        if (user && user.cart) {
+          setCart(user.cart);
+        }
+      }
+    };
+    fetchCart();
+  }, [])
+);
+
+
+
+    return (
     <View>
       <Text style={styles.title}>Your cart :</Text>
 
-      {customer.cart.map((product) => {
+      {cart.map((product) => {
         return (
-          <View key={product.id} style={{ 
+          <View key={product.id} style={{
             display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-            backgroundColor: 'rgb(224, 236, 236)', borderRadius: 5, padding: 10, margin: 5}}>
+            backgroundColor: 'rgb(224, 236, 236)', borderRadius: 5, padding: 10, margin: 5
+          }}>
             <View>
               <Image source={{ uri: products[product.id].image }} style={styles.imageProduct} />
               <Text>{product.name}</Text>
             </View>
-            <Text>{product.quantity} x {product.price} = {product.quantity*product.price}</Text>
+            <Text>{product.quantity} x {product.price} = {product.quantity * product.price}</Text>
           </View>
         )
       })}

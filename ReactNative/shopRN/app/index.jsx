@@ -8,7 +8,6 @@ export default function Index() {
 
   const router = useRouter();
 
-
   //to test a page direcly without going through the pages
   useFocusEffect(
     React.useCallback(() => {
@@ -44,18 +43,6 @@ export default function Index() {
           margin: 5,
         }}>Enter the shop</Link>
 
-      <Link href="/DrawerDir/theStore"
-        style={{
-          color: 'white',
-          backgroundColor: 'orange',
-          borderRadius: 10,
-          fontWeight: 'bold',
-          fontSize: 20,
-          borderColor: 'rgb(122, 56, 12)',
-          borderWidth: 2,
-          padding: 5,
-          margin: 5,
-        }}>Enter the shop</Link>
     </View >
   );
 }

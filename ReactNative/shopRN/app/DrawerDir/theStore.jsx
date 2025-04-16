@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIndexUserByEmail, getUsers, getUsersByEmail } from '../dbUsers.jsx';
-import { use } from 'react';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 const styles = StyleSheet.create({
   imageProduct: {
@@ -98,8 +96,9 @@ export default function theStore() {
 
   const [tempCart, setTempCart] = useState([]);
   const [email, setEmail] = useState('');
-
-  useEffect(() => {
+  
+  useFocusEffect(
+    useCallback(() => {
     const fetchCart = async () => {
       const storedEmail = await AsyncStorage.getItem('email');
       if (storedEmail) {
@@ -108,24 +107,13 @@ export default function theStore() {
         if (user) {
           setTempCart(user.cart);
           console.log('tempCart', tempCart);
-
         }
       }
     };
     fetchCart();
-  }, []);
+  }, []));
 
   //when he got the cart he will fill the data to know how many products he has in the cart
-
-  useEffect(() => {
-    console.log('tempCart', tempCart);
-    if (tempCart == []) {
-      return;
-    }
-    //fill the cart data in each product
-  }, [tempCart]);
-
-
 
   const writePriceCorrectly = (price) => {
     //set space every 3 digits
@@ -217,7 +205,7 @@ export default function theStore() {
   return (
     <View>
       <Text style={styles.title}>The store</Text>
-      <Text>Welcome {email}</Text>
+      <Text style={{textAlign:'center'}}>Welcome {email.split('@')[0]}</Text>
       {products.map((product) => (
         <View key={product.id} style={[styles.containerProduct, { overflow: 'hidden' }]}>
           <Image source={{ uri: product.image }} style={styles.imageProduct} />
