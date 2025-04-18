@@ -10,7 +10,7 @@ const CustomDrawerContent = (props) => {
 
   const goToAdmingPage = () => {
     // TODO : check if the user is admin
-    router.push('/DrawerDir/drawerPage2');
+    router.push('/DrawerDir/addAProduct');
   }
   
 

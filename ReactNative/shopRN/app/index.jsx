@@ -12,7 +12,7 @@ export default function Index() {
   useFocusEffect(
     React.useCallback(() => {
       router.replace({
-        pathname: "/(tabs)/login",
+        pathname: "/DrawerDir/addAProduct",
       });
     }, [])
   );

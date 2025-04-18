@@ -1,8 +1,9 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIndexUserByEmail, getUsers, getUsersByEmail } from '../dbUsers.jsx';
+import { useFocusEffect } from 'expo-router';
 
 const styles = StyleSheet.create({
   imageProduct: {
