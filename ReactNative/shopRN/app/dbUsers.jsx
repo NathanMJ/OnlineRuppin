@@ -81,3 +81,13 @@ export const userExist = async (email, password) => {
     }
     return false; // User does not exist
 };
+
+//empty a cart according to the email
+export const emptyCart = async (email) => {
+    const users = await getUsers();
+    const userIndex = users.findIndex(u => u.email === email);
+    if (userIndex !== -1) {
+        users[userIndex].cart = []; // Empty the cart
+        await AsyncStorage.setItem('users', JSON.stringify(users));
+    }
+};

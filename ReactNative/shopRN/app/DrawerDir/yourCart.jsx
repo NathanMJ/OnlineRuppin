@@ -1,10 +1,10 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Button} from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { use } from 'react';
 import { getUsersByEmail } from '../dbUsers';
 import { useFocusEffect } from 'expo-router';
+import { emptyCart } from '../dbUsers.jsx';
 
 
 const styles = StyleSheet.create({
@@ -69,6 +69,16 @@ export default function yourCart() {
   }, [])
 );
 
+const orderEverything = async () => {
+  if(cart.length === 0) {
+    alert('Your cart is empty !')
+    return
+  }
+  const storedEmail = await AsyncStorage.getItem('email');
+  emptyCart(storedEmail);
+  setCart([]);
+  alert('Everythings has been ordered !')
+}
 
 
     return (
@@ -90,7 +100,7 @@ export default function yourCart() {
         )
       })}
 
-
+        <Button title='Order everything' onPress={orderEverything}></Button>
     </View>
   )
 }
