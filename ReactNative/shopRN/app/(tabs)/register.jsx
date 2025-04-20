@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Alert, Touchable, TouchableOpacity } from 'react-native'
-import { addUser, getUsers } from '../dbUsers';
+import { addUser, getUsers } from '../Databases/dbUsers.jsx';
 
 export default function register() {
     const router = useRouter();

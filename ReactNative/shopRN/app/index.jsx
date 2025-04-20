@@ -2,20 +2,32 @@ import { Link, useFocusEffect,  useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { Button, Text, View } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getUsers, setInitialUsers, addUser} from './dbUsers';
+import { getUsers, setInitialUsers, addUser} from './Databases/dbUsers';
+import { emptyProducts, getProducts, setInitialProducts } from './Databases/dbProducts';
 
 export default function Index() {
 
   const router = useRouter();
 
+
+  const init = async () => {    
+    await setInitialProducts();
+    await setInitialUsers();
+    const users = await getUsers();
+    console.log('users', users);
+    const products = await getProducts();
+    console.log('products', products);
+  }
+
   //to test a page direcly without going through the pages
-  useFocusEffect(
-    React.useCallback(() => {
-      router.replace({
-        pathname: "/DrawerDir/addAProduct",
-      });
-    }, [])
-  );
+  
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     router.replace({
+  //       pathname: "/DrawerDir/theStore",
+  //     });
+  //   }, [])
+  // );
 
   return (
     <View
