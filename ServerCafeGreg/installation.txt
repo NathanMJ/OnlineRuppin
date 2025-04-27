@@ -1,0 +1,6 @@
+npm init -y
+npm install multer
+npm install express
+npm install cors
+npm install morgan
+
