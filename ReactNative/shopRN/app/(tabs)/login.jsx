@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native'
-import { userExist } from '../dbUsers';
+import { userExist } from '../Databases/dbUsers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 

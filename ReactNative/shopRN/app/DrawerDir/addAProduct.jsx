@@ -1,59 +1,39 @@
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useRef, useState } from 'react';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { use } from 'react';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
+import { addProduct, getProducts } from '../Databases/dbProducts';
 
 export default function addAProduct() {
 
-  const [name, setName] = useState('product name');
-  const [price, setPrice] = useState('150');
-  const [description, setDescription] = useState('nice product');
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState('');
   const [facing, setFacing] = useState('front');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const [imageUri, setImageUri] = useState(null);
   const [isTakingAPicture, setIsTakingAPicture] = useState(false); // State to track if a picture is being taken
+  const [products, setProducts] = useState([]); // State to store the products array
 
 
-  const products = [
-    {
-      id: 0,
-      name: 'Shoes',
-      price: 50,
-      description: 'This shoes are the best shoes ever',
-      image: 'https://media.istockphoto.com/id/1350560575/photo/pair-of-blue-running-sneakers-on-white-background-isolated.jpg?s=612x612&w=0&k=20&c=A3w_a9q3Gz-tWkQL6K00xu7UHdN5LLZefzPDp-wNkSU=',
-    },
-    {
-      id: 1,
-      name: 'Bike',
-      price: 250,
-      description: 'This bike is the best bike ever',
-      image: 'https://www.radioflyer.com/cdn/shop/files/flyer-24_-kids_-bike-profile-model-845BR_d1a02114-c9e5-4ef6-9302-57769bc310a6.jpg?v=1710802718&width=1214',
-    },
-    {
-      id: 2,
-      name: 'Car',
-      price: 2500,
-      description: 'This car is the best car ever',
-      image: 'https://imgcdn.zigwheels.vn/medium/gallery/exterior/9/958/honda-hr-v-18808.jpg',
-    },
-    {
-      id: 3,
-      name: 'Boat',
-      price: 5000,
-      description: 'This boat is the best boat ever',
-      image: 'https://www.huntsmarine.com.au/cdn/shop/articles/620_Fishfisher_24_2048x2048.jpg?v=1701991259',
-    },
-    {
-      id: 4,
-      name: 'Plane',
-      price: 10000,
-      description: 'This place is the best plane ever',
-      image: 'https://static01.nyt.com/images/2021/02/26/travel/26United-plane-explainer1/26United-plane-explainer1-mediumSquareAt3X.jpg',
-    },
-  ]
+  useEffect(() => {
+    console.log('newProduct', {name, price, description, imageUri});
+  }
+    , [name, price, description, imageUri]);
+
+
+  //set products
+  useFocusEffect(
+    useCallback(() => {
+      const fetchProducts = async () => {
+        setProducts(await getProducts());
+      };
+      fetchProducts();
+    }, []));
+
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -85,7 +65,7 @@ export default function addAProduct() {
     }
   };
 
-  const addTheProduct = () => {
+  const addTheProduct = async () => {
     if (!imageUri) {
       alert('Please take a picture of the product.');
       return;
@@ -101,21 +81,16 @@ export default function addAProduct() {
       description: description,
       image: imageUri,
     };
-    products.push(newProduct); // Add the new product to the products array
+    // Add the new product to the products array
+    await addProduct(newProduct);
 
     console.log('Product added:', newProduct);
     alert('Product added successfully!');
-    //reset the form fields
-    setName('');
-    setPrice('');
-    setDescription('');
-    setImageUri(null); 
-
 
     // go to the store page
     router.push('/DrawerDir/theStore');
-    
-    
+
+
   }
 
   return (
@@ -153,6 +128,7 @@ export default function addAProduct() {
                   margin: 10,
                   borderRadius: 5,
                 }}
+                onChange={(e) => setName(e.nativeEvent.text)}
               />
             </View>
 
@@ -167,6 +143,7 @@ export default function addAProduct() {
                   margin: 10,
                   borderRadius: 5,
                 }}
+                onChange={(e) => setPrice(e.nativeEvent.text)}
               />
             </View>
 
@@ -181,6 +158,7 @@ export default function addAProduct() {
                   margin: 10,
                   borderRadius: 5,
                 }}
+                onChange={(e) => setDescription(e.nativeEvent.text)}
               />
             </View>
 

@@ -1,0 +1,14 @@
+c:\data\StackPrj\StackPrj\obj\Debug\StackPrj.csproj.AssemblyReference.cache
+c:\data\StackPrj\StackPrj\obj\Debug\StackPrj.csproj.CoreCompileInputs.cache
+c:\data\StackPrj\StackPrj\bin\Debug\StackPrj.exe.config
+c:\data\StackPrj\StackPrj\bin\Debug\StackPrj.exe
+c:\data\StackPrj\StackPrj\bin\Debug\StackPrj.pdb
+c:\data\StackPrj\StackPrj\obj\Debug\StackPrj.exe
+c:\data\StackPrj\StackPrj\obj\Debug\StackPrj.pdb
+C:\Users\home\Desktop\StackPrj\StackPrj\obj\Debug\StackPrj.csproj.AssemblyReference.cache
+C:\Users\home\Desktop\StackPrj\StackPrj\obj\Debug\StackPrj.csproj.CoreCompileInputs.cache
+C:\Users\home\Desktop\StackPrj\StackPrj\obj\Debug\StackPrj.exe
+C:\Users\home\Desktop\StackPrj\StackPrj\obj\Debug\StackPrj.pdb
+C:\Users\home\Desktop\StackPrj\StackPrj\bin\Debug\StackPrj.exe.config
+C:\Users\home\Desktop\StackPrj\StackPrj\bin\Debug\StackPrj.exe
+C:\Users\home\Desktop\StackPrj\StackPrj\bin\Debug\StackPrj.pdb
