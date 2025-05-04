@@ -1,0 +1,55 @@
+//email or phone but one at least
+//for the order history it's the id of the order
+customers = [
+	{
+		"id": "345538268",
+		"email": "nathanmimoun2001@gmail.com",
+		"phone": "0584020406",
+		"order_history":[2,3,6,19]
+	}
+]
+
+ingredients = {
+	"adding_price_code":[
+		"add",
+		"more"
+	],
+	[
+		{
+			"id": "0",
+			"name": "salmon"
+			"adding_price" :[
+				"12",
+				"19"
+			]
+		},
+		{
+			"id": "1",
+			"name": "tomato"
+		}
+	]
+}
+
+orders = [
+	{	
+		"id": "2",
+		"product": "23", 
+		"changes": {
+			"adds":[
+				{
+					"add": "salmon",
+					"price": "19"
+				},
+				{
+					"add": "cucumber"
+				}
+			],
+			"removes":[
+				{
+					"remove": "tomato"
+				}
+			]
+		}
+	}
+
+]

@@ -1,0 +1,10 @@
+customers = [
+	{
+		"id": "345538268",
+		"email": "nathanmimoun2001@gmail.com",
+		"phone": "0584020406",
+		"order_history":[2,3,6,19]
+	}
+]
+
+//email or phone but one at least
