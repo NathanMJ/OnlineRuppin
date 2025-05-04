@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import customerRouter from './services/customer/router.js';
-// import {errorHandler} from './middleware/errorHandler.js';
 
 //set server port
 const PORT = 5500
@@ -21,9 +20,6 @@ server.use(express.urlencoded({extended: true}))
 
 //TODO : add microservices routes here
 server.use('/api/customer', customerRouter)
-
-//TODO : error handler 
-// server.use(errorHandler)
 
 //start server
 server.listen(PORT, () => {
