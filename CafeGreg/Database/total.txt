@@ -3,30 +3,30 @@
 use cafeGregDB
 db.createCollection("customers")
 db.createCollection("products")
-db.createCollection("autorization_send")
+db.createCollection("autorizations_sended")
+db.createCollection("ingredients")
 
 db.customers.insertMany([
 	{
-		id: "345538268",
+		_id: "345538268",
 		contact: "nathanmimoun2001@gmail.com", 
-		order_history:[2,3,4],
-		connected:true 
+		order_history:[2,3,4]
 	},
 	{
-		id: "345481394",
+		_id: "345481394",
 		contact: "0584020406", 
 		order_history:[1,5]
 	}
 ])
 
 db.product_types.insertOne({
-  types: ["cake","salad" "meal", "drink", "can", "bottle"]
+  types: ["cake","salad", "meal", "drink", "can", "bottle"]
 });
 
 
 db.product.insertMany([
   {
-    id: "0",
+    _id: "0",
     name: "French Salad",
     description: "Best salad",
     price: 12,
@@ -35,16 +35,16 @@ db.product.insertMany([
     ingredients: [3, 5, 6, 8]
   },
   {
-    id: "1",
+    _id: "1",
     name: "Chocolate Cake",
     description: "Delicious dessert",
     price: 18,
     picture_link: "https://img.google/cake.gov",
     product_type: 0,
-    ingredients: [1, 4, 9]
+    ingredients: [0, 1, 4, 9]
   },
   {
-    id: "2",
+    _id: "2",
     name: "Orange Juice",
     description: "Freshly squeezed",
     price: 8,
@@ -53,7 +53,7 @@ db.product.insertMany([
     ingredients: [7]
   },
   {
-    id: "3",
+    _id: "3",
     name: "Coca-Cola Can",
     description: "Chilled and fizzy",
     price: 6,
@@ -62,7 +62,7 @@ db.product.insertMany([
     ingredients: []
   },
   {
-    id: "4",
+    _id: "4",
     name: "Mineral Water Bottle",
     description: "Still water 1L",
     price: 5,
@@ -74,34 +74,52 @@ db.product.insertMany([
 
 db.ingredients.insertMany([
   {
-    id: 0,
-    name: "Salmon",
-    adding_price_code: ["add", "more"],
-    adding_price: [12, 19],
-    is_addable: true
+    _id: 0,
+    name: "Chocolate",
+    can_add: false
   },
   {
-    id: 1,
-    name: "Tomato",
-    is_addable: true
+    _id: 1,
+    name: "Vanilla",
+    can_add: false
   },
   {
-    id: 2,
-    name: "Avocado",
-    adding_price_code: ["add", "more"],
-    adding_price: [5, 8],
-    is_addable: true
-  },
-  {
-    id: 3,
+    _id: 3,
     name: "Lettuce",
-    adding_price_code: ["more"],
-    adding_price: [2]
+    can_add: false
   },
   {
-    id: 4,
-    name: "Dark Chocolate",
-    is_addable: false
+    _id: 4,
+    name: "Whipped Cream",
+    can_add: true,
+    adding_price: [2, 3]
+  },
+  {
+    _id: 5,
+    name: "Tomato",
+    can_add: true
+  },
+  {
+    _id: 6,
+    name: "Cucumber",
+    can_add: false
+  },
+  {
+    _id: 7,
+    name: "Orange",
+    can_add: true,
+    adding_price: [1, 2]
+  },
+  {
+    _id: 8,
+    name: "Feta Cheese",
+    can_add: true,
+    adding_price: [2, 3]
+  },
+  {
+    _id: 9,
+    name: "Cherries",
+    can_add: true
   }
 ]);
 
@@ -170,6 +188,9 @@ Function
 
 X	Register
 X	Login
+	Get an order history according to an id
+	Get the ingredients of the order
+
 	
 Register : 	Check if the id is already used
 				if yes get an error message
@@ -186,5 +207,25 @@ Login : 	Check if the id exist
 					if not send an error message
 				if not get an error message
 				
-Get his order history :	
-	
+
+
+
+Get the ingredients of the order :
+
+
+function productIngredients(id) {
+  var ingredientsId = db.products.findOne({_id: id}).ingredients;
+  var ingredients = [];
+
+  ingredientsId.forEach(function(ingredientId) {
+    var tempAdd = db.ingredients.findOne({_id: ingredientId});
+
+    if (!tempAdd) {
+      print('ERR: Ingredient with ID ' + ingredientId + ' not found');
+    } else {
+      ingredients.push(tempAdd);
+    }
+  });
+
+  printjson(ingredients);
+}
