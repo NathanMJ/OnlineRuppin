@@ -18,7 +18,7 @@ server.use(express.json())
 server.use(express.urlencoded({extended: true}))
 
 
-//TODO : add microservices routes here
+//add microservices routes here
 server.use('/api/customer', customerRouter)
 
 //start server

@@ -2,7 +2,7 @@
 ### get every customers
 GET {{Host}}
 ### get customer by id
-GET {{Host}}/profile/1
+GET {{Host}}/profile/345538268
 ### add customer or change it
 POST {{Host}}/add
 content-type: application/json

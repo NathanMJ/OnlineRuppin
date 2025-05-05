@@ -4,6 +4,7 @@ import { getAllCustomers, getCustomer, addCustomer,cleanCustomers } from './cont
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
     console.log('Request Method:', req.method);
+    console.log(req);
     next();
 }
 

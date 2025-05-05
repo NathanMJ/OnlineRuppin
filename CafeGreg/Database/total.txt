@@ -1,36 +1,130 @@
 //email or phone but one at least
 //for the order history it's the id of the order
-customers = [
+use cafeGregDB
+db.createCollection("customers")
+db.createCollection("products")
+db.createCollection("autorization_send")
+
+db.customers.insertMany([
 	{
-		"id": "345538268",
-		"email": "nathanmimoun2001@gmail.com",
-		"phone": "0584020406",
-		"order_history":[2,3,6,19]
+		id: "345538268",
+		contact: "nathanmimoun2001@gmail.com", 
+		order_history:[2,3,4],
+		connected:true 
+	},
+	{
+		id: "345481394",
+		contact: "0584020406", 
+		order_history:[1,5]
+	}
+])
+
+db.product_types.insertOne({
+  types: ["cake","salad" "meal", "drink", "can", "bottle"]
+});
+
+
+db.product.insertMany([
+  {
+    id: "0",
+    name: "French Salad",
+    description: "Best salad",
+    price: 12,
+    picture_link: "https://img.google/salade.gov",
+    product_type: 1,
+    ingredients: [3, 5, 6, 8]
+  },
+  {
+    id: "1",
+    name: "Chocolate Cake",
+    description: "Delicious dessert",
+    price: 18,
+    picture_link: "https://img.google/cake.gov",
+    product_type: 0,
+    ingredients: [1, 4, 9]
+  },
+  {
+    id: "2",
+    name: "Orange Juice",
+    description: "Freshly squeezed",
+    price: 8,
+    picture_link: "https://img.google/orange.gov",
+    product_type: 3,
+    ingredients: [7]
+  },
+  {
+    id: "3",
+    name: "Coca-Cola Can",
+    description: "Chilled and fizzy",
+    price: 6,
+    picture_link: "https://img.google/can.gov",
+    product_type: 5,
+    ingredients: []
+  },
+  {
+    id: "4",
+    name: "Mineral Water Bottle",
+    description: "Still water 1L",
+    price: 5,
+    picture_link: "https://img.google/bottle.gov",
+    product_type: 6,
+    ingredients: []
+  }
+]);
+
+db.ingredients.insertMany([
+  {
+    id: 0,
+    name: "Salmon",
+    adding_price_code: ["add", "more"],
+    adding_price: [12, 19],
+    is_addable: true
+  },
+  {
+    id: 1,
+    name: "Tomato",
+    is_addable: true
+  },
+  {
+    id: 2,
+    name: "Avocado",
+    adding_price_code: ["add", "more"],
+    adding_price: [5, 8],
+    is_addable: true
+  },
+  {
+    id: 3,
+    name: "Lettuce",
+    adding_price_code: ["more"],
+    adding_price: [2]
+  },
+  {
+    id: 4,
+    name: "Dark Chocolate",
+    is_addable: false
+  }
+]);
+
+
+
+autorization_send = [
+	{	
+		id:2,
+		sended_time:'12:20:24'
+	}
+
+]
+
+tables_collection = [
+	{
+		table_id:10,
+		customer_id:10, //if the customer is not connected this field won't be here
+		orders_id : [3,5,6,7] //the id of the orders, if the table didn't ordered this field will be empty
 	}
 ]
 
-ingredients = {
-	"adding_price_code":[
-		"add",
-		"more"
-	],
-	[
-		{
-			"id": "0",
-			"name": "salmon"
-			"adding_price" :[
-				"12",
-				"19"
-			]
-		},
-		{
-			"id": "1",
-			"name": "tomato"
-		}
-	]
-}
 
-orders = [
+orders_collection = [
 	{	
 		"id": "2",
 		"product": "23", 
@@ -53,3 +147,44 @@ orders = [
 	}
 
 ]
+ 
+ingredients = {
+	"adding_price_code":[ add, more ],
+	[
+		{
+			id: 0,
+			name": "salmon"
+			adding_price :[ 12, 19 ]
+		},
+		{
+			"id": "1",
+			"name": "tomato"
+		}
+	]
+}
+
+
+
+
+Function
+
+X	Register
+X	Login
+	
+Register : 	Check if the id is already used
+				if yes get an error message
+				if not check if we got an email or a phone number
+					if yes add it to the customers and add his id to the table
+					if not send and error message
+					
+Login : 	Check if the id exist 
+				if yes check if the contacts match
+					if yes send a message to get the autorization (by email or by phone) 
+					and set in autorization_collection the id and the hours/minutes/seconds
+					(like that he can't press on "send a message" 2 times in less that 1 minutes)
+						when clicked on "it's me" on the message add the id to the table, remove the autorization (with the id)
+					if not send an error message
+				if not get an error message
+				
+Get his order history :	
+	
