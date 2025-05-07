@@ -1,6 +1,3 @@
-
-		Cafe	Greg	DataBase
-
 ------------	Template
 
 order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
@@ -29,15 +26,12 @@ ingredient = {
 	
 }
 
-
 product = {
 	_id,
 	link_id
 }
 
-
 order_destination = ['kitchen','bar']
-
 
 food = {
     _id,
@@ -59,7 +53,6 @@ dessert = {
 	destination
 }
 
-
 drink = {
 	_id,
 	name,
@@ -67,7 +60,6 @@ drink = {
 	picture_link,
 	destination
 }
-
 
 customer = {
 	_id: tz,
@@ -113,29 +105,27 @@ delays_details = [name, delay]
 
 ------------	Collections
 
-	order
+	orders
 	order_status_history
-	ingredient
-	product
-	food
-	drink
-	dessert
-X	customer
+	ingredients
+	products
+	foods
+	drinks
+	desserts
+X	customers
 	order_history
 	autorizations_sended
-	table
+	tables
 	section
 X	order_status
 X	ingredient_changes
 X	order_destination
-	website
+X	website
 	delays_details
 
 ------------	MongoDB
 
-db.createCollection("cafeGregDB")
 use cafeGregDB
-
 
 db.order_status.insertMany([
   { _id: 0, status: "pending" },
@@ -169,30 +159,44 @@ db.customers.insertMany([
 	},
 	{
 		_id: '345481402',
-		contact: 'nathanmimoun2001@gmail'
+		contact: 'nathanmimoun2001@gmail.com'
 	}
 ])
+
+db.website.insertMany([{
+		login: 'CafeGreg',
+		password: '123',
+		recovery_email: 'nathanmimoun2001@gmail.com'
+}])
+
+db.createCollection("tables")
 
 
 ------------	Functions
 
-XX	Register
-X	Login
-	Add customer to a table
-	Check if customer is already in a table (if he is register)
+X	customer_register(id, contact)
+X	customer_login(id, table)
+X	login_website(login, password)
+X	change_login_website(login, password)
+X	add_customer_to_table(id, table)
+X	erase_customer_of_the_table(customer, table)
+X	customer_is_connected(id)
+X	table_exist(id)
+X	transfer_customer_to_table(customer, table)
+	Switch two tables 
 	Get an order history according to an id
-XX	Get the ingredients of the order
+	Get the ingredients of the order
 
 	
 ------------	Algorythms help
 
-Register : 	Check if the id is already used
+Register for customer : 	Check if the id is already used
 				if yes get an error message
 				if not check if we got an email or a phone number
 					if yes add it to the customers and add his id to the table
 					if not send and error message
 					
-Login : 	Check if the id exist 
+Login for customer : 	Check if the id exist 
 				if yes check if the contacts match
 					if yes send a message to get the autorization (by email or by phone) 
 					and set in autorization_collection the id and the hours/minutes/seconds
@@ -204,33 +208,131 @@ Login : 	Check if the id exist
 				
 ------------	 MongoDB functions
 
-Register :
-
-function register(id, contact, table){
+function customer_register(id, contact){
+	if(!id || !contact){
+		print("A parameter is missing")
+		return;
+	}
 	var exist = db.customers.findOne({_id:id,contact})
 	if(exist){
 		print(`User ${id} already exist please login.`)
 	}
 	else{
 		//Send a message to the contact to check id
-		print(`Registered successfully. ${id} added to the table ${table}`)
+		
+		//After the verification :		
 		db.customers.insertOne({_id:id,contact})
+		print(`Registered successfully.`)
 	}
 }
 
-function login(id, contact, table){
-	var exist = db.customers.findOne({_id:id,contact})
-	if(!exist){
+function add_customer_to_table(id, table){	
+	//if the table exist
+	var tableExist = db.tables.findOne({_id:table})
+	if(tableExist){		
+		//Check that he is not already at a table
+		var alreadyIn = db.tables.findOne({customers: {$in: [id]}})			
+		if(alreadyIn){
+			print(`${id} is already in the table ${alreadyIn._id}`)
+		}
+		else{
+			db.tables.updateOne({_id:table}, {$push:{customers: id}})
+			print(`Customer ${id} has been added to the table ${table}`)
+		}
+	}
+	else{
+		//if the table doesnt exist
+		db.tables.insertOne({_id:table, customers: [id]})		
+	}		
+}
+
+function customer_login(id, table){
+	if(!id || !table){
+		print("A parameter is missing")
+		return;
+	}	
+	var customer = db.customers.findOne({_id:id})
+	if(!customer){
 		print(`User ${id} does not exist please register.`)
 	}
 	else{
-		//Check that he is not already at a table
+		//Add the customer to the table
+		add_customer_to_table(id, table)
 		print(`Logged successfully. ${id} added to the table ${table}`)
 	}
 }
 
-Get the ingredients of the order :
 
+function login_website(login, password){
+	var log = db.website.findOne({login, password})
+	if(log){
+		print('Connecting')
+	}
+	else {
+		print('Error')
+	}
+}
+
+
+function change_login_website(login, password){
+    if (login) {
+        var precLog = db.website.findOne().login;
+        db.website.updateOne({}, { $set: { login: login } });
+        print(`Login changed from ${precLog} to ${login}`);
+    }
+    if (password) {
+        var precPass = db.website.findOne().password;
+        db.website.updateOne({}, { $set: { password: password } });
+        print(`Password changed from ${precPass} to ${password}`);
+    }
+}
+
+function customer_is_connected(id){
+	if(!id){
+		print('Id is missing')
+		return;
+	}
+	var table = db.tables.findOne({customers:{$in:[id]}})
+	return table ? ({connected:true,table_id:table._id}) : ({connected:false});
+}
+
+function table_exist(id){
+	if(!id){
+		print('Id is missing')
+		return false;
+	}
+	var table = db.tables.findOne({_id:id})
+	return table ? true : false;
+}
+
+function erase_customer_of_the_table(customer, table){
+	if(!customer || !table){
+		print('Parameter is missing')
+		return
+	}	
+	db.tables.updateOne({_id: table},{$pull:{ customers: customer}})
+	print(`Customer ${customer} has been removed from the table ${table}`)
+}
+
+function transfer_customer_to_table(customer, table){
+	//check if the customer is connected
+	var res = customer_is_connected(customer)
+	
+	if(!res.connected){
+		print(`${customer} is not connected`)
+		return
+	}	
+	
+	//erase the customer in the prec table
+	erase_customer_of_the_table(customer, res.table_id)
+		
+	//create the table and add the customer
+	add_customer_to_table(customer, table)		
+}
+
+
+
+------------	Functions to check 
 
 function productIngredients(id) {
   var ingredientsId = db.products.findOne({_id: id}).ingredients;
@@ -245,16 +347,15 @@ function productIngredients(id) {
       ingredients.push(tempAdd);
     }
   });
-
   printjson(ingredients);
 }
 
 
-
-
-
-
 ------------	Problems
 
-In a few menus you got a free drink/bread/salad to choose
-There are ingredient that I want to add to meals but not to drinks ex : add a tomato to my tea or add ice cube to my salade ?
+- In a few menus you got a free drink/bread/salad to choose
+
+- There are ingredient that I want to add to meals but not to drinks ex : add a tomato to my tea or add ice cube to my salade ?
+
+
+
