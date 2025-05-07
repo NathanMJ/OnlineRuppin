@@ -1,197 +1,191 @@
-//email or phone but one at least
-//for the order history it's the id of the order
-use cafeGregDB
-db.createCollection("customers")
-db.createCollection("products")
-db.createCollection("autorizations_sended")
-db.createCollection("ingredients")
 
-db.customers.insertMany([
-	{
-		_id: "345538268",
-		contact: "nathanmimoun2001@gmail.com", 
-		order_history:[2,3,4]
-	},
-	{
-		_id: "345481394",
-		contact: "0584020406", 
-		order_history:[1,5]
-	}
-])
+		Cafe	Greg	DataBase
 
-db.product_types.insertOne({
-  types: ["cake","salad", "meal", "drink", "can", "bottle"]
-});
+------------	Template
 
+order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
 
-db.product.insertMany([
-  {
-    _id: "0",
-    name: "French Salad",
-    description: "Best salad",
-    price: 12,
-    picture_link: "https://img.google/salade.gov",
-    product_type: 1,
-    ingredients: [3, 5, 6, 8]
-  },
-  {
-    _id: "1",
-    name: "Chocolate Cake",
-    description: "Delicious dessert",
-    price: 18,
-    picture_link: "https://img.google/cake.gov",
-    product_type: 0,
-    ingredients: [0, 1, 4, 9]
-  },
-  {
-    _id: "2",
-    name: "Orange Juice",
-    description: "Freshly squeezed",
-    price: 8,
-    picture_link: "https://img.google/orange.gov",
-    product_type: 3,
-    ingredients: [7]
-  },
-  {
-    _id: "3",
-    name: "Coca-Cola Can",
-    description: "Chilled and fizzy",
-    price: 6,
-    picture_link: "https://img.google/can.gov",
-    product_type: 5,
-    ingredients: []
-  },
-  {
-    _id: "4",
-    name: "Mineral Water Bottle",
-    description: "Still water 1L",
-    price: 5,
-    picture_link: "https://img.google/bottle.gov",
-    product_type: 6,
-    ingredients: []
-  }
-]);
+order_status_history = {
+	order_id,
+	status,
+	time_set
+}
 
-db.ingredients.insertMany([
-  {
-    _id: 0,
-    name: "Chocolate",
-    can_add: false
-  },
-  {
-    _id: 1,
-    name: "Vanilla",
-    can_add: false
-  },
-  {
-    _id: 3,
-    name: "Lettuce",
-    can_add: false
-  },
-  {
-    _id: 4,
-    name: "Whipped Cream",
-    can_add: true,
-    adding_price: [2, 3]
-  },
-  {
-    _id: 5,
-    name: "Tomato",
-    can_add: true
-  },
-  {
-    _id: 6,
-    name: "Cucumber",
-    can_add: false
-  },
-  {
-    _id: 7,
-    name: "Orange",
-    can_add: true,
-    adding_price: [1, 2]
-  },
-  {
-    _id: 8,
-    name: "Feta Cheese",
-    can_add: true,
-    adding_price: [2, 3]
-  },
-  {
-    _id: 9,
-    name: "Cherries",
-    can_add: true
-  }
-]);
-
-
-
-autorization_send = [
-	{	
-		id:2,
-		sended_time:'12:20:24'
-	}
-
-]
-
-tables_collection = [
-	{
-		table_id:10,
-		customer_id:10, //if the customer is not connected this field won't be here
-		orders_id : [3,5,6,7] //the id of the orders, if the table didn't ordered this field will be empty
-	}
-]
-
-
-orders_collection = [
-	{	
-		"id": "2",
-		"product": "23", 
-		"changes": {
-			"adds":[
-				{
-					"add": "salmon",
-					"price": "19"
-				},
-				{
-					"add": "cucumber"
-				}
-			],
-			"removes":[
-				{
-					"remove": "tomato"
-				}
-			]
-		}
-	}
-
-]
- 
-ingredients = {
-	"adding_price_code":[ add, more ],
-	[
-		{
-			id: 0,
-			name": "salmon"
-			adding_price :[ 12, 19 ]
-		},
-		{
-			"id": "1",
-			"name": "tomato"
-		}
+order = {
+	_id:'',
+	changes: [
+		{ ingredients_id, code_change}
 	]
 }
 
+ingredient_changes = ["without","with","a lot of", "aside"]
+
+ingredient = {
+    _id,
+    name,
+	img,
+	[ {change_code, price} ]
+  }
+	
+}
 
 
+product = {
+	_id,
+	link_id
+}
 
-Function
 
-X	Register
+order_destination = ['kitchen','bar']
+
+
+food = {
+    _id,
+    name,
+    description,
+    price,
+    picture_link,
+    ingredients: [],
+	destination
+}
+
+dessert = {
+    _id,
+    name,
+    description,
+    price,
+    picture_link,
+    ingredients: [],
+	destination
+}
+
+
+drink = {
+	_id,
+	name,
+	price,
+	picture_link,
+	destination
+}
+
+
+customer = {
+	_id: tz,
+	contact: email/phone,
+}
+
+order_history = {
+	customers_id: [],
+	orders_id: []
+}
+
+autorizations_sended = {
+	customer_id,
+	sended_time
+}
+
+table = {
+	_id,
+	customers: [], can be empty if the customer dont want to log 
+	orders: []
+}
+
+sections = {
+	_id,
+	name,
+	picture,
+	parent_id,
+	products: [] 
+}
+
+if parent_id does not exist these section are in the main so show them
+if exist 
+	if the array products exist show products
+	if not exist show every section with the parent_id of the id 
+
+website = {
+	login, (encoded)
+	password,(encoded)
+	recovery_email (encoded)
+}
+
+delays_details = [name, delay]
+
+------------	Collections
+
+	order
+	order_status_history
+	ingredient
+	product
+	food
+	drink
+	dessert
+X	customer
+	order_history
+	autorizations_sended
+	table
+	section
+X	order_status
+X	ingredient_changes
+X	order_destination
+	website
+	delays_details
+
+------------	MongoDB
+
+db.createCollection("cafeGregDB")
+use cafeGregDB
+
+
+db.order_status.insertMany([
+  { _id: 0, status: "pending" },
+  { _id: 1, status: "ordered" },
+  { _id: 2, status: "in preparation" },
+  { _id: 3, status: "ready" },
+  { _id: 4, status: "received" },
+  { _id: 5, status: "paid" },
+  { _id: 6, status: "canceled" }
+])
+
+
+db.order_destination.insertMany([
+	{ _id: 0, destination: 'kitchen'},
+	{ _id: 1, destination: 'bar'}
+])
+
+
+db.ingredient_changes.insertMany([
+	{_id: 0, change: 'without'},
+	{_id: 1, change: 'with'},
+	{_id: 2, change: 'a lot of'},
+	{_id: 3, change: 'aside'}
+])
+
+
+db.customers.insertMany([
+	{
+		_id: '345538268',
+		contact: '0584020406'
+	},
+	{
+		_id: '345481402',
+		contact: 'nathanmimoun2001@gmail'
+	}
+])
+
+
+------------	Functions
+
+XX	Register
 X	Login
+	Add customer to a table
+	Check if customer is already in a table (if he is register)
 	Get an order history according to an id
-	Get the ingredients of the order
+XX	Get the ingredients of the order
 
 	
+------------	Algorythms help
+
 Register : 	Check if the id is already used
 				if yes get an error message
 				if not check if we got an email or a phone number
@@ -207,8 +201,33 @@ Login : 	Check if the id exist
 					if not send an error message
 				if not get an error message
 				
+				
+------------	 MongoDB functions
 
+Register :
 
+function register(id, contact, table){
+	var exist = db.customers.findOne({_id:id,contact})
+	if(exist){
+		print(`User ${id} already exist please login.`)
+	}
+	else{
+		//Send a message to the contact to check id
+		print(`Registered successfully. ${id} added to the table ${table}`)
+		db.customers.insertOne({_id:id,contact})
+	}
+}
+
+function login(id, contact, table){
+	var exist = db.customers.findOne({_id:id,contact})
+	if(!exist){
+		print(`User ${id} does not exist please register.`)
+	}
+	else{
+		//Check that he is not already at a table
+		print(`Logged successfully. ${id} added to the table ${table}`)
+	}
+}
 
 Get the ingredients of the order :
 
@@ -229,3 +248,13 @@ function productIngredients(id) {
 
   printjson(ingredients);
 }
+
+
+
+
+
+
+------------	Problems
+
+In a few menus you got a free drink/bread/salad to choose
+There are ingredient that I want to add to meals but not to drinks ex : add a tomato to my tea or add ice cube to my salade ?
