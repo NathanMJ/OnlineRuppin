@@ -43,6 +43,7 @@ product_destination = ['kitchen','bar']
 customer = {
 	_id: tz,
 	contact: email/phone,
+	name
 }
 
 order_history = {
