@@ -4,7 +4,7 @@ order_status = ['pending','ordered','in preparation','ready','received','paid','
 
 order_status_history = {
 	order_id,
-	status,
+	status_code,
 	time_set
 }
 
@@ -21,45 +21,23 @@ ingredient = {
     _id,
     name,
 	img,
-	[ {change_code, price} ]
+	changes_detail : [ {change_code, price} ] (optionnal)
   }
 	
 }
 
 product = {
-	_id,
-	link_id
-}
-
-order_destination = ['kitchen','bar']
-
-food = {
     _id,
     name,
     description,
     price,
-    picture_link,
+    img,
     ingredients: [],
 	destination
 }
 
-dessert = {
-    _id,
-    name,
-    description,
-    price,
-    picture_link,
-    ingredients: [],
-	destination
-}
+product_destination = ['kitchen','bar']
 
-drink = {
-	_id,
-	name,
-	price,
-	picture_link,
-	destination
-}
 
 customer = {
 	_id: tz,
@@ -105,13 +83,12 @@ delays_details = [name, delay]
 
 ------------	Collections
 
+//cafe side 
+
 	orders
 	order_status_history
 	ingredients
 	products
-	foods
-	drinks
-	desserts
 X	customers
 	order_history
 	autorizations_sended
@@ -119,9 +96,18 @@ X	customers
 	section
 X	order_status
 X	ingredient_changes
-X	order_destination
+X	product_destination
 X	website
 	delays_details
+
+//worker side
+	
+	
+	
+//add ranks and optionnal comment
+
+//add workers with start and end service 
+	with the id of who start or end the service
 
 ------------	MongoDB
 
@@ -183,10 +169,9 @@ X	erase_customer_of_the_table(customer, table)
 X	customer_is_connected(id)
 X	table_exist(id)
 X	transfer_customer_to_table(customer, table)
-	Switch two tables 
+X	Switch two tables 
 	Get an order history according to an id
 	Get the ingredients of the order
-
 	
 ------------	Algorythms help
 
@@ -331,6 +316,36 @@ function transfer_customer_to_table(customer, table){
 }
 
 
+function switch_tables(table_1,table_2){
+
+var tempTables = [
+	db.tables.findOne({_id:table_1}),
+	db.tables.findOne({_id:table_2})
+	]
+
+if(!tempTables[0]){
+	db.tables.insertOne({_id:table_1})
+	tempTables[0] = {_id:table_1}
+}
+
+if(!tempTables[1]){
+	db.tables.insertOne({_id:table_2})
+	tempTables[1] = {_id:table_2}
+}
+	
+db.tables.deleteOne({_id:table_1})
+db.tables.deleteOne({_id:table_2})
+
+delete tempTables[0]._id
+delete tempTables[1]._id
+
+db.tables.insertOne({...tempTables[0], _id:table_2})
+db.tables.insertOne({...tempTables[1], _id:table_1})
+
+
+print(`The table ${table_1} and the table ${table_2} have been switched`)
+}
+
 
 ------------	Functions to check 
 
@@ -355,7 +370,8 @@ function productIngredients(id) {
 
 - In a few menus you got a free drink/bread/salad to choose
 
-- There are ingredient that I want to add to meals but not to drinks ex : add a tomato to my tea or add ice cube to my salade ?
+- There are ingredient that I want to add to meals but not to drinks 
+ex : add a tomato to my tea or add ice cube to my salade ?
 
 
 
