@@ -1,0 +1,32 @@
+------------	Features to add
+
+
+------------	Problems
+
+- In a few menus you got a free drink/bread/salad to choose
+
+- There are ingredient that I want to add to meals but not to drinks 
+ex : add a tomato to my tea or add ice cube to my salade ?
+
+------------	DataBase
+
+Fill the database :
+	orders
+	order_status_history
+	ingredients
+	products
+	order_history
+	autorizations_sended
+	section
+	delays_details
+
+
+------------	React
+
+
+Create the main page of table
+
+In register/login page :
+	We can register
+	We can login
+	We can unlog

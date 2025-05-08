@@ -9,7 +9,8 @@ order_status_history = {
 }
 
 order = {
-	_id:'',
+	_id,
+	product_id,
 	changes: [
 		{ ingredients_id, code_change}
 	]
@@ -21,7 +22,7 @@ ingredient = {
     _id,
     name,
 	img,
-	changes_detail : [ {change_code, price} ] (optionnal)
+	changes_detail : [ {change_code, price} ] (optional)
   }
 	
 }
@@ -63,7 +64,7 @@ table = {
 sections = {
 	_id,
 	name,
-	picture,
+	img,
 	parent_id,
 	products: [] 
 }
@@ -83,28 +84,32 @@ delays_details = [name, delay]
 
 ------------	Collections
 
-//cafe side 
+X	Template
+XX	In MongoDB
 
-	orders
-	order_status_history
-	ingredients
-	products
-X	customers
-	order_history
-	autorizations_sended
-	tables
-	section
-X	order_status
-X	ingredient_changes
-X	product_destination
-X	website
-	delays_details
+
+//cafe side		06/14
+
+X	orders
+X	order_status_history
+X	ingredients
+X	products
+XX	customers
+X	order_history
+X	autorizations_sended
+XX	tables
+X	section
+XX	order_status
+XX	ingredient_changes
+XX	product_destination
+XX	website
+X	delays_details
 
 //worker side
 	
 	
 	
-//add ranks and optionnal comment
+//add ranks and optional comment
 
 //add workers with start and end service 
 	with the id of who start or end the service
@@ -124,7 +129,7 @@ db.order_status.insertMany([
 ])
 
 
-db.order_destination.insertMany([
+db.product_destination.insertMany([
 	{ _id: 0, destination: 'kitchen'},
 	{ _id: 1, destination: 'bar'}
 ])
@@ -364,14 +369,4 @@ function productIngredients(id) {
   });
   printjson(ingredients);
 }
-
-
-------------	Problems
-
-- In a few menus you got a free drink/bread/salad to choose
-
-- There are ingredient that I want to add to meals but not to drinks 
-ex : add a tomato to my tea or add ice cube to my salade ?
-
-
 
