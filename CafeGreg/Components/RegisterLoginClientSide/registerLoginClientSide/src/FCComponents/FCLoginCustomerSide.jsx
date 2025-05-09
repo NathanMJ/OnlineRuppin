@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function FCLoginSide(props) {
+export default function FCLoginCustomerSide(props) {
 
     return (
-        <div className="Login">
+        <div className="FCLoginCustomerSide">
             <h1>Login</h1>
             <form onSubmit={(e) => {
                 e.preventDefault()
@@ -19,9 +19,9 @@ export default function FCLoginSide(props) {
                     alert('IDs do not match')
                     return
                 }
-                props.login(e.target[0].value, e.target[1].value)
-            }}
-                style={{ display: 'flex', flexDirection: 'column' }}>
+                console.log(e.target[0].value);                
+                props.login(e.target[0].value)
+            }}>
                 <div style={{ display: 'flex' }}>
                     <h2>Your id :</h2>
                     <input type="text" placeholder='Tehoudat zehout' defaultValue={'345538268'} />

@@ -7,6 +7,16 @@ export default function HeaderCustomers(props) {
         return (<></>)
     }
 
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }        
+        return color;
+      }
+      
+
     const size = '5vh'
     return (
         <div className='headerCustomers' style={{
@@ -19,19 +29,22 @@ export default function HeaderCustomers(props) {
             padding: size,
             gap: size,
             overflowX: 'auto',
-            backgroundColor: 'red',
-        }}> {props.customers.map(customer =>
+            backgroundColor: 'rgb(255, 255, 255, 0.5)',
+        }}> 
+        <h1>Customers :</h1>
+        {props.customers.map(customer =>
             <div key={customer.id} style={{
                 position: 'relative'
             }}>
                 <p style={{
                     padding: '0px',
                     fontSize: size,
-                    backgroundColor: 'blue',
-                    color: 'white',
-                    padding: '8px',
+                    background: 'linear-gradient(90deg, rgba(235, 229, 229, 0.86), rgba(201, 195, 195, 0.66))',
+                    backgroundColor: getRandomColor(),
+                    padding: '8px 12px',
                     margin: '0px',
-                    borderRadius: '25px'
+                    borderRadius: '25px',
+                    border: '3px solid white'
                 }}>{customer.name}</p>
 
                 <img style={{
@@ -42,7 +55,7 @@ export default function HeaderCustomers(props) {
                     right: '0px',
                     transform: 'translate(50%, -50%)',
                     width: size,
-                }} src='./Pictures/X_icon.png'/>
+                }} src='./Pictures/X_icon.png' onClick={() => props.logOut(customer.id)}/>
 
             </div>
 

@@ -17,11 +17,11 @@ export default function FCRegisterSide(props) {
       alert('Please select email or phone')
       return
     }
-    props.register(e.target[0].value, e.target[0].value, contact);
+    props.register(e.target[0].value, e.target[1].value, contact);
   }
 
   return (
-    <div className="Register">
+    <div className="FCRegisterCustomerSide">
       <h1>Register</h1>
       <form style={{ display: 'flex', flexDirection: 'column' }} onSubmit={(e) => register(e)}>
         <div style={{ display: 'flex' }}>
