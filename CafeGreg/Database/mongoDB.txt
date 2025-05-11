@@ -1,162 +1,3 @@
-
-------------	Collections
-
-X	Template
-XX	In MongoDB
-
-
-//cafe side		06/14
-
-X	orders
-X	order_status_history
-X	ingredients
-X	products
-XX	customers
-X	order_history
-X	autorizations_sended
-XX	tables
-XX	section
-XX	order_status
-XX	ingredient_changes
-XX	product_destination
-XX	website
-X	delays_details
-
-//add ranks and optional comment
-
-//worker side
-	
-	
-	
-
-//add workers with start and end service 
-	with the id of who start or end the service
-
-
-------------	Functions
-
-X	customer_register(id, contact)
-X	customer_login(id, table)
-X	login_website(login, password)
-X	change_login_website(login, password)
-X	add_customer_to_table(id, table)
-X	erase_customer_of_the_table(customer, table)
-X	customer_is_connected(id)
-X	table_exist(id)
-X	transfer_customer_to_table(customer, table)
-X	switch_tables(table_1,table_2)
-X	send_authorization(id)
-	Get an order history according to an id
-	Get the ingredients of the order
-	change the status of an order (orders)
-	
-	
-------------	Template
-
-order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
-
-order_status_history = {
-	order_id,
-	status_code,
-	time_set
-}
-
-order = {
-	_id,
-	product_id,
-	changes: [
-		{ ingredients_id, code_change}
-	]
-}
-
-ingredient_changes = ["without","with","a lot of", "aside"]
-
-ingredient = {
-    _id,
-    name,
-	img,
-	changes_detail : [ {change_code, price} ] (optional)
-  }
-	
-}
-
-product = {
-    _id,
-    name,
-    description,
-    price,
-    img,
-    ingredients: [],
-	destination
-}
-
-product_destination = ['kitchen','bar']
-
-
-customer = {
-	_id: tz,
-	contact: email/phone,
-	name
-}
-
-order_history = {
-	customers_id: [],
-	orders_id: []
-}
-
-autorizations_sended = {
-	customer_id,
-	sended_time
-}
-
-table = {
-	_id,
-	customers: [], can be empty if the customer dont want to log 
-	orders: []
-}
-
-sections = {
-	_id,
-	name,
-	img,
-	parent_id,
-	products: [] 
-}
-
-if parent_id does not exist these section are in the main so show them
-if exist 
-	if the array products exist show products
-	if not exist show every section with the parent_id of the id 
-
-website = {
-	login, (encoded)
-	password,(encoded)
-	recovery_email (encoded)
-}
-
-delays_details = [name, delay]
-
-------------	Sections
-
-	Main
-		Most ordered
-		Starters
-		Meals
-			Main
-			Breakfasts
-			Italian
-			Sandwichs
-			Salads
-		Desserts
-			Pancakes
-			Waffles
-		Drinks
-			Bottles/Cans
-			Beers
-		
-			
-------------	MongoDB
-
 use cafeGregDB
 
 db.order_status.insertMany([
@@ -300,10 +141,6 @@ db.authorization_sended.createIndex(
   { expireAfterSeconds: 0 }
 )
 
-
-
-				
-------------	 MongoDB functions
 
 function customer_register(id, contact){
 	if(!id || !contact){
@@ -480,7 +317,6 @@ if(!id){
 
 
 
-
 ------------	Functions to check 
 
 function productIngredients(id) {
@@ -500,8 +336,6 @@ function productIngredients(id) {
 }
 
 
-------------	Products
-
 db.products.insertMany([
 {
 	_id: '0'
@@ -510,7 +344,7 @@ db.products.insertMany([
 	ingredient: [0, 1, 2, 3, 4],
 	bread_to_choose: [5, 6 ,7 ,8 ,9],
 	bread_to_add: {
-	bread_choice : { [10, 5, 7, 9], price: 11 }			
+	bread_choice : { [10, 5, 7, 9], price: 11 },		
 	
 }
 
@@ -619,77 +453,3 @@ db.products.insertMany([
   ]
 
 
-------------	Ingredients
-
-db.products.insertMany([
-{
-	_id: 0,
-	name: 'tomato'
-},{
-	_id: 1,
-	name: 'walnuts'
-},{
-	_id: 2,
-	name: 'parsley'
-},{
-	_id: 3,
-	name: 'garlic'
-},{
-	_id: 4,
-	name: 'seed'
-},{
-	_id: 5,
-	name: 'black ciabatta'
-},{
-	_id: 6,
-	name: 'sourdough'
-},{
-	_id: 7,
-	name: 'light bread'
-},{
-	_id: 8,
-	name: 'white ciabatta'
-},{
-	_id: 9,
-	name: 'gluten-free bread'
-},{
-	_id: 10,
-	name: 'house bread'
-},{
-	_id: 11,
-	name: 'gluten-free bread'
-},{
-	_id: 12,
-	name: 'gluten-free bread'
-},{
-	_id: 13,
-	name: 'gluten-free bread'
-},{
-	_id: 14,
-	name: 'gluten-free bread'
-},{
-	_id: 15,
-	name: 'gluten-free bread'
-},{
-	_id: 16,
-	name: 'gluten-free bread'
-},{
-	_id: 17,
-	name: 'gluten-free bread'
-},{
-	_id: 18,
-	name: 'gluten-free bread'
-},{
-	_id: 19,
-	name: 'gluten-free bread'
-},{
-	_id: 20,
-	name: 'gluten-free bread'
-},{
-	_id: 21,
-	name: 'gluten-free bread'
-},{
-	_id: 22,
-	name: 'gluten-free bread'
-}
-])

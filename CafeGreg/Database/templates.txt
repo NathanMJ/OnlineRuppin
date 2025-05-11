@@ -1,0 +1,83 @@
+
+order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
+
+order_status_history = {
+	order_id,
+	status_code,
+	time_set
+}
+
+order = {
+	_id,
+	product_id,
+	changes: [
+		{ ingredients_id, code_change}
+	]
+}
+
+ingredient_changes = ["without","with","a lot of", "aside"]
+
+ingredient = {
+    _id,
+    name,
+	img,
+	changes_detail : [ {change_code, price} ] (optional)
+  }
+	
+}
+
+product = {
+    _id,
+    name,
+    description,
+    price,
+    img,
+    ingredients: [],
+	destination
+}
+
+product_destination = ['kitchen','bar']
+
+
+customer = {
+	_id: tz,
+	contact: email/phone,
+	name
+}
+
+order_history = {
+	customers_id: [],
+	orders_id: []
+}
+
+autorizations_sended = {
+	customer_id,
+	sended_time
+}
+
+table = {
+	_id,
+	customers: [], can be empty if the customer dont want to log 
+	orders: []
+}
+
+sections = {
+	_id,
+	name,
+	img,
+	parent_id,
+	products: [] 
+}
+
+if parent_id does not exist these section are in the main so show them
+if exist 
+	if the array products exist show products
+	if not exist show every section with the parent_id of the id 
+
+website = {
+	login, (encoded)
+	password,(encoded)
+	recovery_email (encoded)
+}
+
+delays_details = [name, delay]
