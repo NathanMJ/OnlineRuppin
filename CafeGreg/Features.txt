@@ -16,17 +16,21 @@ Fill the database :
 	ingredients
 	products
 	order_history
-	autorizations_sended
-	section
 	delays_details
 
-
+Create the function for :
+	send an autorization (autorizations_sended)
+	set timeout for autorization (autorizations_sended)
+	change the status of an order (orders)
+	
 ------------	React
 
 
 Create the main page of table
 
 In register/login page :
-	We can register
-	We can login
-	We can unlog
+X	We can register
+X	We can login
+X	We can unlog
+
+

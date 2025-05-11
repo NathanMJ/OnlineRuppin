@@ -99,22 +99,42 @@ XX	customers
 X	order_history
 X	autorizations_sended
 XX	tables
-X	section
+XX	section
 XX	order_status
 XX	ingredient_changes
 XX	product_destination
 XX	website
 X	delays_details
 
+//add ranks and optional comment
+
 //worker side
 	
 	
 	
-//add ranks and optional comment
 
 //add workers with start and end service 
 	with the id of who start or end the service
 
+------------	Sections
+
+	Main
+		Most ordered
+		Starters
+		Meals
+			Main
+			Breakfasts
+			Italian
+			Sandwichs
+			Salads
+		Desserts
+			Pancakes
+			Waffles
+		Drinks
+			Bottles/Cans
+			Beers
+		
+			
 ------------	MongoDB
 
 use cafeGregDB
@@ -162,6 +182,91 @@ db.website.insertMany([{
 }])
 
 db.createCollection("tables")
+
+db.sections.insertMany([
+	{
+		_id: '0',
+		name: "Most ordered",
+		img: "image.png"
+	},
+	{
+		_id: '1',
+		name: "Starters",
+		img: "image.png"
+	},
+	{
+		_id: '2',
+		name: "Meals",
+		img: "image.png"
+	},
+	{
+		_id: '3',
+		name: "Desserts",
+		img: "image.png"
+	},
+	{
+		_id: '4',
+		name: "Drinks",
+		img: "image.png"
+	},
+	{
+		_id: '5',
+		name: "Main Courses",
+		img: "image.png",
+		parent_id: '2'
+	},
+	{
+		_id: '6',
+		name: "Breakfasts",
+		img: "image.png",
+		parent_id: '2'
+	},
+	{
+		_id: '7',
+		name: "Italians",
+		img: "image.png",
+		parent_id: '2'
+	},
+	{
+		_id: '8',
+		name: "Sandwichs",
+		img: "image.png",
+		parent_id: '2'
+	},
+	{
+		_id: '9',
+		name: "Salads",
+		img: "image.png",
+		parent_id: '2'
+	},
+	{
+		_id: '10',
+		name: "Pancakes",
+		img: "image.png",
+		parent_id: '3'
+	},
+	{
+		_id: '11',
+		name: "Waffles",
+		img: "image.png",
+		parent_id: '3'
+	},
+	{
+		_id: '12',
+		name: "Bottles/Cans",
+		img: "image.png",
+		parent_id: '4'
+	},
+	{
+		_id: '13',
+		name: "Beers",
+		img: "image.png",
+		parent_id: '4',
+		need_autorization : true
+	}
+])
+
+
 
 
 ------------	Functions
@@ -370,4 +475,110 @@ function productIngredients(id) {
   });
   printjson(ingredients);
 }
+
+
+------------	JSON Products
+
+
+[
+    {
+      "name": "American Waffle",
+      "description": "Crispy waffle, sautéed onions and mushrooms in 4-cheese sauce, poached eggs, green onion. Served with a salad of your choice.",
+      "price": 61,
+      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/american-waffle.jpg",
+      "categorie": "Breakfasts"
+    },
+    {
+      "name": "Norwegian Waffle (for those with permission)",
+      "description": "Crispy waffle, smoked salmon, sautéed spinach and onions in cheese sauce, sunny-side-up eggs, green onion. Served with a salad of your choice.",
+      "price": 74,
+      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/norwegian-waffle.jpg",
+      "categorie": "Breakfasts"
+    },
+    {
+      "name": "Eggs Benedict",
+      "description": "Brioche, spinach, hollandaise, poached eggs, onion jam, green onion, black pepper. Served with a salad of your choice. Add sautéed mushrooms and onions for ₪10. Add smoked salmon for ₪22.",
+      "price": 68,
+      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/eggs-benedict.jpg",
+      "categorie": "Breakfasts"
+    },
+    {
+      "name": "French Brioche",
+      "description": "Brioche, truffle butter, mushroom Alfredo sauce, mozzarella cheese, sunny-side-up eggs, green onion. Served with a side salad.",
+      "price": 68,
+      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/french-brioche.jpg",
+      "categorie": "Breakfasts"
+    },
+    {
+      "name": "Shakshuka",
+      "description": "Traditional hot skillet dish with two eggs. Served with bread and a salad of your choice. House – ₪65. Balkan – Bulgarian cheese, pesto, eggplant ₪68. Mozzarella – pesto, fresh mozzarella ₪68. Falafel – falafel balls, raw tahini, parsley ₪68. Vegan – falafel, sweet potato cubes, roasted eggplant, raw tahini ₪68.",
+      "price": 65,
+      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/shakshuka.jpg",
+      "categorie": "Breakfasts"
+    },
+	{
+	  "name": "Krihon and Coffee - Served until 12:00",
+      "description": "The sandwich is served with lettuce, tomato, yellow cheese / Bulgarian cheese / lemon cream / ricotta peppers / labneh / skordalia / tuna salad / guacamole, alongside Kalamata olives.",
+      "price": 36,
+	  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/קפה-וכריכון-scaled.jpg",
+	  "category": "Breakfast"
+	},
+	{
+      "name": "Coffee and Pastry",
+      "description": "Coffee and pastry from the selection of your choice",
+      "price": 28,
+      "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/קפה-ומאפה-scaled.jpg",
+      "category": "Breakfast"
+	},
+	{
+  "name": "Selection of Pastries",
+  "description": "A changing selection of pastries",
+  "price": 18,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/מאפה-scaled.jpg",
+  "category": "Breakfast"
+},
+{
+  "name": "Couple's Breakfast",
+  "description": "Eggs of your choice, Bulgarian cheese, labneh with za'atar and olive oil, lemon cream with green onions, guacamole, ricotta with peppers, tuna salad, green tahini with spiced chickpeas, skordalia with almonds, tomato salsa with balsamic, jam, grain bar, homemade bread, choice of salad. Served with a small coffee and a small cold drink (orange/carrot/lemonade).",
+  "price": 154,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/ארוחת-בוקר-זוגית-scaled.jpg",
+  "category": "Breakfast"
+},
+{
+  "name": "Single Vegan Breakfast VO",
+  "description": "Legume omelette, slices of vegan cheese, guacamole, vegan spreadable cheese, vegan Bulgarian cheese slices, grain bar, jam, green tahini with spiced chickpeas, tomato salsa with balsamic, personal salad, homemade bread. Served with a small coffee and a small cold drink (orange/carrot/lemonade).",
+  "price": 82,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/ארוחת-בוקר-יחיד-טבעוני-scaled.jpg",
+  "category": "Breakfast"
+},
+{
+  "name": "Vegan Couple's Breakfast VO",
+  "description": "Legume omelette, slices of vegan cheese, almond skordalia, green tahini with spiced chickpeas, guacamole, vegan spreadable cheese, vegan Bulgarian cheese, pesto, grain bar, jam, eggplant tahini, tomato salsa with balsamic, personal salad, homemade bread. Served with a small coffee and a small cold drink (orange/carrot/lemonade).",
+  "price": 154,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/ארוחת-בוקר-טבעוני-זוגי-scaled.jpg",
+  "category": "Breakfast"
+},
+{
+  "name": "Greek Breakfast",
+  "description": "Fried eggs served on cheese and spinach tiropita, served with almond skordalia, labneh with olive oil and tomato salsa, ricotta with peppers, and a Greek salad. (Served without bread).",
+  "price": 67,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/בוקר-יווני-scaled.jpg",
+  "category": "Breakfast"
+},
+{
+  "name": "Galilean Breakfast",
+  "description": "Bagels with gibna and za'atar leaves, cucumbers and herbs on labneh with sumac, green tahini with seasoned chickpeas, ricotta with peppers, quinoa tabbouleh salad, and za'atar omelette. (Served without bread).",
+  "price": 69,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/בוקר-גלילי-scaled.jpg",
+  "category": "Breakfast"
+},
+{
+  "name": "Turkish Bourekas",
+  "description": "Cheese-filled bourekas, served with labneh, olive oil, green tahini with seasoned chickpeas, hard-boiled egg, spicy jalapeno spread, crushed tomatoes with olive oil, served with pickled cucumber and fresh vegetables.",
+  "price": 59,
+  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/בורקס-טורקי-scaled.jpg",
+  "category": "Breakfast"
+}
+  ]
+
 
