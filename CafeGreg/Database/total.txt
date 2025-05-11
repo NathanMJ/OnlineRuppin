@@ -50,6 +50,7 @@ X	send_authorization(id)
 	Get the ingredients of the order
 	change the status of an order (orders)
 	
+	
 ------------	Template
 
 order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
@@ -159,27 +160,27 @@ delays_details = [name, delay]
 use cafeGregDB
 
 db.order_status.insertMany([
-  { _id: '0', status: "pending" },
-  { _id: '1', status: "ordered" },
-  { _id: '2', status: "in preparation" },
-  { _id: '3', status: "ready" },
-  { _id: '4', status: "received" },
-  { _id: '5', status: "paid" },
-  { _id: '6', status: "canceled" }
+  { _id: 0, status: "pending" },
+  { _id: 1, status: "ordered" },
+  { _id: 2, status: "in preparation" },
+  { _id: 3, status: "ready" },
+  { _id: 4, status: "received" },
+  { _id: 5, status: "paid" },
+  { _id: 6, status: "canceled" }
 ])
 
 
 db.product_destination.insertMany([
-	{ _id: '0', destination: 'kitchen'},
-	{ _id: '1', destination: 'bar'}
+	{ _id: 0, destination: 'kitchen'},
+	{ _id: 1, destination: 'bar'}
 ])
 
 
 db.ingredient_changes.insertMany([
-	{_id: '0', change: 'without'},
-	{_id: '1', change: 'with'},
-	{_id: '2', change: 'a lot of'},
-	{_id: '3', change: 'aside'}
+	{_id: 0, change: 'without'},
+	{_id: 1, change: 'with'},
+	{_id: 2, change: 'a lot of'},
+	{_id: 3, change: 'aside'}
 ])
 
 
@@ -204,90 +205,90 @@ db.createCollection("tables")
 
 db.sections.insertMany([
 	{
-		_id: '0',
+		_id: 0,
 		name: "Most ordered",
 		img: "image.png"
 	},
 	{
-		_id: '1',
+		_id: 1,
 		name: "Starters",
 		img: "image.png"
 	},
 	{
-		_id: '2',
+		_id: 2,
 		name: "Meals",
 		img: "image.png"
 	},
 	{
-		_id: '3',
+		_id: 3,
 		name: "Desserts",
 		img: "image.png"
 	},
 	{
-		_id: '4',
+		_id: 4,
 		name: "Drinks",
 		img: "image.png"
 	},
 	{
-		_id: '5',
+		_id: 5,
 		name: "Main Courses",
 		img: "image.png",
-		parent_id: '2'
+		parent_id: 2
 	},
 	{
-		_id: '6',
+		_id: 6,
 		name: "Breakfasts",
 		img: "image.png",
-		parent_id: '2'
+		parent_id: 2
 	},
 	{
-		_id: '7',
+		_id: 7,
 		name: "Italians",
 		img: "image.png",
-		parent_id: '2'
+		parent_id: 2
 	},
 	{
-		_id: '8',
+		_id: 8,
 		name: "Sandwichs",
 		img: "image.png",
-		parent_id: '2'
+		parent_id: 2
 	},
 	{
-		_id: '9',
+		_id: 9,
 		name: "Salads",
 		img: "image.png",
-		parent_id: '2'
+		parent_id: 2
 	},
 	{
-		_id: '10',
+		_id: 10,
 		name: "Pancakes",
 		img: "image.png",
-		parent_id: '3'
+		parent_id: 3
 	},
 	{
-		_id: '11',
+		_id: 11,
 		name: "Waffles",
 		img: "image.png",
-		parent_id: '3'
+		parent_id: 3
 	},
 	{
-		_id: '12',
+		_id: 12,
 		name: "Bottles/Cans",
 		img: "image.png",
-		parent_id: '4'
+		parent_id: 4
 	},
 	{
-		_id: '13',
+		_id: 13,
 		name: "Beers",
 		img: "image.png",
-		parent_id: '4',
+		parent_id: 4,
 		need_autorization : true
 	}
 ])
 
 db.delays_detail.insertMany([
 {
-	_id: '0',
+	_id: 0,
 	name: 'authorization_sended',
 	time_sec: 10
 }])
@@ -301,40 +302,6 @@ db.authorization_sended.createIndex(
 
 
 
-------------	Functions
-
-X	customer_register(id, contact)
-X	customer_login(id, table)
-X	login_website(login, password)
-X	change_login_website(login, password)
-X	add_customer_to_table(id, table)
-X	erase_customer_of_the_table(customer, table)
-X	customer_is_connected(id)
-X	table_exist(id)
-X	transfer_customer_to_table(customer, table)
-X	switch_tables(table_1,table_2)
-X	send_authorization(id)
-	Get an order history according to an id
-	Get the ingredients of the order
-	change the status of an order (orders)
-	
-------------	Algorythms help
-
-Register for customer : 	Check if the id is already used
-				if yes get an error message
-				if not check if we got an email or a phone number
-					if yes add it to the customers and add his id to the table
-					if not send and error message
-					
-Login for customer : 	Check if the id exist 
-				if yes check if the contacts match
-					if yes send a message to get the autorization (by email or by phone) 
-					and set in autorization_collection the id and the hours/minutes/seconds
-					(like that he can't press on "send a message" 2 times in less that 1 minutes)
-						when clicked on "it's me" on the message add the id to the table, remove the autorization (with the id)
-					if not send an error message
-				if not get an error message
-				
 				
 ------------	 MongoDB functions
 
@@ -481,7 +448,7 @@ if(!tempTables[1]){
 db.tables.deleteOne({_id:table_1})
 db.tables.deleteOne({_id:table_2})
 
-delete tempTables[0]._id id
+delete tempTables[0]._id 
 delete tempTables[1]._id
 
 db.tables.insertOne({...tempTables[0], _id:table_2})
@@ -536,7 +503,16 @@ function productIngredients(id) {
 ------------	Products
 
 db.products.insertMany([
-
+{
+	_id: '0'
+	name: "Halloumi and mushroom salad",
+	price: "",
+	ingredient: [0, 1, 2, 3, 4],
+	bread_to_choose: [5, 6 ,7 ,8 ,9],
+	bread_to_add: {
+	bread_choice : { [10, 5, 7, 9], price: 11 }			
+	
+}
 
 
 ])
@@ -643,3 +619,77 @@ db.products.insertMany([
   ]
 
 
+------------	Ingredients
+
+db.products.insertMany([
+{
+	_id: 0,
+	name: 'tomato'
+},{
+	_id: 1,
+	name: 'walnuts'
+},{
+	_id: 2,
+	name: 'parsley'
+},{
+	_id: 3,
+	name: 'garlic'
+},{
+	_id: 4,
+	name: 'seed'
+},{
+	_id: 5,
+	name: 'black ciabatta'
+},{
+	_id: 6,
+	name: 'sourdough'
+},{
+	_id: 7,
+	name: 'light bread'
+},{
+	_id: 8,
+	name: 'white ciabatta'
+},{
+	_id: 9,
+	name: 'gluten-free bread'
+},{
+	_id: 10,
+	name: 'house bread'
+},{
+	_id: 11,
+	name: 'gluten-free bread'
+},{
+	_id: 12,
+	name: 'gluten-free bread'
+},{
+	_id: 13,
+	name: 'gluten-free bread'
+},{
+	_id: 14,
+	name: 'gluten-free bread'
+},{
+	_id: 15,
+	name: 'gluten-free bread'
+},{
+	_id: 16,
+	name: 'gluten-free bread'
+},{
+	_id: 17,
+	name: 'gluten-free bread'
+},{
+	_id: 18,
+	name: 'gluten-free bread'
+},{
+	_id: 19,
+	name: 'gluten-free bread'
+},{
+	_id: 20,
+	name: 'gluten-free bread'
+},{
+	_id: 21,
+	name: 'gluten-free bread'
+},{
+	_id: 22,
+	name: 'gluten-free bread'
+}
+])
