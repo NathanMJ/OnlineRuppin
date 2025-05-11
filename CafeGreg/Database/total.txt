@@ -1,3 +1,55 @@
+
+------------	Collections
+
+X	Template
+XX	In MongoDB
+
+
+//cafe side		06/14
+
+X	orders
+X	order_status_history
+X	ingredients
+X	products
+XX	customers
+X	order_history
+X	autorizations_sended
+XX	tables
+XX	section
+XX	order_status
+XX	ingredient_changes
+XX	product_destination
+XX	website
+X	delays_details
+
+//add ranks and optional comment
+
+//worker side
+	
+	
+	
+
+//add workers with start and end service 
+	with the id of who start or end the service
+
+
+------------	Functions
+
+X	customer_register(id, contact)
+X	customer_login(id, table)
+X	login_website(login, password)
+X	change_login_website(login, password)
+X	add_customer_to_table(id, table)
+X	erase_customer_of_the_table(customer, table)
+X	customer_is_connected(id)
+X	table_exist(id)
+X	transfer_customer_to_table(customer, table)
+X	switch_tables(table_1,table_2)
+X	send_authorization(id)
+	Get an order history according to an id
+	Get the ingredients of the order
+	change the status of an order (orders)
+	
 ------------	Template
 
 order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
@@ -83,39 +135,6 @@ website = {
 
 delays_details = [name, delay]
 
-------------	Collections
-
-X	Template
-XX	In MongoDB
-
-
-//cafe side		06/14
-
-X	orders
-X	order_status_history
-X	ingredients
-X	products
-XX	customers
-X	order_history
-X	autorizations_sended
-XX	tables
-XX	section
-XX	order_status
-XX	ingredient_changes
-XX	product_destination
-XX	website
-X	delays_details
-
-//add ranks and optional comment
-
-//worker side
-	
-	
-	
-
-//add workers with start and end service 
-	with the id of who start or end the service
-
 ------------	Sections
 
 	Main
@@ -140,27 +159,27 @@ X	delays_details
 use cafeGregDB
 
 db.order_status.insertMany([
-  { _id: 0, status: "pending" },
-  { _id: 1, status: "ordered" },
-  { _id: 2, status: "in preparation" },
-  { _id: 3, status: "ready" },
-  { _id: 4, status: "received" },
-  { _id: 5, status: "paid" },
-  { _id: 6, status: "canceled" }
+  { _id: '0', status: "pending" },
+  { _id: '1', status: "ordered" },
+  { _id: '2', status: "in preparation" },
+  { _id: '3', status: "ready" },
+  { _id: '4', status: "received" },
+  { _id: '5', status: "paid" },
+  { _id: '6', status: "canceled" }
 ])
 
 
 db.product_destination.insertMany([
-	{ _id: 0, destination: 'kitchen'},
-	{ _id: 1, destination: 'bar'}
+	{ _id: '0', destination: 'kitchen'},
+	{ _id: '1', destination: 'bar'}
 ])
 
 
 db.ingredient_changes.insertMany([
-	{_id: 0, change: 'without'},
-	{_id: 1, change: 'with'},
-	{_id: 2, change: 'a lot of'},
-	{_id: 3, change: 'aside'}
+	{_id: '0', change: 'without'},
+	{_id: '1', change: 'with'},
+	{_id: '2', change: 'a lot of'},
+	{_id: '3', change: 'aside'}
 ])
 
 
@@ -266,6 +285,19 @@ db.sections.insertMany([
 	}
 ])
 
+db.delays_detail.insertMany([
+{
+	_id: '0',
+	name: 'authorization_sended',
+	time_sec: 10
+}])
+
+db.createCollection("authorization_sended")
+
+db.authorization_sended.createIndex(
+  { expireAt: 1 },
+  { expireAfterSeconds: 0 }
+)
 
 
 
@@ -280,9 +312,11 @@ X	erase_customer_of_the_table(customer, table)
 X	customer_is_connected(id)
 X	table_exist(id)
 X	transfer_customer_to_table(customer, table)
-X	Switch two tables 
+X	switch_tables(table_1,table_2)
+X	send_authorization(id)
 	Get an order history according to an id
 	Get the ingredients of the order
+	change the status of an order (orders)
 	
 ------------	Algorythms help
 
@@ -447,7 +481,7 @@ if(!tempTables[1]){
 db.tables.deleteOne({_id:table_1})
 db.tables.deleteOne({_id:table_2})
 
-delete tempTables[0]._id
+delete tempTables[0]._id id
 delete tempTables[1]._id
 
 db.tables.insertOne({...tempTables[0], _id:table_2})
@@ -456,6 +490,28 @@ db.tables.insertOne({...tempTables[1], _id:table_1})
 
 print(`The table ${table_1} and the table ${table_2} have been switched`)
 }
+
+function send_authorization(id) {
+if(!id){
+	print('Id is missing')
+	return
+}
+  var exist = db.authorization_sended.findOne({ _id: id });
+  if (exist) {
+    print("Authorization already exists");
+    return;
+  }
+  var time = db.delays_detail.findOne({'name':'authorization_sended'}).time_sec
+  
+  time = time ? time : 10;
+
+  db.authorization_sended.insertOne({
+    _id: id,
+    expireAt: new Date(Date.now() + time * 1000)
+  });
+}
+
+
 
 
 ------------	Functions to check 
@@ -477,8 +533,13 @@ function productIngredients(id) {
 }
 
 
-------------	JSON Products
+------------	Products
 
+db.products.insertMany([
+
+
+
+])
 
 [
     {
