@@ -22,15 +22,15 @@ export default function FCLoginCustomerSide(props) {
                 console.log(e.target[0].value);                
                 props.login(e.target[0].value)
             }}>
-                <div style={{ display: 'flex' }}>
+                <div className="labelInputDiv">
                     <h2>Your id :</h2>
                     <input type="text" placeholder='Tehoudat zehout' defaultValue={'345538268'} />
                 </div>
-                <div style={{ display: 'flex' }}>
+                <div className="labelInputDiv">
                     <h2>Confirm your id :</h2>
                     <input type="text" placeholder='Tehoudat zehout' defaultValue={'345538268'} />
                 </div>
-                <button type='submit'><h2>Login</h2></button>
+                <button type='submit'>Login</button>
             </form>
         </div>
     )

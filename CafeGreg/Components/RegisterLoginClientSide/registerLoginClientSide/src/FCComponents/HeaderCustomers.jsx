@@ -29,20 +29,19 @@ export default function HeaderCustomers(props) {
             padding: size,
             gap: size,
             overflowX: 'auto',
-            backgroundColor: 'rgb(255, 255, 255, 0.5)',
+            backgroundColor: 'rgb(0, 0, 0, 0.25)',
         }}> 
         <h1>Customers :</h1>
         {props.customers.map(customer =>
             <div key={customer.id} style={{
                 position: 'relative'
             }}>
+                
                 <p style={{
-                    padding: '0px',
                     fontSize: size,
-                    background: 'linear-gradient(90deg, rgba(235, 229, 229, 0.86), rgba(201, 195, 195, 0.66))',
+                    background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.59), rgba(0, 0, 0, 0.19))',
                     backgroundColor: getRandomColor(),
                     padding: '8px 12px',
-                    margin: '0px',
                     borderRadius: '25px',
                     border: '3px solid white'
                 }}>{customer.name}</p>

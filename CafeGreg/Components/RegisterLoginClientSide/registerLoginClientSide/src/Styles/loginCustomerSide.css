@@ -15,10 +15,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 3vh;
 }
 
 .FCLoginCustomerSide h1 {
-    font-size: 5vh;
+    font-size: 7vh;
+    font-weight: 700;
 }
 
 .FCLoginCustomerSide form h2 {
@@ -27,4 +29,17 @@
 
 .FCLoginCustomerSide button {
     width: 75%;
+    font-size: 5vh ;
+}
+
+.FCLoginCustomerSide .labelInputDiv{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    width: 90%;
+}
+
+.FCLoginCustomerSide .labelInputDiv input{
+    font-size: 3vh;
+    max-width: 100%;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 export default function FCRegisterSide(props) {
 
@@ -21,19 +21,19 @@ export default function FCRegisterSide(props) {
   }
 
   return (
-    <div className="FCRegisterCustomerSide">
+    <div className="FCRegisterCustomerSide" >
       <h1>Register</h1>
       <form style={{ display: 'flex', flexDirection: 'column' }} onSubmit={(e) => register(e)}>
-        <div style={{ display: 'flex' }}>
+        <div className="labelInputDiv">
           <h2>Your name :</h2>
           <input type="text" placeholder='Name' defaultValue={'Nathan'} />
         </div>
-        <div style={{ display: 'flex' }}>
+        <div className="labelInputDiv">
           <h2>Your tehoudat zehout :</h2>
-          <input type="text" placeholder='Tehoudat zehout' defaultValue={'345538268'} />
+          <input type="text" placeholder='Tehoudat zehout' defaultValue={'345538268'}/>
         </div>
         <div style={{ display: 'flex' }}>
-          <div className="buttons">
+          <div className="buttons" style={{display: 'flex', flexDirection: 'row', gap: '10px'}}>
             <button style={{ backgroundColor: regField === 0 ? 'blue' : 'rgb(48, 47, 47)' }} onClick={(e) => changeRegField(e, 0)}>
               <h2>Email</h2>
             </button>
@@ -46,16 +46,12 @@ export default function FCRegisterSide(props) {
           <div>
             <h2>Please select email or phone</h2>
           </div> :
-          regField === 0 ?
-            <div style={{ display: 'flex' }}>
-              <h2>Enter your email</h2>
-              <input type="text" defaultValue={'nathanmimoun2001@gmail.com'} onChange={(e) => { setContact(e.target.value) }} />
-            </div> :
-            <div style={{ display: 'flex' }}>
-              <h2>Enter your phone number</h2>
-              <input type="text" defaultValue={'0584020406'} onChange={(e) => { setContact(e.target.value) }} />
-            </div>}
-        <button type='submit'><h2>Register</h2></button>
+            <div  className="labelInputDiv" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%'}}>
+              <h2>Enter your {(regField === 0 ? "email" : "phone number")}</h2>
+              <input type="text" defaultValue={'nathanmimoun2001@gmail.com'} onChange={(e) => { setContact(e.target.value) }} style={{width:'80%', textAlign:'center'}}/>
+            </div>
+            }
+        <button type='submit'>Register</button>
       </form>
     </div>
   )

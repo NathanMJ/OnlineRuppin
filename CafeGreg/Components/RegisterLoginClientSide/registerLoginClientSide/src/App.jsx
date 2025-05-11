@@ -3,11 +3,9 @@ import { useEffect, useState } from 'react'
 import HeaderCustomers from './FCComponents/HeaderCustomers.jsx'
 import FCLoginCustomerSide from './FCComponents/FCLoginCustomerSide.jsx'
 import FCRegisterCustomerSide from './FCComponents/FCRegisterCustomerSide.jsx'
+import FCReturnButton from './FCComponents/FCReturnButton.jsx'
 
 function App() {
-
-
-  // IDEA : maybe no id but just name and contact and send a qr code to the contact 
 
   const [customersDB, setCustomersDB] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
 
@@ -17,6 +15,16 @@ function App() {
   const correctID = (id) => {
     let regexIsID = /^[0-9]{8,9}$/;
     return regexIsID.test(id)
+  }
+
+  const isPhone = (contact) => {
+    let regexIsPhone = /^0[0-9]{9}$/;
+    return regexIsPhone.test(contact)
+  }
+
+  const isEmail = (contact) => {
+    let regexIsEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regexIsEmail.test(contact)
   }
 
   const login = async (id) => {
@@ -46,7 +54,16 @@ function App() {
     //send a message to the customer to confirm it's him
 
     //temp message
-    alert('A message will be sent to your phone number to confirm')
+    if(isPhone(customer.contact)) {
+      alert('A message will be sent to your phone number to confirm')
+    }
+    else if(isEmail(customer.contact)) {
+      alert('A message will be sent to your email to confirm')
+    }
+    else {
+      alert('Contact is not valid')
+      return
+    }
     if (confirm('Is it you ?')) {
       alert('You have been logged in')
       //add the customer to the customers list
@@ -64,7 +81,6 @@ function App() {
 
     //check id
 
-    let regexIsID = /^[0-9]{8,9}$/;
     if (!correctID(id)) {
       alert('The id is not valid')
       return
@@ -143,6 +159,7 @@ function App() {
         <HeaderCustomers logOut={logOut} customers={customers} ></HeaderCustomers>
         <FCRegisterCustomerSide register={register} ></FCRegisterCustomerSide>
         <FCLoginCustomerSide login={login}></FCLoginCustomerSide>
+        <FCReturnButton bottom={'20px'} left={'20px'} size={'5vh'}></FCReturnButton>
       </div>
     </>
   )
