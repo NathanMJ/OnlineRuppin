@@ -5,14 +5,14 @@
   },
   "connections": [
     {
-      "id": "3cf6c6be-d577-4d48-8015-ec226e71a1b7",
+      "id": "d206a9d8-30e3-4ad1-ac6c-63431a540976",
       "lastUsed": {
         "$date": {
-          "$numberLong": "1746683457742"
+          "$numberLong": "1746976921254"
         }
       },
       "favorite": {
-        "name": "CafeGregDB"
+        "name": "cafeGregDB"
       },
       "savedConnectionType": "recent",
       "connectionOptions": {
