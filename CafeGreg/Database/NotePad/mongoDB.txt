@@ -31,11 +31,13 @@ db.ingredient_changes.insertMany([
 db.customers.insertMany([
 	{
 		_id: '345538268',
-		contact: '0584020406'
+		contact: '0584020406',
+		name: 'Nathan'
 	},
 	{
 		_id: '345481402',
-		contact: 'nathanmimoun2001@gmail.com'
+		contact: 'nathanmimoun2001@gmail.com',
+		name: 'Nathan2'
 	}
 ])
 

@@ -24,13 +24,17 @@ export async function getCustomer(req, res) {
 
 export async function addCustomer(req, res) {
 
-    let { id, contact } = req.body;
+    let { id, contact, name} = req.body;
+    const ogCustomer = new Customer(id, contact, name);
 
     if (!id) {
         return res.status(400).json({ message: "Id is missing" });
     }
     if (!contact) {
         return res.status(400).json({ message: "Contact can not be empty" });
+    }
+    if (!name) {
+        return res.status(400).json({ message: "Name can not be empty" });
     }
 
     //check if the id already exist
@@ -46,7 +50,7 @@ export async function addCustomer(req, res) {
         else 
             return res.status(200).json({ message: 'No changes were made to the customer.' });
     } else {       
-        const newCustomer = await Customer.addCustomer({id, contact});
+        const newCustomer = await Customer.addCustomer(ogCustomer);        
         return res.status(200).json({ message: 'Customer successfully added!', customer: newCustomer });
     }
 

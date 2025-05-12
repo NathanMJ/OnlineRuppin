@@ -51,8 +51,7 @@ export async function addCustomer(customer) {
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);        
         const db = client.db(process.env.DB_NAME); 
-        const {id, contact} = customer
-        const res = await db.collection("customers").insertOne({_id:id, contact})
+        const res = await db.collection("customers").insertOne(customer);
         return res;       
     }   catch (error){
         console.error('Error connecting to MongoDB:', error);
@@ -70,9 +69,9 @@ export async function cleanCustomers() {
     //clean every customer that doesnt fit to the criteria 
 
     /* Criteria :
-            email has to be right (regex)
-            phone has to be right (regex)
             id (tz) has to be right (regex)
+            name has to exist
+            contact has to exist (email or phone)
      */
 
 
@@ -84,10 +83,10 @@ export async function cleanCustomers() {
 }
 
 function isCorrectCustomer(customer) {
-    let { id, email, phone } = customer
+    let { id, contact, name } = customer
     //if the id is empty or the email/phone is empty return false
     
-    if (!id || (!email && !phone)) {        
+    if (!id || !name || !contact) {        
         return false;
     }
 
@@ -95,15 +94,12 @@ function isCorrectCustomer(customer) {
     const phoneRegex = /^0\d{9}$/;
     const idRegex = /^\d{9}$/;
 
-    if(email && !emailRegex.test(email))
+    if(!emailRegex.test(email) || !phoneRegex.test(phone))
         return false
 
-    if(phone && !phoneRegex.test(phone))
+    if(!idRegex.test(id))
         return false
-
-    if(!idRegex.test(id)){
-        return false
-    }
+    
     return true
 }
 
