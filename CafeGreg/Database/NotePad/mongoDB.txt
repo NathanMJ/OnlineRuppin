@@ -1,4 +1,4 @@
-use cafeGregDB
+use CafeGregDB
 
 db.order_status.insertMany([
   { _id: 0, status: "pending" },
@@ -140,6 +140,8 @@ db.authorization_sended.createIndex(
   { expireAt: 1 },
   { expireAfterSeconds: 0 }
 )
+
+
 
 
 function customer_register(id, contact){
@@ -336,120 +338,128 @@ function productIngredients(id) {
 }
 
 
+------------	Products
+
+source : https://wolt.com/en/isr/pardes-hanna/restaurant/cafe-greg-hadera?srsltid=AfmBOormuQEuNs5sXJ3QOVItfn28rKT6UFRxWGYEl8kGq7m5QZm4mT3W
+
+
 db.products.insertMany([
 {
-	_id: '0'
-	name: "Halloumi and mushroom salad",
-	price: "",
-	ingredient: [0, 1, 2, 3, 4],
-	bread_to_choose: [5, 6 ,7 ,8 ,9],
-	bread_to_add: {
-	bread_choice : { [10, 5, 7, 9], price: 11 },		
-	
-}
+	_id: 0,
+	name: "Turkish Bourekas",
+	img: "https://gregcafe.co.il/wp-content/uploads/2025/01/בורקס-טורקי-scaled.jpg",
+	price: 59.00,
+	description: "Bourekas stuffed with cheeses, served with labneh and olive oil, green tahini and spiced chickpeas, hard-boiled egg, spicy jalapeño spread, crushed tomatoes and olive oil. Served with pickles and fresh vegetables.",
+	ingredient: [], 
+	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+},
+{
+	_id: 1,
+	name: "American Waffle",
+	img: "https://imageproxy.wolt.com/menu/menu-images/shared/bbcd2fc0-b2d9-11ee-a2ce-2a26bf50e9fb_vafel_americai_2_photoroom.jpg?w=600",
+	price: 61.00,
+	description: "Crispy waffle, sautéed onions and mushrooms in four-cheese sauce, poached eggs, green onion, served with a salad of your choice.",
+	ingredient: [], 
+	salads_to_choose: [
+	{ id:0 },
+	{ id:1 },
+	{ id:2 },
+	{ id:3, price: 15} ] 
+},
+{
+	_id: 2,
+	name: "Norwegian Waffle",
+	img: "https://imageproxy.wolt.com/menu/menu-images/shared/bf8100ce-b2d9-11ee-996c-66c5b47bd167_vafel_norvegi_photoroom.jpg?w=600",
+	price: 74.00,
+	description: "Crispy waffle, smoked salmon, spinach and sautéed onions in butter and cheese sauce, sunny-side-up eggs and green onion, served with a salad of your choice.",
+	ingredient: [],
+	salads_to_choose: [
+		{ id: 0 },
+		{ id: 1 },
+		{ id: 2 },
+		{ id: 3, price: 15 }
+	],
+	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+},
+{
+	_id: 3,
+	name: "Greek Morning",
+	img: "https://imageproxy.wolt.com/menu/menu-images/shared/e178d684-b2d9-11ee-8482-5e29ceb85658_boker_yevani_photoroom.jpg?w=600",
+	price: 67.00,
+	description: "Sunny-side up eggs served on cheese and spinach tiropita, with almond skordalia, labneh with olive oil, tomato salsa, ricotta with peppers, and Greek salad. (Served without bread)",
+	ingredient: [],
+	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+},
+{
+	_id: 4,
+	name: "Eggs Benedict",
+	img: "https://imageproxy.wolt.com/menu/menu-images/shared/e8222ada-b2d9-11ee-b363-a2e21199740d_benedict_photoroom.jpg?w=600",
+	price: 68.00,
+	description: "Brioche, spinach, hollandaise, poached eggs, onion jam, green onion and black pepper. Served with a salad of your choice.",
+	ingredient: [],
+	adds: [
+    { name: "Mushrooms and onions", price: 10 },
+    { name: "Smoked salmon", price: 15 }
+	],
+	salads_to_choose: [
+		{ id: 0 },
+		{ id: 1 },
+		{ id: 2 },
+		{ id: 3, price: 15 }
+	],
+	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+},
+{
+	_id: 5,
+	name: "French Brioche",
+	img: "https://imageproxy.wolt.com/menu/menu-images/shared/eba59912-b2d9-11ee-a7e8-e664ddb694a7_brish_tsarfati_photoroom.jpg?w=600",
+	price: 68.00,
+	description: "Brioche, truffle butter, mushroom Alfredo sauce, mozzarella cheese, sunny-side-up eggs and green onion. Served with a personal salad.",
+	ingredient: [],
+	salads_to_choose: [
+		{ id: 0 },
+		{ id: 1 },
+		{ id: 2 },
+		{ id: 3, price: 15 }
+	],
+	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+}])
 
 
+
+
+
+
+db.sauces.insertMany([
+			{ id: 0, name: "Silan"},
+			{ id: 1, name: "Tehina"},
+			{ id: 2, name: "Pesto"},
+			{ id: 3, name: "Crushed tomatoes"},
+			{ id: 4, name: "Sweet chili"},
+			{ id: 5, name: "Teriyaki"},
+			{ id: 6, name: "Skhug"},
+			{ id: 7, name: "Vinaigrette"},
+			{ id: 8, name: "Garlic butter"},
+			{ id: 9, name: "Mayonnaise"},
+			{ id: 10, name: "Jam"},
+			{ id: 11, name: "Parmesan"},
+			{ id: 12, name: "Raw tahini"},
+			{ id: 13, name: "Garlic sauce"},
+			{ id: 14, name: "Thousand Islands"},
+			{ id: 15, name: "Ketchup"},
+			{ id: 16, name: "Spicy pepper salsa"}
 ])
 
-[
-    {
-      "name": "American Waffle",
-      "description": "Crispy waffle, sautéed onions and mushrooms in 4-cheese sauce, poached eggs, green onion. Served with a salad of your choice.",
-      "price": 61,
-      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/american-waffle.jpg",
-      "categorie": "Breakfasts"
-    },
-    {
-      "name": "Norwegian Waffle (for those with permission)",
-      "description": "Crispy waffle, smoked salmon, sautéed spinach and onions in cheese sauce, sunny-side-up eggs, green onion. Served with a salad of your choice.",
-      "price": 74,
-      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/norwegian-waffle.jpg",
-      "categorie": "Breakfasts"
-    },
-    {
-      "name": "Eggs Benedict",
-      "description": "Brioche, spinach, hollandaise, poached eggs, onion jam, green onion, black pepper. Served with a salad of your choice. Add sautéed mushrooms and onions for ₪10. Add smoked salmon for ₪22.",
-      "price": 68,
-      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/eggs-benedict.jpg",
-      "categorie": "Breakfasts"
-    },
-    {
-      "name": "French Brioche",
-      "description": "Brioche, truffle butter, mushroom Alfredo sauce, mozzarella cheese, sunny-side-up eggs, green onion. Served with a side salad.",
-      "price": 68,
-      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/french-brioche.jpg",
-      "categorie": "Breakfasts"
-    },
-    {
-      "name": "Shakshuka",
-      "description": "Traditional hot skillet dish with two eggs. Served with bread and a salad of your choice. House – ₪65. Balkan – Bulgarian cheese, pesto, eggplant ₪68. Mozzarella – pesto, fresh mozzarella ₪68. Falafel – falafel balls, raw tahini, parsley ₪68. Vegan – falafel, sweet potato cubes, roasted eggplant, raw tahini ₪68.",
-      "price": 65,
-      "img": "https://gregcafe.co.il/wp-content/uploads/2023/01/shakshuka.jpg",
-      "categorie": "Breakfasts"
-    },
-	{
-	  "name": "Krihon and Coffee - Served until 12:00",
-      "description": "The sandwich is served with lettuce, tomato, yellow cheese / Bulgarian cheese / lemon cream / ricotta peppers / labneh / skordalia / tuna salad / guacamole, alongside Kalamata olives.",
-      "price": 36,
-	  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/קפה-וכריכון-scaled.jpg",
-	  "category": "Breakfast"
-	},
-	{
-      "name": "Coffee and Pastry",
-      "description": "Coffee and pastry from the selection of your choice",
-      "price": 28,
-      "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/קפה-ומאפה-scaled.jpg",
-      "category": "Breakfast"
-	},
-	{
-  "name": "Selection of Pastries",
-  "description": "A changing selection of pastries",
-  "price": 18,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/מאפה-scaled.jpg",
-  "category": "Breakfast"
-},
-{
-  "name": "Couple's Breakfast",
-  "description": "Eggs of your choice, Bulgarian cheese, labneh with za'atar and olive oil, lemon cream with green onions, guacamole, ricotta with peppers, tuna salad, green tahini with spiced chickpeas, skordalia with almonds, tomato salsa with balsamic, jam, grain bar, homemade bread, choice of salad. Served with a small coffee and a small cold drink (orange/carrot/lemonade).",
-  "price": 154,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/ארוחת-בוקר-זוגית-scaled.jpg",
-  "category": "Breakfast"
-},
-{
-  "name": "Single Vegan Breakfast VO",
-  "description": "Legume omelette, slices of vegan cheese, guacamole, vegan spreadable cheese, vegan Bulgarian cheese slices, grain bar, jam, green tahini with spiced chickpeas, tomato salsa with balsamic, personal salad, homemade bread. Served with a small coffee and a small cold drink (orange/carrot/lemonade).",
-  "price": 82,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/ארוחת-בוקר-יחיד-טבעוני-scaled.jpg",
-  "category": "Breakfast"
-},
-{
-  "name": "Vegan Couple's Breakfast VO",
-  "description": "Legume omelette, slices of vegan cheese, almond skordalia, green tahini with spiced chickpeas, guacamole, vegan spreadable cheese, vegan Bulgarian cheese, pesto, grain bar, jam, eggplant tahini, tomato salsa with balsamic, personal salad, homemade bread. Served with a small coffee and a small cold drink (orange/carrot/lemonade).",
-  "price": 154,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/ארוחת-בוקר-טבעוני-זוגי-scaled.jpg",
-  "category": "Breakfast"
-},
-{
-  "name": "Greek Breakfast",
-  "description": "Fried eggs served on cheese and spinach tiropita, served with almond skordalia, labneh with olive oil and tomato salsa, ricotta with peppers, and a Greek salad. (Served without bread).",
-  "price": 67,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/בוקר-יווני-scaled.jpg",
-  "category": "Breakfast"
-},
-{
-  "name": "Galilean Breakfast",
-  "description": "Bagels with gibna and za'atar leaves, cucumbers and herbs on labneh with sumac, green tahini with seasoned chickpeas, ricotta with peppers, quinoa tabbouleh salad, and za'atar omelette. (Served without bread).",
-  "price": 69,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/בוקר-גלילי-scaled.jpg",
-  "category": "Breakfast"
-},
-{
-  "name": "Turkish Bourekas",
-  "description": "Cheese-filled bourekas, served with labneh, olive oil, green tahini with seasoned chickpeas, hard-boiled egg, spicy jalapeno spread, crushed tomatoes with olive oil, served with pickled cucumber and fresh vegetables.",
-  "price": 59,
-  "image": "https://gregcafe.co.il/wp-content/uploads/2025/01/בורקס-טורקי-scaled.jpg",
-  "category": "Breakfast"
-}
-  ]
-
-
+db.salades.insertMany([
+	{ id: 0, 
+	name: "No salad"},
+	{ id: 1, 
+	name: "Chopped salad",
+	description: "tomato, cucumber, onion, parsley, olive oil & lemon" },
+	{ id: 2, 
+	name: "Green salad", 
+	description: "lettuce mix, sliced cucumber, cherry tomatoes, citrus vinaigrette, rice crisps, red & white cabbage" },
+	{ id: 3, 
+	name: "Galilee salad",
+	description: "red quinoa, black lentils, greens, cranberries, almonds" }
+])
