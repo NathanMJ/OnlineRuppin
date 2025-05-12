@@ -18,10 +18,13 @@ db.product_destination.insertMany([
 
 
 db.ingredient_changes.insertMany([
-	{_id: 0, change: 'without'},
-	{_id: 1, change: 'with'},
-	{_id: 2, change: 'a lot of'},
-	{_id: 3, change: 'aside'}
+	{_id: 0, change: 'without', img: ''},
+	{_id: 1, change: 'with', img: ''},
+	{_id: 2, change: 'a lot of', img: ''},
+	{_id: 3, change: 'aside', img: ''},
+	{_id: 3, change: 'omelette', img: ''},
+	{_id: 3, change: 'hard-boiled egg', img: ''},
+	{_id: 3, change: 'fried egg', img: ''}
 ])
 
 
@@ -43,24 +46,6 @@ db.website.insertMany([{
 }])
 
 db.createCollection("tables")
-
-Menu
-	Most ordered
-	Starters
-	Meals
-		Main Courses
-		Breakfasts
-		Italians
-		Sandwichs
-		Salads
-	Desserts
-		Pancakes
-		Waffles
-	Drinks
-		Bottles/Cans
-		Beerks
-	
-
 
 db.sections.insertMany([
 	{
@@ -157,7 +142,6 @@ db.authorization_sended.createIndex(
 
 
 
-
 ------------	Products
 
 source : https://wolt.com/en/isr/pardes-hanna/restaurant/cafe-greg-hadera?srsltid=AfmBOormuQEuNs5sXJ3QOVItfn28rKT6UFRxWGYEl8kGq7m5QZm4mT3W
@@ -245,6 +229,8 @@ db.products.insertMany([
 	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 }])
 
+
+db.ingredients.insertMany([])
 
 
 

@@ -11,20 +11,20 @@ order = {
 	_id,
 	product_id,
 	changes: [
-		{ ingredients_id, code_change}
+		{ ingredients_id, code_change }
 	]
 }
 
-ingredient_changes = ["without","with","a lot of", "aside"]
+ingredient_changes = ["without","with","a lot of", "aside", ]
 
 ingredient = {
     _id,
     name,
 	img,
 	changes_detail : [ {change_code, price} ] (optional)
-  }
-	
 }
+	
+
 
 product = {
     _id,
