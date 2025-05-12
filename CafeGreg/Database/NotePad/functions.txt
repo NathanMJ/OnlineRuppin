@@ -21,14 +21,307 @@ X	switch_tables(table_1,table_2)
 ---	Products
 
 X	get_sauces(id)
+	Get the ingredients of the product
 
 ---	Sections
 
 X	get_products_from_section(id)
 X	get_sections_from_section(id)
-X	get_section(id)	   
+X	get_from_section(id)	   
 //use get_products or get_sections according to the content
+
+--- Order 
+
 	Get an order history according to an id
-	Get the ingredients of the order
-	change the status of an order (orders)
+	Change the status of an order 
 	
+	
+
+
+
+
+
+
+
+
+
+
+function customer_register(id, contact){
+	if(!id || !contact){
+		print("A parameter is missing")
+		return;
+	}
+	var exist = db.customers.findOne({_id:id,contact})
+	if(exist){
+		print(`User ${id} already exist please login.`)
+	}
+	else{
+		//Send a message to the contact to check id
+		
+		//After the verification :		
+		db.customers.insertOne({_id:id,contact})
+		print(`Registered successfully.`)
+	}
+}
+
+function add_customer_to_table(id, table){	
+	//if the table exist
+	var tableExist = db.tables.findOne({_id:table})
+	if(tableExist){		
+		//Check that he is not already at a table
+		var alreadyIn = db.tables.findOne({customers: {$in: [id]}})			
+		if(alreadyIn){
+			print(`${id} is already in the table ${alreadyIn._id}`)
+		}
+		else{
+			db.tables.updateOne({_id:table}, {$push:{customers: id}})
+			print(`Customer ${id} has been added to the table ${table}`)
+		}
+	}
+	else{
+		//if the table doesnt exist
+		db.tables.insertOne({_id:table, customers: [id]})		
+	}		
+}
+
+function customer_login(id, table){
+	if(!id || !table){
+		print("A parameter is missing")
+		return;
+	}	
+	var customer = db.customers.findOne({_id:id})
+	if(!customer){
+		print(`User ${id} does not exist please register.`)
+	}
+	else{
+		//Add the customer to the table
+		add_customer_to_table(id, table)
+		print(`Logged successfully. ${id} added to the table ${table}`)
+	}
+}
+
+
+function login_website(login, password){
+	var log = db.website.findOne({login, password})
+	if(log){
+		print('Connecting')
+	}
+	else {
+		print('Error')
+	}
+}
+
+
+function change_login_website(login, password){
+    if (login) {
+        var precLog = db.website.findOne().login;
+        db.website.updateOne({}, { $set: { login: login } });
+        print(`Login changed from ${precLog} to ${login}`);
+    }
+    if (password) {
+        var precPass = db.website.findOne().password;
+        db.website.updateOne({}, { $set: { password: password } });
+        print(`Password changed from ${precPass} to ${password}`);
+    }
+}
+
+function customer_is_connected(id){
+	if(!id){
+		print('Id is missing')
+		return;
+	}
+	var table = db.tables.findOne({customers:{$in:[id]}})
+	return table ? ({connected:true,table_id:table._id}) : ({connected:false});
+}
+
+function table_exist(id){
+	if(!id){
+		print('Id is missing')
+		return false;
+	}
+	var table = db.tables.findOne({_id:id})
+	return table ? true : false;
+}
+
+function erase_customer_of_the_table(customer, table){
+	if(!customer || !table){
+		print('Parameter is missing')
+		return
+	}	
+	db.tables.updateOne({_id: table},{$pull:{ customers: customer}})
+	print(`Customer ${customer} has been removed from the table ${table}`)
+}
+
+function transfer_customer_to_table(customer, table){
+	//check if the customer is connected
+	var res = customer_is_connected(customer)
+	
+	if(!res.connected){
+		print(`${customer} is not connected`)
+		return
+	}	
+	
+	//erase the customer in the prec table
+	erase_customer_of_the_table(customer, res.table_id)
+		
+	//create the table and add the customer
+	add_customer_to_table(customer, table)		
+}
+
+
+function switch_tables(table_1,table_2){
+
+var tempTables = [
+	db.tables.findOne({_id:table_1}),
+	db.tables.findOne({_id:table_2})
+	]
+
+if(!tempTables[0]){
+	db.tables.insertOne({_id:table_1})
+	tempTables[0] = {_id:table_1}
+}
+
+if(!tempTables[1]){
+	db.tables.insertOne({_id:table_2})
+	tempTables[1] = {_id:table_2}
+}
+	
+db.tables.deleteOne({_id:table_1})
+db.tables.deleteOne({_id:table_2})
+
+delete tempTables[0]._id 
+delete tempTables[1]._id
+
+db.tables.insertOne({...tempTables[0], _id:table_2})
+db.tables.insertOne({...tempTables[1], _id:table_1})
+
+
+print(`The table ${table_1} and the table ${table_2} have been switched`)
+}
+
+function send_authorization(id) {
+if(!id){
+	print('Id is missing')
+	return
+}
+  var exist = db.authorization_sended.findOne({ _id: id });
+  if (exist) {
+    print("Authorization already exists");
+    return;
+  }
+  var time = db.delays_detail.findOne({'name':'authorization_sended'}).time_sec
+  
+  time = time ? time : 10;
+
+  db.authorization_sended.insertOne({
+    _id: id,
+    expireAt: new Date(Date.now() + time * 1000)
+  });
+}
+
+function get_sauces(id){
+var product = db.products.findOne({_id:id})
+if(!product){
+	print(`Product with id : ${id} does not exist`)
+	return
+}
+
+var sauces = product.sauces
+if(!sauces || sauces.length === 0){
+	print(`${product.name} doesn't have sauces`)
+	return []
+}
+
+var everySauces = []
+sauces.forEach(function(id_sauce){
+	var sauceFound = db.sauces.findOne({_id:id_sauce})
+	if(!sauceFound){
+		print(`The sauce with the id : ${id_sauce} was not found`)
+	}
+	else{
+		everySauces.push(sauceFound)
+	}
+})
+
+return everySauces
+}
+
+function get_products_from_section(id){
+var products = db.sections.findOne({_id:id}).products
+if(!products){
+	print('No products found')
+	return 
+}
+var arrProducts = []
+products.forEach(function(product){
+	var productFound = db.products.findOne({_id:product})
+	if(!productFound){
+		print(`The product with the id ${product} was not found`)
+	}
+	else{
+		arrProducts.push(productFound)
+	}
+})
+return arrProducts
+}
+
+
+function get_sections_from_section(id){
+var sectionsId = db.sections.findOne({_id:id}).child_sections
+if(!sectionsId){
+	print('No sections found')
+	return
+}
+
+var sectionsArr = []
+sectionsId.forEach(function(eachId){
+	var section = db.sections.findOne({_id:eachId})
+	if(!section){
+		print(`Section ${eachId} does not exist`)
+	}
+	else{
+		sectionsArr.push(section)
+	}
+})
+
+return sectionsArr
+}
+
+function get_from_section(id){
+
+var products = get_products_from_section(id)
+if(products){
+	return {type: "product", products}
+}
+
+var sections = get_sections_from_section(id)
+if(sections){
+	return {type: "section", sections}
+}
+
+var sectionExist = db.sections.findOne({_id:id})
+if(sectionExist){
+	print(`Section id ${id} found but empty`)
+}
+else {
+	print(`Section id ${id} not found`)
+}
+}
+
+------------	Functions to check 
+
+function productIngredients(id) {
+  var ingredientsId = db.products.findOne({_id: id}).ingredients;
+  var ingredients = [];
+
+  ingredientsId.forEach(function(ingredientId) {
+    var tempAdd = db.ingredients.findOne({_id: ingredientId});
+
+    if (!tempAdd) {
+      print('ERR: Ingredient with ID ' + ingredientId + ' not found');
+    } else {
+      ingredients.push(tempAdd);
+    }
+  });
+  printjson(ingredients);
+}
