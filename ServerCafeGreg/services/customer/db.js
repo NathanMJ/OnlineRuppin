@@ -1,24 +1,68 @@
 import { readFile, writeFile } from 'fs/promises';
 import path from 'path';
 import { __dirname } from '../../globals.js';
+import { MongoClient } from 'mongodb';
 
-export async function findAllCustomers() {
-    let customers = await readFile(path.join(__dirname, 'DB', 'customers.json'));
-    return JSON.parse(customers.toString());
+
+
+
+export async function findAllCustomers() {    
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        
+        const db = client.db(process.env.DB_NAME); 
+        const customers = await db.collection("customers").find({}).toArray();
+        return customers;       
+    }   catch (error){
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if(client){
+            client.close();
+        }
+    }
 }
 
 export async function findCustomer(id) {
-    let customers = await readFile(path.join(__dirname, 'DB', 'customers.json'));
-    customers = JSON.parse(customers.toString());
-    let customer = customers.find((customer) => customer.id === id);
-    return customer;
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        
+        const db = client.db(process.env.DB_NAME); 
+        const customer = await db.collection("customers").findOne({_id: id})        
+        return customer;       
+    }   catch (error){
+        console.error('Error connecting to MongoDB:', error);        
+        throw error;
+    }
+    finally {
+        if(client){
+            client.close();
+        }
+    }
 }
 
+
+
 export async function addCustomer(customer) {
-    let customers = await findAllCustomers();
-    customers.push(customer);
-    await writeFile(path.join(__dirname, 'DB', 'customers.json'), JSON.stringify(customers, null, 2));
-    return customer;
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);        
+        const db = client.db(process.env.DB_NAME); 
+        const {id, contact} = customer
+        const res = await db.collection("customers").insertOne({_id:id, contact})
+        return res;       
+    }   catch (error){
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if(client){
+            client.close();
+        }
+    }
 }
 
 export async function cleanCustomers() {

@@ -1,10 +1,9 @@
 import { findAllCustomers, findCustomer, addCustomer, cleanCustomers, modifyCustomer} from './db.js';
 
 export default class Customer{
-    constructor(id, email, phone) {
-        this.id = id;
-        this.email = email;
-        this.phone = phone;
+    constructor(id, contact) {
+        this._id = id;
+        this.contact = contact;
     }
 
     static async allCustomer(){

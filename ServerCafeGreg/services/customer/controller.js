@@ -1,4 +1,5 @@
 import Customer from "./model.js";
+import { ObjectId } from "mongodb";
 
 export async function getAllCustomers(req, res) {
     //check permits 
@@ -23,29 +24,29 @@ export async function getCustomer(req, res) {
 
 export async function addCustomer(req, res) {
 
-    let { id, email, phone } = req.body;
+    let { id, contact } = req.body;
 
     if (!id) {
         return res.status(400).json({ message: "Id is missing" });
     }
-    if (!email && !phone) {
-        return res.status(400).json({ message: "Email an phone can not be empty together" });
+    if (!contact) {
+        return res.status(400).json({ message: "Contact can not be empty" });
     }
 
-    
-
     //check if the id already exist
-    let customers = await Customer.allCustomer(); 
-    let exist = customers.find(customer => customer.id === id)
-    
-    if (exist) {
-        const updatedCustomer = await Customer.modifyCustomer(req.body);
+    let customer = await Customer.findCustomer(id); 
+
+        
+    if (customer) {
+        console.log("Customer already exist");
+        
+        return
         if(updatedCustomer.changes.length > 0)
             return res.status(200).json({ message: 'Customer successfully changed!', customer: updatedCustomer });
         else 
             return res.status(200).json({ message: 'No changes were made to the customer.' });
-    } else {
-        const newCustomer = await Customer.addCustomer(req.body);
+    } else {       
+        const newCustomer = await Customer.addCustomer({id, contact});
         return res.status(200).json({ message: 'Customer successfully added!', customer: newCustomer });
     }
 

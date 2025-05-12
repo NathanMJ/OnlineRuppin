@@ -2,9 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import customerRouter from './services/customer/router.js';
+import 'dotenv/config';
 
 //set server port
-const PORT = 5500
+const PORT = process.env.PORT || 5500
 
 //create server instance
 const server = express()
@@ -15,7 +16,7 @@ server.use(morgan('tiny'))
 
 //add support for json and form support
 server.use(express.json())
-server.use(express.urlencoded({extended: true}))
+server.use(express.urlencoded({ extended: true }))
 
 
 //add microservices routes here
@@ -25,3 +26,7 @@ server.use('/api/customer', customerRouter)
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
 })
+
+
+
+    

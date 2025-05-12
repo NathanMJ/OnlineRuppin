@@ -8,9 +8,8 @@ POST {{Host}}/add
 content-type: application/json
 
 {
-  "id": "345538268",
-  "email": "nathanmimoun2001@gmail.com",
-  "phone": "0584020406"
+  "id": "345538269",
+  "contact": "nathanmimoun2001@gmail.com"
 }
 ### Clean the database
 DELETE {{Host}}/clean
