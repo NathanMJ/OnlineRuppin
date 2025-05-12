@@ -44,11 +44,30 @@ db.website.insertMany([{
 
 db.createCollection("tables")
 
+Menu
+	Most ordered
+	Starters
+	Meals
+		Main Courses
+		Breakfasts
+		Italians
+		Sandwichs
+		Salads
+	Desserts
+		Pancakes
+		Waffles
+	Drinks
+		Bottles/Cans
+		Beerks
+	
+
+
 db.sections.insertMany([
 	{
 		_id: 0,
 		name: "Most ordered",
-		img: "image.png"
+		img: "image.png",
+		products: [0,4,5]
 	},
 	{
 		_id: 1,
@@ -58,71 +77,66 @@ db.sections.insertMany([
 	{
 		_id: 2,
 		name: "Meals",
-		img: "image.png"
+		img: "image.png",
+		child_sections: [5, 6, 7, 8, 9]
 	},
 	{
 		_id: 3,
 		name: "Desserts",
-		img: "image.png"
+		img: "image.png",
+		child_sections: [10, 11]
 	},
 	{
 		_id: 4,
 		name: "Drinks",
-		img: "image.png"
+		img: "image.png",
+		child_sections: [12, 13]
 	},
 	{
 		_id: 5,
 		name: "Main Courses",
-		img: "image.png",
-		parent_id: 2
+		img: "image.png"
 	},
 	{
 		_id: 6,
 		name: "Breakfasts",
 		img: "image.png",
-		parent_id: 2
+		products: [0,1,2,3,4,5]
 	},
 	{
 		_id: 7,
 		name: "Italians",
-		img: "image.png",
-		parent_id: 2
+		img: "image.png"
 	},
 	{
 		_id: 8,
 		name: "Sandwichs",
-		img: "image.png",
-		parent_id: 2
+		img: "image.png"
 	},
 	{
 		_id: 9,
 		name: "Salads",
-		img: "image.png",
-		parent_id: 2
+		img: "image.png"
 	},
 	{
 		_id: 10,
 		name: "Pancakes",
-		img: "image.png",
-		parent_id: 3
+		img: "image.png"
 	},
 	{
 		_id: 11,
 		name: "Waffles",
-		img: "image.png",
-		parent_id: 3
+		img: "image.png"
 	},
 	{
 		_id: 12,
 		name: "Bottles/Cans",
-		img: "image.png",
-		parent_id: 4
+		img: "image.png"
 	},
 	{
 		_id: 13,
 		name: "Beers",
 		img: "image.png",
-		parent_id: 4,
 		need_autorization : true
 	}
 ])
@@ -317,7 +331,88 @@ if(!id){
   });
 }
 
+function get_sauces(id){
+var product = db.products.findOne({_id:id})
+if(!product){
+	print(`Product with id : ${id} does not exist`)
+	return
+}
 
+var sauces = product.sauces
+if(!sauces || sauces.length === 0){
+	print(`${product.name} doesn't have sauces`)
+	return []
+}
+
+var everySauces = []
+sauces.forEach(function(id_sauce){
+	var sauceFound = db.sauces.findOne({_id:id_sauce})
+	if(!sauceFound){
+		print(`The sauce with the id : ${id_sauce} was not found`)
+	}
+	else{
+		everySauces.push(sauceFound)
+	}
+})
+
+return everySauces
+}
+
+function get_products_from_section(id){
+var products = db.sections.findOne({_id:id}).products
+if(!products){
+	print('No products found')
+	return
+}
+var arrProducts = []
+products.forEach(function(product){
+	var productFound = db.products.findOne({_id:product})
+	if(!product){
+		print(`The product with the id ${product} was not found`)
+	}
+	else{
+		arrProducts.push(productFound)
+	}
+})
+return arrProducts
+}
+
+
+function get_sections_from_section(id){
+var sectionsId = db.sections.findOne({_id:id}).child_sections
+if(!sectionsId){
+	print('No sections found')
+	return
+}
+
+var sectionsArr = []
+sectionsId.forEach(function(eachId){
+	var section = db.sections.findOne({_id:eachId})
+	if(!section){
+		print(`Section ${eachId} does not exist`)
+	}
+	else{
+		sectionsArr.push(section)
+	}
+})
+
+return sectionsArr
+}
+
+function get_from_section(id){
+
+var products = get_products_from_section(id)
+if(product){
+	return products
+}
+
+var sections = get_sections_from_section(id)
+if(sections){
+	return sections
+}
+
+print('Error in the sections')
+}
 
 ------------	Functions to check 
 
@@ -379,7 +474,7 @@ db.products.insertMany([
 		{ id: 2 },
 		{ id: 3, price: 15 }
 	],
-	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
 	_id: 3,
@@ -388,7 +483,7 @@ db.products.insertMany([
 	price: 67.00,
 	description: "Sunny-side up eggs served on cheese and spinach tiropita, with almond skordalia, labneh with olive oil, tomato salsa, ricotta with peppers, and Greek salad. (Served without bread)",
 	ingredient: [],
-	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
 	_id: 4,
@@ -407,7 +502,7 @@ db.products.insertMany([
 		{ id: 2 },
 		{ id: 3, price: 15 }
 	],
-	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
 	_id: 5,
@@ -422,44 +517,42 @@ db.products.insertMany([
 		{ id: 2 },
 		{ id: 3, price: 15 }
 	],
-	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 }])
 
 
 
 
-
-
 db.sauces.insertMany([
-			{ id: 0, name: "Silan"},
-			{ id: 1, name: "Tehina"},
-			{ id: 2, name: "Pesto"},
-			{ id: 3, name: "Crushed tomatoes"},
-			{ id: 4, name: "Sweet chili"},
-			{ id: 5, name: "Teriyaki"},
-			{ id: 6, name: "Skhug"},
-			{ id: 7, name: "Vinaigrette"},
-			{ id: 8, name: "Garlic butter"},
-			{ id: 9, name: "Mayonnaise"},
-			{ id: 10, name: "Jam"},
-			{ id: 11, name: "Parmesan"},
-			{ id: 12, name: "Raw tahini"},
-			{ id: 13, name: "Garlic sauce"},
-			{ id: 14, name: "Thousand Islands"},
-			{ id: 15, name: "Ketchup"},
-			{ id: 16, name: "Spicy pepper salsa"}
+			{ _id: 0, name: "Silan"},
+			{ _id: 1, name: "Tehina"},
+			{ _id: 2, name: "Pesto"},
+			{ _id: 3, name: "Crushed tomatoes"},
+			{ _id: 4, name: "Sweet chili"},
+			{ _id: 5, name: "Teriyaki"},
+			{ _id: 6, name: "Skhug"},
+			{ _id: 7, name: "Vinaigrette"},
+			{ _id: 8, name: "Garlic butter"},
+			{ _id: 9, name: "Mayonnaise"},
+			{ _id: 10, name: "Jam"},
+			{ _id: 11, name: "Parmesan"},
+			{ _id: 12, name: "Raw tahini"},
+			{ _id: 13, name: "Garlic sauce"},
+			{ _id: 14, name: "Thousand Islands"},
+			{ _id: 15, name: "Ketchup"},
+			{ _id: 16, name: "Spicy pepper salsa"}
 ])
 
 db.salades.insertMany([
-	{ id: 0, 
+	{ _id: 0, 
 	name: "No salad"},
-	{ id: 1, 
+	{ _id: 1, 
 	name: "Chopped salad",
 	description: "tomato, cucumber, onion, parsley, olive oil & lemon" },
-	{ id: 2, 
+	{ _id: 2, 
 	name: "Green salad", 
 	description: "lettuce mix, sliced cucumber, cherry tomatoes, citrus vinaigrette, rice crisps, red & white cabbage" },
-	{ id: 3, 
+	{ _id: 3, 
 	name: "Galilee salad",
 	description: "red quinoa, black lentils, greens, cranberries, almonds" }
 ])

@@ -1,14 +1,33 @@
+--- Customer 
+
 X	customer_register(id, contact)
 X	customer_login(id, table)
+X	customer_is_connected(id)
+X	send_authorization(id)
+
+--- Website
+
 X	login_website(login, password)
 X	change_login_website(login, password)
+
+---	Table
+
 X	add_customer_to_table(id, table)
 X	erase_customer_of_the_table(customer, table)
-X	customer_is_connected(id)
 X	table_exist(id)
 X	transfer_customer_to_table(customer, table)
 X	switch_tables(table_1,table_2)
-X	send_authorization(id)
+
+---	Products
+
+X	get_sauces(id)
+
+---	Sections
+
+X	get_products_from_section(id)
+X	get_sections_from_section(id)
+X	get_section(id)	   
+//use get_products or get_sections according to the content
 	Get an order history according to an id
 	Get the ingredients of the order
 	change the status of an order (orders)
