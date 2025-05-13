@@ -239,7 +239,7 @@ db.ingredients.insertMany([
 },
 {
     _id: 1,
-    name:"lehina"] 
+    name:"lehina"
 },
 {
     _id: 2,
