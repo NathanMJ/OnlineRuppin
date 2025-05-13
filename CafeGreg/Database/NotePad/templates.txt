@@ -15,16 +15,14 @@ order = {
 	]
 }
 
-ingredient_change = {_id , change, img}
+ingredient_change = {_id , change}
 
 ingredient = {
     _id,
     name,
-	img,
 	changes_detail : [ {change_code, price} ] (optional)
 }
 	
-
 
 product = {
     _id,
@@ -37,7 +35,6 @@ product = {
 }
 
 product_destination = ['kitchen','bar']
-
 
 customer = {
 	_id: tz,
@@ -65,7 +62,7 @@ sections = {
 	_id,
 	name,
 	img,
-	parent_id,
+	child_section,
 	products: [] 
 }
 
@@ -80,4 +77,4 @@ website = {
 	recovery_email (encoded)
 }
 
-delays_details = [name, delay]
+delays_details = [_id, name, delay]

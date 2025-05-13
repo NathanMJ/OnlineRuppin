@@ -24,7 +24,8 @@ db.ingredient_changes.insertMany([
 	{_id: 3, change: 'aside'},
 	{_id: 4, change: 'omelette'},
 	{_id: 5, change: 'hard-boiled egg'},
-	{_id: 6, change: 'sunny-side-up egg'}
+	{_id: 6, change: 'sunny-side-up egg'},
+	{_id: 7, change: 'poached eggs'}	
 ])
 
 
@@ -234,6 +235,15 @@ db.products.insertMany([
 
 db.ingredients.insertMany([
 {
+    _id:-1,
+    name: 'basic_ingredient',
+	changes_detail: [ 
+	{change_code: 0},
+	{change_code: 1},
+	{change_code: 2},
+	{change_code: 3} ]
+},
+{
     _id:0,
     name: 'labneh'
 },
@@ -253,7 +263,7 @@ db.ingredients.insertMany([
 	{change_code: 4},
 	{change_code: 5},
 	{change_code: 6}, 
-	{change_code: 7},] 
+	{change_code: 7}] 
 },
 {
     _id: 4,

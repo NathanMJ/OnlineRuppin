@@ -25,12 +25,13 @@ X	get_sauces(id)
 X	get_ingredients_of_products(id)
 	get_full_product(id)
 
+--- Ingredient change
+
+X	set_correct_format_changes
+
 --- Ingredient
 
-	get_changes_ingredient(id)
-
-
-
+X	get_changes_ingredient(id)
 
 ---	Sections
 
@@ -337,7 +338,19 @@ function get_ingredients_of_products(id) {
   printjson(ingredients);
 }
 
+
+
+
+function set_correct_format_changes(change){
+if(!change.price){
+return {...change, price: 0}
+}
+return change
+}
+
+
 function get_changes_ingredient(id){
+
   var ingredient = db.ingredients.findOne({_id: id});
   
   if(!ingredient){
@@ -345,19 +358,19 @@ function get_changes_ingredient(id){
 	return
   }
   
-  var changes = ingredient.changes_detail
+  var changes = ingredient.changes_detail 
+  
   if(!changes){
-	changes = [
-		{change_code: 0, price: 0},
-		{change_code: 1, price: 0},
-		{change_code: 2, price: 0}, 
-		{change_code: 3, price: 0}] 
-	}
+	changes = db.ingredients.findOne({_id:-1}).changes_detail
+  }
   
 var full_changes = []
-changes.forEach(function(change){
 
-})
-  
- 
+changes.forEach(function(change){
+var price = set_correct_format_changes(change).price
+var change_detail = db.ingredient_changes.findOne({_id:change.change_code})
+full_changes.push({price, ...change_detail})
+})  
+
+ return full_changes
 }
