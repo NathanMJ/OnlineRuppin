@@ -22,7 +22,15 @@ X	switch_tables(table_1,table_2)
 
 X	get_sauces(id)
 //Get the sauces of the product (if he has)
-	Get the ingredients of the product
+X	get_ingredients_of_products(id)
+	get_full_product(id)
+
+--- Ingredient
+
+	get_changes_ingredient(id)
+
+
+
 
 ---	Sections
 
@@ -309,10 +317,12 @@ else {
 }
 }
 
-------------	Functions to check 
-
-function productIngredients(id) {
+function get_ingredients_of_products(id) {
   var ingredientsId = db.products.findOne({_id: id}).ingredients;
+  if(!ingredientsId){
+	print('ERR')
+	return
+  }
   var ingredients = [];
 
   ingredientsId.forEach(function(ingredientId) {
@@ -325,4 +335,29 @@ function productIngredients(id) {
     }
   });
   printjson(ingredients);
+}
+
+function get_changes_ingredient(id){
+  var ingredient = db.ingredients.findOne({_id: id});
+  
+  if(!ingredient){
+	print(`Ingredient id : ${id} not found`)
+	return
+  }
+  
+  var changes = ingredient.changes_detail
+  if(!changes){
+	changes = [
+		{change_code: 0, price: 0},
+		{change_code: 1, price: 0},
+		{change_code: 2, price: 0}, 
+		{change_code: 3, price: 0}] 
+	}
+  
+var full_changes = []
+changes.forEach(function(change){
+
+})
+  
+ 
 }

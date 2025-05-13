@@ -18,13 +18,13 @@ db.product_destination.insertMany([
 
 
 db.ingredient_changes.insertMany([
-	{_id: 0, change: 'without', img: ''},
-	{_id: 1, change: 'with', img: ''},
-	{_id: 2, change: 'a lot of', img: ''},
-	{_id: 3, change: 'aside', img: ''},
-	{_id: 4, change: 'omelette', img: ''},
-	{_id: 5, change: 'hard-boiled egg', img: ''},
-	{_id: 6, change: 'sunny-side-up egg', img: ''}
+	{_id: 0, change: 'without'},
+	{_id: 1, change: 'with'},
+	{_id: 2, change: 'a lot of'},
+	{_id: 3, change: 'aside'},
+	{_id: 4, change: 'omelette'},
+	{_id: 5, change: 'hard-boiled egg'},
+	{_id: 6, change: 'sunny-side-up egg'}
 ])
 
 
@@ -156,7 +156,7 @@ db.products.insertMany([
 	img: "https://gregcafe.co.il/wp-content/uploads/2025/01/בורקס-טורקי-scaled.jpg",
 	price: 59.00,
 	description: "Bourekas stuffed with cheeses, served with labneh and olive oil, green tahini and spiced chickpeas, hard-boiled egg, spicy jalapeño spread, crushed tomatoes and olive oil. Served with pickles and fresh vegetables.",
-	ingredient: [0, 1, 2, 3, 4, 5, 6], 
+	ingredients: [0, 1, 2, 3, 4, 5, 6], 
 	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
@@ -165,7 +165,7 @@ db.products.insertMany([
 	img: "https://imageproxy.wolt.com/menu/menu-images/shared/bbcd2fc0-b2d9-11ee-a2ce-2a26bf50e9fb_vafel_americai_2_photoroom.jpg?w=600",
 	price: 61.00,
 	description: "Crispy waffle, sautéed onions and mushrooms in four-cheese sauce, poached eggs, green onion, served with a salad of your choice.",
-	ingredient: [7, 8, {_id: 3, selected: 7}, 9], 
+	ingredients: [7, 8, {_id: 3, selected: 7}, 9], 
 	salads_to_choose: [
 	{ id:0 },
 	{ id:1 },
@@ -178,7 +178,7 @@ db.products.insertMany([
 	img: "https://imageproxy.wolt.com/menu/menu-images/shared/bf8100ce-b2d9-11ee-996c-66c5b47bd167_vafel_norvegi_photoroom.jpg?w=600",
 	price: 74.00,
 	description: "Crispy waffle, smoked salmon, spinach and sautéed onions in butter and cheese sauce, sunny-side-up eggs and green onion, served with a salad of your choice.",
-	ingredient: [10, 11, 7, {_id: 3, selected: 6 }, 9 ],
+	ingredients: [10, 11, 7, {_id: 3, selected: 6 }, 9 ],
 	salads_to_choose: [
 		{ id: 0 },
 		{ id: 1 },
@@ -193,7 +193,7 @@ db.products.insertMany([
 	img: "https://imageproxy.wolt.com/menu/menu-images/shared/e178d684-b2d9-11ee-8482-5e29ceb85658_boker_yevani_photoroom.jpg?w=600",
 	price: 67.00,
 	description: "Sunny-side up eggs served on cheese and spinach tiropita, with almond skordalia, labneh with olive oil, tomato salsa, ricotta with peppers, and Greek salad. (Served without bread)",
-	ingredient: [ { _id:3, selected: 6 }, 12, 0, 13, 14],
+	ingredients: [ { _id:3, selected: 6 }, 12, 0, 13, 14],
 	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
@@ -202,7 +202,7 @@ db.products.insertMany([
 	img: "https://imageproxy.wolt.com/menu/menu-images/shared/e8222ada-b2d9-11ee-b363-a2e21199740d_benedict_photoroom.jpg?w=600",
 	price: 68.00,
 	description: "Brioche, spinach, hollandaise, poached eggs, onion jam, green onion and black pepper. Served with a salad of your choice.",
-	ingredient: [11, 15, {_id: 3, selected: 7}, 16, 9, 17],
+	ingredients: [11, 15, {_id: 3, selected: 7}, 16, 9, 17],
 	adds: [
     { name: "Mushrooms and onions", price: 10 },
     { name: "Smoked salmon", price: 15 }
@@ -221,7 +221,7 @@ db.products.insertMany([
 	img: "https://imageproxy.wolt.com/menu/menu-images/shared/eba59912-b2d9-11ee-a7e8-e664ddb694a7_brish_tsarfati_photoroom.jpg?w=600",
 	price: 68.00,
 	description: "Brioche, truffle butter, mushroom Alfredo sauce, mozzarella cheese, sunny-side-up eggs and green onion. Served with a personal salad.",
-	ingredient: [18, 19, {_id: 3, selected: 6}, 9],
+	ingredients: [18, 19, {_id: 3, selected: 6}, 9],
 	salads_to_choose: [
 		{ id: 0 },
 		{ id: 1 },
@@ -235,30 +235,15 @@ db.products.insertMany([
 db.ingredients.insertMany([
 {
     _id:0,
-    name: 'labneh',
-	changes_detail : [ 
-	{change_code:0},
-	{change_code:1},
-	{change_code:2},
-	{change_code:3} ]
+    name: 'labneh'
 },
 {
     _id: 1,
-    name:"lehina",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name:"lehina"] 
 },
 {
     _id: 2,
-    name:"spiced chickpeas",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name:"spiced chickpeas" 
 },
 {
     _id: 3,
@@ -272,57 +257,27 @@ db.ingredients.insertMany([
 },
 {
     _id: 4,
-    name: "spicy jalapeño spread",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name: "spicy jalapeño spread"
 },
 {
     _id: 5,
-    name: "crushed tomatoes",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name: "crushed tomatoes"
 },
 {
     _id: 6,
-    name: "pickles",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name: "pickles"
 },
 {
     _id: 7,
-    name: "onions",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name: "onions"
 },
 {
     _id: 8,
-    name: "mushroom",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name: "mushroom" 
 },
 {
     _id: 9,
-    name: "green onion",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2},
-	{change_code: 3} ] 
+    name: "green onion"
 },
 {
     _id: 10,
@@ -334,84 +289,39 @@ db.ingredients.insertMany([
 },
 {
     _id: 11,
-    name: "spinach",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "spinach"
 },
 {
     _id: 12,
-    name: "cheese",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "cheese"
 },
 {
     _id: 13,
-    name: "tomato salsa",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "tomato salsa"
 },
 {
     _id: 14,
-    name: "ricotta with peppers",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "ricotta with peppers"
 },
 {
     _id: 15,
-    name: "hollandaise",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "hollandaise"
 },
 {
     _id: 16,
-    name: "onion jam",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "onion jam"
 },
 {
     _id: 17,
-    name: "black pepper",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "black pepper"
 },
 {
     _id: 18,
-    name: "mushroom Alfredo sauce",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "mushroom Alfredo sauce"
 },
 {
     _id: 19,
-    name: "mozzarella cheese",
-	changes_detail : [ 
-	{change_code: 0},
-	{change_code: 1},
-	{change_code: 2}, 
-	{change_code: 3}] 
+    name: "mozzarella cheese"
 }
 ])
 
