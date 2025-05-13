@@ -23,7 +23,7 @@ X	switch_tables(table_1,table_2)
 X	get_sauces(id)
 //Get the sauces of the product (if he has)
 X	get_ingredients_of_products(id)
-	get_full_product(id)
+	get_product(id)
 
 --- Ingredient change
 
@@ -32,6 +32,7 @@ X	set_correct_format_changes
 --- Ingredient
 
 X	get_changes_ingredient(id)
+X	get_ingredient(id)
 
 ---	Sections
 
@@ -373,4 +374,46 @@ full_changes.push({price, ...change_detail})
 })  
 
  return full_changes
+}
+
+
+function get_ingredient(id){
+var ingredient = db.ingredients.findOne({_id:id})
+if(!ingredient){
+	print(`Ingredient with id : ${id} does not exist`)
+return
+}
+
+var changes = get_changes_ingredient(id)
+
+delete ingredient.changes_detail
+
+return {...ingredient, changes}
+}
+
+
+function get_product(id){
+var product = db.products.findOne({_id:id})
+if(!product){
+print(`Product with id : ${id} does not exist`)
+return 
+}
+
+var ingredients = []
+
+product.ingredients.forEach(function(ingredientId){
+if(ingredientId._id){
+var ingredient = get_ingredient(ingredientId._id)
+ingredients.push(ingredient)
+}
+else{
+var ingredient = get_ingredient(ingredientId)
+ingredients.push(ingredient)
+}
+
+})
+
+delete product.ingredients
+
+return { ...product, ingredients }
 }
