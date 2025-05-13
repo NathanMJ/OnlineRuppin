@@ -22,9 +22,9 @@ db.ingredient_changes.insertMany([
 	{_id: 1, change: 'with', img: ''},
 	{_id: 2, change: 'a lot of', img: ''},
 	{_id: 3, change: 'aside', img: ''},
-	{_id: 3, change: 'omelette', img: ''},
-	{_id: 3, change: 'hard-boiled egg', img: ''},
-	{_id: 3, change: 'fried egg', img: ''}
+	{_id: 4, change: 'omelette', img: ''},
+	{_id: 5, change: 'hard-boiled egg', img: ''},
+	{_id: 6, change: 'fried egg', img: ''}
 ])
 
 
@@ -156,7 +156,7 @@ db.products.insertMany([
 	img: "https://gregcafe.co.il/wp-content/uploads/2025/01/בורקס-טורקי-scaled.jpg",
 	price: 59.00,
 	description: "Bourekas stuffed with cheeses, served with labneh and olive oil, green tahini and spiced chickpeas, hard-boiled egg, spicy jalapeño spread, crushed tomatoes and olive oil. Served with pickles and fresh vegetables.",
-	ingredient: [], 
+	ingredient: [0, 1], 
 	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
@@ -193,7 +193,7 @@ db.products.insertMany([
 	img: "https://imageproxy.wolt.com/menu/menu-images/shared/e178d684-b2d9-11ee-8482-5e29ceb85658_boker_yevani_photoroom.jpg?w=600",
 	price: 67.00,
 	description: "Sunny-side up eggs served on cheese and spinach tiropita, with almond skordalia, labneh with olive oil, tomato salsa, ricotta with peppers, and Greek salad. (Served without bread)",
-	ingredient: [],
+	ingredient: [0,],
 	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
@@ -232,7 +232,50 @@ db.products.insertMany([
 }])
 
 
-db.ingredients.insertMany([])
+db.ingredients.insertMany([
+{
+    _id:0,
+    name: 'labneh',
+	changes_detail : [ 
+	{change_code:0, price:0},
+	{change_code:1, price:0},
+	{change_code:2, price:0},
+	{change_code:3, price:0} ]
+},
+{
+    _id: 1,
+    name:"lehina",
+	changes_detail : [ 
+	{change_code: 0, price: 0},
+	{change_code: 1, price: 0},
+	{change_code: 2, price: 0},
+	{change_code: 3, price: 0} ] 
+},
+{
+    _id: 2,
+    name:"spiced chickpeas",
+	changes_detail : [ 
+	{change_code: 0, price: 0},
+	{change_code: 1, price: 0},
+	{change_code: 2, price: 0},
+	{change_code: 3, price: 0} ] 
+},
+{
+    _id: 3,
+    name: "egg",
+	changes_detail: [ 
+	{change_code: 0, price: 0},
+	{change_code: 4, price: 0},
+	{change_code: 5, price: 0},
+	{change_code: 6, price: 0} ] 
+},
+{
+    _id,
+    name,
+	changes_detail : [ 
+	{change_code, price} ] 
+}
+])
 
 
 

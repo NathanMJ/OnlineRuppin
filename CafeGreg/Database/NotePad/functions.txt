@@ -21,6 +21,7 @@ X	switch_tables(table_1,table_2)
 ---	Products
 
 X	get_sauces(id)
+//Get the sauces of the product (if he has)
 	Get the ingredients of the product
 
 ---	Sections
