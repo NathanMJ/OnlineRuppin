@@ -23,7 +23,8 @@ X	switch_tables(table_1,table_2)
 X	get_sauces(id)
 //Get the sauces of the product (if he has)
 X	get_ingredients_of_products(id)
-	get_product(id)
+X	get_product(id)
+//Not really finished, miss the bread, sauce, salad to add
 
 --- Ingredient change
 
@@ -402,18 +403,21 @@ return
 var ingredients = []
 
 product.ingredients.forEach(function(ingredientId){
+
 if(ingredientId._id){
 var ingredient = get_ingredient(ingredientId._id)
+ingredient.change_selected = ingredientId.selected
 ingredients.push(ingredient)
 }
 else{
 var ingredient = get_ingredient(ingredientId)
+ingredient.change_selected = 1
 ingredients.push(ingredient)
 }
 
 })
 
 delete product.ingredients
-
+print(ingredients)
 return { ...product, ingredients }
 }
