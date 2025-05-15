@@ -51,9 +51,10 @@ X	get_from_section(id)
 
 --- Order 
 
-X	order_to_table(order_id, table_id)
-	get_order_for_bar
-	get_order_for_kitchen
+	add_order_product(product_id, table_id,changeList)
+X	add_order_to_table(order_id, table_id)
+	get_orders_for_bar
+	get_orders_for_kitchen
 	Get an order history according to an id
 	Change the status of an order 
 	
@@ -472,29 +473,16 @@ return salads
 
 
 function add_order_to_table(order_id, table_id){
-/*
-var order = db.order.find({_id:order_id})
-if(!order){
-	print(`No order with id ${order_id} was found`)
-	return
-}
-*/
-
+	
 var table = db.tables.findOne({ _id: table_id})
 
 if(!table){
 	db.tables.insertOne({_id:table_id, orders:[order_id]})
 }
 else{
-
-	//if order already exist return true
-	if(table.orders.includes(order_id)){
-		print('Order already exist')
-		return
-	}
 	
 	//if it's not the first order
-	if(tables.orders){
+	if(table.orders){
 		db.tables.updateOne({_id:table_id},{$push:{orders:order_id}})
 	}
 	else {	//if it's the first order
@@ -503,5 +491,30 @@ else{
 }
 
 print('Order is added to the table')
-return 
+return true
+}
+
+
+function add_order_product(product_id, table_id, change_list){
+//check that the product exist
+var products_exist = db.products.find({_id:product_id})
+
+if(!products_exist){
+	print(`Product with id ${product_id} does not exist`)
+	return
+}
+
+var temp = db.orders.find().sort({ _id: -1 }).limit(1).toArray()[0]._id
+var id = (temp ? temp + 1 : 0) 
+var order = {_id:id, product_id}
+
+//add order in the collection
+db.orders.insertOne({...order})
+
+if(change_list){
+	order = {...order, change_list}
+}
+//add order to the table
+add_order_to_table(id, table_id)
+print('Ordered successfully')
 }
