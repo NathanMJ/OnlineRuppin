@@ -1,28 +1,20 @@
-
-order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
-
-order_status_history = {
-	order_id,
-	status_code,
-	time_set
+customer = {
+	_id: tz,
+	contact: email/phone,
+	name
 }
 
-order = {
-	_id,
-	product_id,
-	changes: [
-		{ ingredients_id, code_change }
-	]
-}
-
-ingredient_change = {_id , change}
 
 ingredient = {
     _id,
     name,
+	img,
 	changes_detail : [ {change_code, price} ] (optional)
 }
 	
+	
+
+ingredient_change = {_id , change}
 
 product = {
     _id,
@@ -34,22 +26,34 @@ product = {
 	destination
 }
 
-product_destination = ['kitchen','bar']
 
-customer = {
-	_id: tz,
-	contact: email/phone,
-	name
+product_destination = {
+	_id,
+	destination
 }
 
-order_history = {
+
+order = {
+	_id,
+	product_id,
+	changes: [
+		{ ingredient_id, code_change }
+	]
+}
+
+
+order_status = ['pending','ordered','in preparation','ready','received','paid','canceled']
+
+
+order_status_history = {
+	order_id,
+	status_code,
+	time_change
+}
+
+customer_order_history = {
 	customers_id: [],
 	orders_id: []
-}
-
-autorizations_sended = {
-	customer_id,
-	sended_time
 }
 
 table = {
@@ -57,6 +61,13 @@ table = {
 	customers: [], can be empty if the customer dont want to log 
 	orders: []
 }
+
+
+autorizations_sendeds = {
+	customer_id,
+	sended_time
+}
+
 
 sections = {
 	_id,
@@ -66,7 +77,7 @@ sections = {
 	products: [] 
 }
 
-if parent_id does not exist these section are in the main so show them
+if child does not exist these section are in the main so show them
 if exist 
 	if the array products exist show products
 	if not exist show every section with the parent_id of the id 

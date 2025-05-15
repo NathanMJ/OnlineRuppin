@@ -158,7 +158,7 @@ db.products.insertMany([
 	price: 59.00,
 	description: "Bourekas stuffed with cheeses, served with labneh and olive oil, green tahini and spiced chickpeas, hard-boiled egg, spicy jalapeño spread, crushed tomatoes and olive oil. Served with pickles and fresh vegetables.",
 	ingredients: [0, 1, 2, 3, 4, 5, 6], 
-	sauces_to_add: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
 	_id: 1,
@@ -167,11 +167,7 @@ db.products.insertMany([
 	price: 61.00,
 	description: "Crispy waffle, sautéed onions and mushrooms in four-cheese sauce, poached eggs, green onion, served with a salad of your choice.",
 	ingredients: [7, 8, {_id: 3, selected: 7}, 9], 
-	salads_to_choose: [
-	{ id:0 },
-	{ id:1 },
-	{ id:2 },
-	{ id:3, price: 15} ] 
+	salads: [ 0,1,2 ,{ _id: 3, price: 15 } ]
 },
 {
 	_id: 2,
@@ -180,12 +176,7 @@ db.products.insertMany([
 	price: 74.00,
 	description: "Crispy waffle, smoked salmon, spinach and sautéed onions in butter and cheese sauce, sunny-side-up eggs and green onion, served with a salad of your choice.",
 	ingredients: [10, 11, 7, {_id: 3, selected: 6 }, 9 ],
-	salads_to_choose: [
-		{ id: 0 },
-		{ id: 1 },
-		{ id: 2 },
-		{ id: 3, price: 15 }
-	],
+	salads: [ 0,1,2, { _id: 3, price: 15 } ],
 	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
@@ -208,12 +199,7 @@ db.products.insertMany([
     { name: "Mushrooms and onions", price: 10 },
     { name: "Smoked salmon", price: 15 }
 	],
-	salads_to_choose: [
-		{ id: 0 },
-		{ id: 1 },
-		{ id: 2 },
-		{ id: 3, price: 15 }
-	],
+	salads: [ 0,1,2,{ _id: 3, price: 15 } ],
 	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 },
 {
@@ -223,12 +209,7 @@ db.products.insertMany([
 	price: 68.00,
 	description: "Brioche, truffle butter, mushroom Alfredo sauce, mozzarella cheese, sunny-side-up eggs and green onion. Served with a personal salad.",
 	ingredients: [18, 19, {_id: 3, selected: 6}, 9],
-	salads_to_choose: [
-		{ id: 0 },
-		{ id: 1 },
-		{ id: 2 },
-		{ id: 3, price: 15 }
-	],
+	salads: [ 0 ,1 , 2 ,{ _id: 3, price: 15 } ],
 	sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 }])
 
@@ -357,7 +338,7 @@ db.sauces.insertMany([
 			{ _id: 16, name: "Spicy pepper salsa"}
 ])
 
-db.salades.insertMany([
+db.salads.insertMany([
 	{ _id: 0, 
 	name: "No salad"},
 	{ _id: 1, 

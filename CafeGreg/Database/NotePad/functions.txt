@@ -23,6 +23,7 @@ X	switch_tables(table_1,table_2)
 X	get_sauces(id)
 //Get the sauces of the product (if he has)
 X	get_ingredients_of_products(id)
+	get_salads(id)
 X	get_product(id)
 //Not really finished, miss the bread, sauce, salad to add
 
@@ -241,7 +242,7 @@ if(!product){
 var sauces = product.sauces
 if(!sauces || sauces.length === 0){
 	print(`${product.name} doesn't have sauces`)
-	return []
+	return 
 }
 
 var everySauces = []
@@ -320,25 +321,6 @@ else {
 }
 }
 
-function get_ingredients_of_products(id) {
-  var ingredientsId = db.products.findOne({_id: id}).ingredients;
-  if(!ingredientsId){
-	print('ERR')
-	return
-  }
-  var ingredients = [];
-
-  ingredientsId.forEach(function(ingredientId) {
-    var tempAdd = db.ingredients.findOne({_id: ingredientId});
-
-    if (!tempAdd) {
-      print('ERR: Ingredient with ID ' + ingredientId + ' not found');
-    } else {
-      ingredients.push(tempAdd);
-    }
-  });
-  printjson(ingredients);
-}
 
 
 
@@ -349,6 +331,8 @@ return {...change, price: 0}
 }
 return change
 }
+
+
 
 
 function get_changes_ingredient(id){
@@ -378,6 +362,8 @@ full_changes.push({price, ...change_detail})
 }
 
 
+
+
 function get_ingredient(id){
 var ingredient = db.ingredients.findOne({_id:id})
 if(!ingredient){
@@ -393,16 +379,11 @@ return {...ingredient, changes}
 }
 
 
-function get_product(id){
-var product = db.products.findOne({_id:id})
-if(!product){
-print(`Product with id : ${id} does not exist`)
-return 
-}
 
+function get_ingredients_of_product(ingredientsList){
 var ingredients = []
 
-product.ingredients.forEach(function(ingredientId){
+ingredientsList.forEach(function(ingredientId){
 
 if(ingredientId._id){
 var ingredient = get_ingredient(ingredientId._id)
@@ -414,10 +395,76 @@ var ingredient = get_ingredient(ingredientId)
 ingredient.change_selected = 1
 ingredients.push(ingredient)
 }
+})
+return ingredients
+}
 
+
+
+function get_product(id){
+var product = db.products.findOne({_id:id})
+if(!product){
+print(`Product with id : ${id} does not exist`)
+return 
+}
+
+//get ingredients
+var ingredients = get_ingredients_of_product(product.ingredients)
+
+
+//remove ingredients to add them
+delete product.ingredients
+product = {...product, ingredients}
+
+//get salads
+
+if(product.salads){
+	//get sauces
+	var salads = get_salads(product.salads)
+	
+	//remove salads to add them
+	delete product.salads
+	if(salads){
+		product = {...product, salads}
+	}
+}
+
+
+
+if(product.sauces){
+	//get sauces
+	var sauces = get_sauces(id)
+	
+	//remove sauces to add them at the end
+	delete product.sauces
+	if(sauces){
+		product = {...product, sauces}
+	}
+}
+
+
+
+
+
+return product
+}
+
+
+
+
+
+function get_salads(saladList){
+var salads = []
+if(!saladList){
+	return
+}
+saladList.forEach(function(element){
+	var id = (element._id ? element._id : element)
+	var salad = db.salads.findOne({_id:id})
+	var price = (element.price ? element.price : 0)
+	salads.push({...salad, price})
 })
 
-delete product.ingredients
-print(ingredients)
-return { ...product, ingredients }
+return salads
 }
+
