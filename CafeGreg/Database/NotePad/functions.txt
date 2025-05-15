@@ -20,10 +20,8 @@ X	switch_tables(table_1,table_2)
 
 ---	Products
 
-X	get_sauces(id)
 //Get the sauces of the product (if he has)
-X	get_ingredients_of_products(id)
-	get_salads(id)
+X	get_ingredients_of_product(ingredientsList)
 X	get_product(id)
 //Not really finished, miss the bread, sauce, salad to add
 
@@ -36,6 +34,14 @@ X	set_correct_format_changes
 X	get_changes_ingredient(id)
 X	get_ingredient(id)
 
+---	Salads
+
+X	get_salads(saladList)
+
+--- Sauces
+
+X	get_sauces(id)
+
 ---	Sections
 
 X	get_products_from_section(id)
@@ -45,6 +51,9 @@ X	get_from_section(id)
 
 --- Order 
 
+X	order_to_table(order_id, table_id)
+	get_order_for_bar
+	get_order_for_kitchen
 	Get an order history according to an id
 	Change the status of an order 
 	
@@ -442,15 +451,8 @@ if(product.sauces){
 	}
 }
 
-
-
-
-
 return product
 }
-
-
-
 
 
 function get_salads(saladList){
@@ -468,3 +470,38 @@ saladList.forEach(function(element){
 return salads
 }
 
+
+function add_order_to_table(order_id, table_id){
+/*
+var order = db.order.find({_id:order_id})
+if(!order){
+	print(`No order with id ${order_id} was found`)
+	return
+}
+*/
+
+var table = db.tables.findOne({ _id: table_id})
+
+if(!table){
+	db.tables.insertOne({_id:table_id, orders:[order_id]})
+}
+else{
+
+	//if order already exist return true
+	if(table.orders.includes(order_id)){
+		print('Order already exist')
+		return
+	}
+	
+	//if it's not the first order
+	if(tables.orders){
+		db.tables.updateOne({_id:table_id},{$push:{orders:order_id}})
+	}
+	else {	//if it's the first order
+		db.tables.updateOne({_id:table_id},{$set:{orders:[order_id]}})
+	}	
+}
+
+print('Order is added to the table')
+return 
+}

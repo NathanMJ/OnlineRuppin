@@ -51,7 +51,7 @@ order_status_history = {
 	time_change
 }
 
-customer_order_history = {
+customers_order_history = {
 	customers_id: [],
 	orders_id: []
 }

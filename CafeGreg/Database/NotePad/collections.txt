@@ -9,8 +9,8 @@ X	order_status_history
 X	ingredients
 X	products
 XX	customers
-X	order_history
-X	autorizations_sended
+X	customers_order_history
+X	autorizations_sendeds
 XX	tables
 XX	section
 XX	order_status
@@ -18,8 +18,9 @@ XX	ingredient_changes
 XX	product_destination
 XX	website
 X	delays_details
-X	sauces
+XX	sauces
 X	breads
+XX	salads
 
 //add ranks and optional comment
 
