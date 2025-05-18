@@ -63,15 +63,52 @@ X	add_order_to_table(order_id, table_id)
 
 
 
+function correctParams(params) {
+  let missing = false;
 
+  function check(params) {
+    if (!Array.isArray(params)) {
+      if (params === null || params === undefined) {
+        missing = true;
+        return false;
+      }
+      return true;
+    }
 
+    for (const param of params) {
+      if (param === null || param === undefined) {
+        missing = true;
+        return false;
+      }
 
+      if (typeof param === "object" && !Array.isArray(param)) {
+        if (!check(Object.values(param))) {
+          missing = true;
+          return false;
+        }
+      }
+
+      if (Array.isArray(param)) {
+        if (!check(param)) {
+          missing = true;
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  const result = check(params);
+  if (missing) {
+    print("A parameter is missing");
+  }
+  return result;
+}
 
 
 
 function customer_register(id, contact){
-	if(!id || !contact){
-		print("A parameter is missing")
+	if(!correctParams([id,contact])){
 		return;
 	}
 	var exist = db.customers.findOne({_id:id,contact})
@@ -88,6 +125,10 @@ function customer_register(id, contact){
 }
 
 function add_customer_to_table(id, table){	
+	if(!correctParams([id,table])){
+		return
+	}
+
 	//if the table exist
 	var tableExist = db.tables.findOne({_id:table})
 	if(tableExist){		
@@ -108,8 +149,7 @@ function add_customer_to_table(id, table){
 }
 
 function customer_login(id, table){
-	if(!id || !table){
-		print("A parameter is missing")
+	if(!correctParams([id,table])){
 		return;
 	}	
 	var customer = db.customers.findOne({_id:id})
@@ -125,6 +165,9 @@ function customer_login(id, table){
 
 
 function login_website(login, password){
+	if(!correctParams([login,password])){
+		return
+	}
 	var log = db.website.findOne({login, password})
 	if(log){
 		print('Connecting')
@@ -136,6 +179,9 @@ function login_website(login, password){
 
 
 function change_login_website(login, password){
+	if(!correctParams([login,password])){
+		return
+	}
     if (login) {
         var precLog = db.website.findOne().login;
         db.website.updateOne({}, { $set: { login: login } });
@@ -149,6 +195,9 @@ function change_login_website(login, password){
 }
 
 function customer_is_connected(id){
+	if(!correctParams(id)){
+		return
+	}
 	if(!id){
 		print('Id is missing')
 		return;
@@ -158,24 +207,25 @@ function customer_is_connected(id){
 }
 
 function table_exist(id){
-	if(!id){
-		print('Id is missing')
-		return false;
+	if(!correctParams(id)){
+		return
 	}
 	var table = db.tables.findOne({_id:id})
 	return table ? true : false;
 }
 
 function erase_customer_of_the_table(customer, table){
-	if(!customer || !table){
-		print('Parameter is missing')
+	if(!correctParams([customer,table])){
 		return
-	}	
+	}
 	db.tables.updateOne({_id: table},{$pull:{ customers: customer}})
 	print(`Customer ${customer} has been removed from the table ${table}`)
 }
 
 function transfer_customer_to_table(customer, table){
+	if(!correctParams([customer,table])){
+		return
+	}
 	//check if the customer is connected
 	var res = customer_is_connected(customer)
 	
@@ -193,6 +243,9 @@ function transfer_customer_to_table(customer, table){
 
 
 function switch_tables(table_1,table_2){
+	if(!correctParams([table_1,table_2])){
+		return
+	}
 
 var tempTables = [
 	db.tables.findOne({_id:table_1}),
@@ -223,10 +276,9 @@ print(`The table ${table_1} and the table ${table_2} have been switched`)
 }
 
 function send_authorization(id) {
-if(!id){
-	print('Id is missing')
-	return
-}
+	if(!correctParams(id)){
+		return
+	}
   var exist = db.authorization_sended.findOne({ _id: id });
   if (exist) {
     print("Authorization already exists");
@@ -243,6 +295,10 @@ if(!id){
 }
 
 function get_sauces(id){
+
+	if(!correctParams(id)){
+		return
+	}
 var product = db.products.findOne({_id:id})
 if(!product){
 	print(`Product with id : ${id} does not exist`)
@@ -270,6 +326,10 @@ return everySauces
 }
 
 function get_products_from_section(id){
+
+if(!correctParams(id)){
+	return
+}
 var products = db.sections.findOne({_id:id}).products
 if(!products){
 	print('No products found')
@@ -290,6 +350,10 @@ return arrProducts
 
 
 function get_sections_from_section(id){
+
+if(!correctParams(id)){
+	return
+}
 var sectionsId = db.sections.findOne({_id:id}).child_sections
 if(!sectionsId){
 	print('No sections found')
@@ -312,6 +376,9 @@ return sectionsArr
 
 function get_from_section(id){
 
+if(!correctParams(id)){
+	return
+}
 var products = get_products_from_section(id)
 if(products){
 	return {type: "product", products}
@@ -342,11 +409,11 @@ return {...change, price: 0}
 return change
 }
 
-
-
-
 function get_changes_ingredient(id){
 
+if(!correctParams(id)){
+	return
+}
   var ingredient = db.ingredients.findOne({_id: id});
   
   if(!ingredient){
@@ -375,6 +442,9 @@ full_changes.push({price, ...change_detail})
 
 
 function get_ingredient(id){
+if(!correctParams(id)){
+	return
+}
 var ingredient = db.ingredients.findOne({_id:id})
 if(!ingredient){
 	print(`Ingredient with id : ${id} does not exist`)
@@ -391,6 +461,9 @@ return {...ingredient, changes}
 
 
 function get_ingredients_of_product(ingredientsList){
+if(!correctParams(ingredientsList)){
+	return
+}
 var ingredients = []
 
 ingredientsList.forEach(function(ingredientId){
@@ -412,6 +485,9 @@ return ingredients
 
 
 function get_product(id){
+if(!correctParams(id)){
+	return
+}
 var product = db.products.findOne({_id:id})
 if(!product){
 print(`Product with id : ${id} does not exist`)
