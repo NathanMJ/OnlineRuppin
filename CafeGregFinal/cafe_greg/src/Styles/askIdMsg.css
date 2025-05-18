@@ -1,0 +1,73 @@
+.askIdMessage{
+    position: fixed;
+    background-color: aliceblue;
+    padding: 15px;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    flex-direction: column;
+    gap: 40px;
+    border-radius: 20px;
+    border: 5px solid rgb(17, 19, 107);
+    max-width: 450px;
+}
+
+
+
+.backgroundAskIdMessage{
+    background-color: rgba(0, 0, 0, 0);
+    position:fixed;
+    width: 500vw;
+    height: 500vh;
+    transform: translate(-25%,-25%);
+    z-index: -1;
+}
+
+.askIdMessage .cancel{
+    position:absolute;
+    right: 0px;
+    top: 0px;
+    transform: translate(50%,-50%);
+}
+
+.askIdMessage .cancel:hover,
+.askIdMessage .validation:hover{
+    cursor: pointer;
+}
+
+.inputContainer{
+    display:flex;
+    flex-direction: row;
+    gap: 25px;
+} 
+.inputContainer input{
+    width: 100%;
+    font-size: calc(var(--font-size-h1)/3);
+    text-align: center;
+} 
+
+.askIdMessage img{
+    width: 70px;
+}
+
+.shake{
+    animation: shake 0.20s ease-in-out 2 forwards;
+}
+
+@keyframes shake {
+    0%,50%,100%{
+        transform: translate(-50%,-50%);
+    }
+
+    /*left*/
+    25%{
+        transform: translate(-60%,-50%);
+    }
+    /*right*/
+    75%{
+        transform: translate(-40%,-50%);
+    }
+
+
+}

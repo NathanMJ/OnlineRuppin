@@ -1,0 +1,65 @@
+.workMain {
+    display: grid;
+    grid-template-areas: "kitchen service bar"
+        "kitchen manager bar";
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100vw;
+    height: 100vh;
+}
+
+
+.workMain .serviceSide,
+.workMain .kitchenSide,
+.workMain .barSide,
+.workMain .managerSide{
+    background-position: center;    
+    background-size: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.workMain .serviceSide:hover,
+.workMain .kitchenSide:hover,
+.workMain .barSide:hover,
+.workMain .managerSide:hover{
+    cursor: pointer;
+}
+
+.workMain .serviceSide {
+    background-image: url('../Pictures/Enter-stop-service.jpg');
+    grid-area: service;
+}
+
+.workMain .kitchenSide {
+    background-image: url('../Pictures/Kitchen-side.jpg');
+    grid-area: kitchen;
+}
+
+.workMain .barSide {
+    background-image: url('../Pictures/Bar-side.jpg');
+    grid-area: bar;
+}
+
+.workMain .managerSide {
+    background-image: url('../Pictures/Manager-side.jpg');
+    grid-area: manager;
+}
+
+
+.workMain .serviceSide h3,
+.workMain .kitchenSide h3,
+.workMain .barSide h3,
+.workMain .managerSide h3{
+    text-align: center;
+    background-color: aliceblue;
+    padding: 15px;
+    border-radius: 15px;
+    width: 50%;
+}
+
+.workMain .backButton {
+    bottom: 1vh;
+    right: 1vh;
+}

@@ -1,0 +1,33 @@
+.sideChoice{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+}
+
+.sideChoice .cafeSide:hover,
+.sideChoice .workSide:hover{
+    cursor: pointer;
+}
+
+.sideChoice .cafeSide{
+    background-image: url('../Pictures/Cafe-side.jpg');
+}
+
+.sideChoice .workSide{
+    background-image: url('../Pictures/Work-side.jpg');
+}
+
+.sideChoice div{
+    background-position: center;    
+    background-size: cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sideChoice div h2{
+    background-color: aliceblue;
+    padding: 15px;
+    border-radius: 15px;
+}

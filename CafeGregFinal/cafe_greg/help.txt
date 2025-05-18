@@ -1,0 +1,12 @@
+If you got an error with a change name : 
+
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Recurse -Force .vite
+Remove-Item -Recurse -Force .cache
+Remove-Item -Recurse -Force dist
+
+
+and 
+
+npm install
+npm run dev
