@@ -1,9 +1,5 @@
 export default function ReturnButton(props) {
 
-  const returnButton = () => {
-    props.returnButton()
-  }
-
   return (
     <div style={{
       position: 'fixed',

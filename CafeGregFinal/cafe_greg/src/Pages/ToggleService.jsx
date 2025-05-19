@@ -139,7 +139,7 @@ const totalTime = (start, pause) => {
           </tbody>
         )))}
       </table>
-            <ReturnButton bottom={'3vh'} left={'3vh'} onClick={() => props.goto('/workMain')}></ReturnButton>  
+            <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={()=>props.goto('/workMain')}></ReturnButton>  
     </div>
   );
 }
