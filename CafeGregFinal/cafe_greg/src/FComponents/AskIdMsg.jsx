@@ -13,7 +13,7 @@ export default function AskIdMsg(props) {
         if(isValid){
             //return the id to the parent component
             //if the id is valid, call the function to hide the message
-
+            props.goToWithId(id)
             //if the id is not valide, call the function "wrongId"
             props.hideMsg()
         }

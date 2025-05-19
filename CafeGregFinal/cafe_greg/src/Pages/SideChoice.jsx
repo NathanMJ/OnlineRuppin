@@ -1,4 +1,4 @@
-import ReturnButton from "../assets/FComponents/ReturnButton"
+import ReturnButton from "../FComponents/ReturnButton"
 
 export default function sideChoice(props) {
     
