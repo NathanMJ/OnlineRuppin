@@ -2,7 +2,7 @@ export default function ReturnButton(props) {
 
   return (
     <div style={{
-      position: 'fixed',
+      position: 'absolute',
       ...(props.top !== undefined && { top: props.top }),
       ...(props.bottom !== undefined && { bottom: props.bottom }),
       ...(props.left !== undefined && { left: props.left }),

@@ -4,6 +4,7 @@ import LoginWebsite from './Pages/WebsiteLogin.jsx'
 import WorkMain from './Pages/WorkMain.jsx'
 import SideChoice from './Pages/SideChoice.jsx'
 import ToggleService from './Pages/ToggleService.jsx'
+import CafeMain from './Pages/CafeMain.jsx'
 
 function App() {
 
@@ -21,6 +22,7 @@ function App() {
           <Route path='/sideChoice' element={<SideChoice goto={goto}/>}></Route>
           <Route path='/workMain' element={<WorkMain goto={goto}/>}></Route>
           <Route path='/toggleService' element={<ToggleService goto={goto}/>}></Route>
+          <Route path='/cafeMain' element={<CafeMain goto={goto}/>}></Route>
         </Routes>
       </div>
     </>

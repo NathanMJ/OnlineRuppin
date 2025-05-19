@@ -1,0 +1,8 @@
+.cafeMain{
+    display: flex;
+}
+
+.cafeMain .leftSide{
+    width: 20vw;
+    min-width: 250px;
+}
