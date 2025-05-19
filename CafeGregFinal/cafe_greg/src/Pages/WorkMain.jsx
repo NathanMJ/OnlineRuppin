@@ -50,6 +50,12 @@ export default function WorkMain(props) {
     const hideMsg = () => {
         setShow(false);
     }
+
+    const returnButton = () => {
+        props.goto('/sideChoice')
+        alert()
+    }
+
     return (
         <div className="workMain">            
         <div className="serviceSide"
@@ -64,7 +70,7 @@ export default function WorkMain(props) {
             <div className="managerSide"
             onClick={() => clickOnField('manager')}>
                 <h3>Manager side</h3></div>
-            <ReturnButton bottom={'3vh'} left={'3vh'}/>
+            <ReturnButton returnButton={returnButton} bottom={'3vh'} left={'3vh'}/>
             <AskIdMsg goToWithId={goToWithId} sendId={receiveId} showMsg={showMsg} hideMsg={hideMsg} show={show}></AskIdMsg>
         </div>
     )

@@ -1,5 +1,9 @@
 export default function ReturnButton(props) {
 
+  const returnButton = () => {
+    props.returnButton()
+  }
+
   return (
     <div style={{
       position: 'fixed',
@@ -13,8 +17,9 @@ export default function ReturnButton(props) {
       padding: '1vh',
       borderRadius: '20px',
       border: '5px solid black',
-      cursor: 'pointer',
-    }}>
+      cursor: 'pointer'
+    }}
+    onClick={props.returnButton}>
       Return
     </div>
   )

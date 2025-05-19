@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { tempTimeWorker, tempWorkers } from "../tempDB";
 import { useLocation } from "react-router-dom";
+import ReturnButton from "../FComponents/ReturnButton.jsx";
 
-export default function ToggleService() {
+export default function ToggleService(props) {
   //TO DO : 
   // Check if the current id is working or not 
   // Set the button according to the current status
@@ -136,9 +137,9 @@ const totalTime = (start, pause) => {
               <td>{totalTime(time.startTime,time.pauseTime)}</td>
             </tr>
           </tbody>
-
         )))}
       </table>
+            <ReturnButton bottom={'3vh'} left={'3vh'} onClick={() => props.goto('/workMain')}></ReturnButton>  
     </div>
   );
 }

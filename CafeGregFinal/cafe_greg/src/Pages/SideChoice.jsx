@@ -9,10 +9,11 @@ export default function sideChoice(props) {
     }
 
     return (
-        <body className="sideChoice">
+        
+        <div className="sideChoice">
             <div className="cafeSide"><h2>Cafe Side</h2></div>
             <div onClick={()=>props.goto('workMain')} className="workSide"><h2>Work Side</h2></div>
-            <ReturnButton bottom={'3vh'} left={'3vh'}></ReturnButton>
-        </body>
+            <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={returnButton}></ReturnButton>
+        </div>
     )
 }
