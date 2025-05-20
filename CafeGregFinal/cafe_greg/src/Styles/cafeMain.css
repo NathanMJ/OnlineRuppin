@@ -1,0 +1,42 @@
+.cafeMain {
+    display: grid;
+    grid-template-columns: minmax(200px, 1fr) 3fr;
+    height: 100vh;
+}
+
+.cafeMain .leftSide {
+    height: 100vh;
+}
+
+
+.cafeMain .tableSide {
+    position: relative;
+    height: 100vh;
+}
+
+.cafeMain .tableSide .tables {
+    grid-template-columns: repeat(auto-fit, 250px);
+    display: grid;
+}
+
+.cafeMain .tableSide .table {
+    width: 20vh;
+    position: relative;
+}
+
+.cafeMain .tableSide .table img {
+    width: 20vh;
+}
+
+.cafeMain .tableSide .table .tableId {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    background-color: yellow;
+    border: black solid 3px;
+    transform: translate(-50%, -50%);
+    border-radius: 25%;
+    font-size: 2vw;
+    padding: 5px 10px;
+    text-align: center;
+}
