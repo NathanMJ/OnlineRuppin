@@ -37,25 +37,29 @@ export default function CafeMain(props) {
                     {tables.map((table) => {
                         return (
                             <div key={table._id} className="table">
-                                <p className="tableId">{table._id}</p>
-                                {table.customers ?
-                                    <div className="customersCount">
-                                        <img src="/Pictres/CustomerLogo" alt="customerLogo" />
-                                        <p>{table.customers.length}</p>
-                                    </div> : ''}
-                                <img src="/Pictures/Table.png" alt="table" />
-                                {table.orders ? <div className="totalPrice">
-                                    <p>Total : {getTotalOfTheTable(table._id)} ₪</p>
-                                </div> : ''}
+                                <div className="customersCount">
+                                    <p> {table.customers?.length > 0 ? table.customers.length : '0'} </p>
+                                    <img src="/Pictures/Person-logo.png" alt="person-logo" className="personLogo" />
+                                </div>
 
+                                <div className="totalPrice">
+                                    <p>Total : {table.orders ? getTotalOfTheTable(table._id) : 0} ₪</p>
+                                </div>
+
+                                <img src="/Pictures/Table.png" alt="table" className="tablePicture" />
+
+
+
+                                <p className="tableId">{table._id}</p>
                                 {table.lastCheck ? <div className="lastCheck"></div> : ""}
                             </div>
                         )
                     })}
                 </div>
-
-                <img className="addTableLogo" src="/Pictures/Add-logo.png" />
-                <img className="private" src="/Pictures/Settings-logo.png" />
+                <div className="options">
+                    <img className="addTableLogo" src="/Pictures/Add-logo.png" />
+                    <img className="private" src="/Pictures/Settings-logo.png" />
+                </div>
                 <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={() => { props.goto('/sideChoice') }}></ReturnButton>
                 <AskIdMsg showMsg={() => setShow(true)} hideMsg={() => setShow(false)} show={show}></AskIdMsg>
             </div>
