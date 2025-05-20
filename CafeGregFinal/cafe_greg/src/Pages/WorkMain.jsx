@@ -9,12 +9,15 @@ export default function WorkMain(props) {
     const navigate = useNavigate()
 
     const goToWithId = () => {
-        switch(destination) {
-            case 'service':                
-                //TO DO : check if the id is valid  
-                if(true){
-                    navigate('/toggleService', {state : { id: '345538268'}})
-                }else {
+        //TO DO : check if the id exist in the db
+
+
+        //TO DO : check if the id got the autorization to go to the space
+        switch (destination) {
+            case 'service':
+                if (true) {
+                    navigate('/toggleService', { state: { id: '345538268' } })
+                } else {
 
                 }
                 break;
@@ -26,16 +29,8 @@ export default function WorkMain(props) {
                 break;
             case 'manager':
                 alert("Manager side is not available yet")
-                break;        
+                break;
         }
-    }
-
-    const receiveId = async (id) => {
-        //TO DO : check the id in the database 
-        // (existance and permission)
-
-
-        return true;
     }
 
     const clickOnField = (field) => {
@@ -51,26 +46,27 @@ export default function WorkMain(props) {
         setShow(false);
     }
 
+
     const returnButton = () => {
         props.goto('/sideChoice')
     }
 
     return (
-        <div className="workMain">            
-        <div className="serviceSide"
-            onClick={() => clickOnField('service')}>
+        <div className="workMain">
+            <div className="serviceSide"
+                onClick={() => clickOnField('service')}>
                 <h3>Enter/Stop service</h3></div>
             <div className="kitchenSide"
-            onClick={() => clickOnField('kitchen')}>
+                onClick={() => clickOnField('kitchen')}>
                 <h3>Kitchen side</h3></div>
             <div className="barSide"
-            onClick={() => clickOnField('bar')}>
-            <h3>Bar side</h3></div>
+                onClick={() => clickOnField('bar')}>
+                <h3>Bar side</h3></div>
             <div className="managerSide"
-            onClick={() => clickOnField('manager')}>
+                onClick={() => clickOnField('manager')}>
                 <h3>Manager side</h3></div>
-            <ReturnButton returnButton={returnButton} bottom={'3vh'} left={'3vh'}/>
-            <AskIdMsg goToWithId={goToWithId} sendId={receiveId} showMsg={() => setShow(true)} hideMsg={() => setShow(false)} show={show}></AskIdMsg>
+            <ReturnButton returnButton={returnButton} bottom={'3vh'} left={'3vh'} />
+            <AskIdMsg exec={goToWithId} showMsg={() => setShow(true)} hideMsg={() => setShow(false)} show={show}></AskIdMsg>
         </div>
     )
 }

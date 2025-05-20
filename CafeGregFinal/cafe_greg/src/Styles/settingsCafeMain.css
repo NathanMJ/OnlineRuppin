@@ -1,0 +1,18 @@
+.settingsCafeMain {
+    background-color: aliceblue;
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+}
+
+.settingsCafeMain  .background {
+    background-color: rgb(0, 0, 0);
+    position: fixed;
+    width: 200vw;
+    transform: translate(-50%, -50%);
+    height: 200vh;
+    display: flex;
+}

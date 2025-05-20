@@ -5,19 +5,11 @@ export default function AskIdMsg(props) {
     const [animation, setAnimation] = useState(false);
 
     const confirm = async () => {
-        //check if the id is valid
-    
-        const isValid = await props.sendId(1123)
-
-
-        if(isValid){
-            //return the id to the parent component
-            //if the id is valid, call the function to hide the message
-            props.goToWithId(id)
-            //if the id is not valide, call the function "wrongId"
+        const res = await props.exec(id)
+        if(res){
             props.hideMsg()
         }
-        else {
+        else{
             wrongId()
         }
     }
@@ -25,7 +17,6 @@ export default function AskIdMsg(props) {
     const cancel = () => {
         //close the message 
         props.hideMsg()
-
     }
 
     const wrongId = () => {
@@ -45,11 +36,11 @@ export default function AskIdMsg(props) {
             <h2 className="title">Insert your id</h2>
             <div className="inputContainer">
                 <img src="../Pictures/Id-logo.png" className="logo" />
-                <input type="text" placeholder="Your id" maxLength="9" />
-                <img 
-                onClick={confirm}
-                src="../Pictures/Confirmation.png" 
-                className="validation" />
+                <input type="text" placeholder="Your id" maxLength="9" onChange={(e) => setId(e.target.value)} />
+                <img
+                    onClick={confirm}
+                    src="../Pictures/Confirmation.png"
+                    className="validation" />
             </div>
             <img
                 src="../Pictures/Cross.png"
