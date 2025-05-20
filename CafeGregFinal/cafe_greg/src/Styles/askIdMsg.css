@@ -16,7 +16,7 @@
 
 
 .backgroundAskIdMessage{
-    background-color: rgba(219, 26, 26, 0.233);
+    background-color: rgba(219, 26, 26, 0);
     position:fixed;
     width: 500vw;
     height: 500vh;
