@@ -12,6 +12,10 @@ export default function CafeMain(props) {
         { _id: 5, customers: [1, 2, 3, 4], ask: 0 }
     ]
 
+    //  STATUS TABLE
+    // ASK 0 => ASK FOR HELP 
+    // ASK 1 => ASK TO PAY 
+
     const getTotalOfTheTable = (id) => {
         switch (id) {
             case 1:
@@ -25,9 +29,20 @@ export default function CafeMain(props) {
         }
     }
 
-    //  STATUS TABLE
-    // ASK 0 => ASK FOR HELP 
-    // ASK 1 => ASK TO PAY 
+
+    const clickOnTable = (id) => {
+        alert(`You clicked on the table ${id}`)
+
+    }
+
+    const openSetting = () => {
+        alert(`Open settings`)
+    }
+
+    const addATable = () => {
+        alert(`Add a table`)
+    }
+
 
     return (
         <div className="cafeMain">
@@ -36,7 +51,7 @@ export default function CafeMain(props) {
                 <div className="tables">
                     {tables.map((table) => {
                         return (
-                            <div key={table._id} className="table">
+                            <div key={table._id} className="table" onClick={() => clickOnTable(table._id)}>
                                 <div className="customersCount">
                                     <p> {table.customers?.length > 0 ? table.customers.length : '0'} </p>
                                     <img src="/Pictures/Person-logo.png" alt="person-logo" className="personLogo" />
@@ -47,7 +62,7 @@ export default function CafeMain(props) {
                                 </div>
 
                                 <img src="/Pictures/Table.png" alt="table" className="tablePicture" />
-
+                                <div className="shadow"></div>
 
 
                                 <p className="tableId">{table._id}</p>
@@ -57,8 +72,8 @@ export default function CafeMain(props) {
                     })}
                 </div>
                 <div className="options">
-                    <img className="addTableLogo" src="/Pictures/Add-logo.png" />
-                    <img className="private" src="/Pictures/Settings-logo.png" />
+                    <img className="addTableLogo" src="/Pictures/Add-logo.png" onClick={addATable}/>
+                    <img className="private" src="/Pictures/Settings-logo.png" onClick={openSetting} />
                 </div>
                 <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={() => { props.goto('/sideChoice') }}></ReturnButton>
                 <AskIdMsg showMsg={() => setShow(true)} hideMsg={() => setShow(false)} show={show}></AskIdMsg>

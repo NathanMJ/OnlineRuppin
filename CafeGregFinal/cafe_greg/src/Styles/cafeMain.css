@@ -14,7 +14,9 @@
     .tableSide {
         position: relative;
         height: 100vh;
-
+        background-image: url('/public/Pictures/Background-main-table.jpg');
+        background-size: 1000px;
+        padding-left: 30px;
 
         .options {
             display: flex;
@@ -45,9 +47,10 @@
             grid-template-columns: repeat(auto-fit, 200px);
             display: grid;
             padding-top: 40px;
-            gap: 5px;
+            gap: 30px;
 
             .table {
+                cursor: pointer;
                 display: flex;
                 gap: 5px;
                 flex-direction: column;
@@ -57,9 +60,20 @@
                 grid-template-rows: 20px 20px auto;
                 width: 200px;
                 position: relative;
-                background-color: gainsboro;
+
+                .shadow {
+                    background-color: black;
+                    width: 80%;
+                    height: 20%;
+                    border-radius: 50%;
+                    filter: blur(20px);
+                    position: absolute;
+                    bottom: 0;
+                    z-index: 0;
+                }
 
                 .tablePicture {
+                    z-index: 1;
                     width: 20vh;
                 }
 
@@ -88,6 +102,7 @@
                     border-radius: 25%;
                     font-size: 30px;
                     padding: 5px 10px;
+                    z-index: 2;
                     text-align: center;
                 }
             }
