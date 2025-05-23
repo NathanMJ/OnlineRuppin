@@ -2,13 +2,43 @@ import { ImageBackground } from "expo-image";
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import FCEveryOrdersMain from "../FuncComps/FCEveryOrdersMain.jsx";
 import { Alert } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { LinkAppContext } from "../LinkAppContext.jsx";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { getOrdersWithTableId } from '../database.js'
 
 export default function main() {
   //TODO: get id of the table according to the link id
   //TODO: get orders of the table according to the id table
 
-  const orders = [0, 1, 2, 3, 4, 5, 6]
+  const { linkApp, setLinkApp } = useContext(LinkAppContext);
+
+
+  const [orders, setOrders] = useState([])
+  useFocusEffect(
+    useCallback(() => {
+      const fetchOrders = async () => {
+        try {
+          if (linkApp.tableId) {
+            console.log('linkApp', linkApp);
+
+            const tempOrders = await getOrdersWithTableId(linkApp.tableId);
+
+            console.log('tempOrders', tempOrders);
+
+            if (tempOrders) {
+              setOrders(tempOrders);
+            }
+          }
+        } catch (error) {
+          console.error('Erreur dans fetchOrders :', error);
+        }
+      };
+
+      fetchOrders();
+    }, [linkApp.tableId])
+  );
+
 
 
   const orderTest = {
@@ -24,10 +54,11 @@ export default function main() {
       'Do you want to disconnect?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'OK', onPress: () => 
-          {
+        {
+          text: 'OK', onPress: () => {
             router.push('/')
-          } }
+          }
+        }
       ]
     );
   }

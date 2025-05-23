@@ -1,16 +1,14 @@
 import { router, useFocusEffect } from 'expo-router';
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ImageBackground, LogBox, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getTableIdWithLinkId } from './database.js'
+import { LinkAppContext } from './LinkAppContext.jsx';
 
 export default function Index() {
 
+  const { linkApp, setLinkApp } = useContext(LinkAppContext)
   const [id, setId] = useState('')
   const [show, setShow] = useState(false)
-
-
-
-
 
 
   //to test a page direcly without going through the pages
@@ -19,12 +17,10 @@ export default function Index() {
   if (goDirectly) {
     useFocusEffect(
       React.useCallback(() => {
-        router.replace({
-          pathname: "/(tabs)/main",
-        });
+        setLinkApp({ tableId: 3 })
+        router.push({ pathname: "(tabs)/main" })
       }, [])
     );
-
   }
 
 
@@ -32,16 +28,21 @@ export default function Index() {
     setShow(true)
   }
 
+  const cancel = () => {
+    setShow(false)
+    setId('')
+  }
+
   const confirmId = async () => {
-
-
     const res = await getTableIdWithLinkId(id)
-    
+
     if (!res) {
       alert(`The id ${id} is incorrect`)
+      setId('')
     }
     else {
-      router.push({pathname:"(tabs)/main"})
+      setLinkApp({ tableId: res})
+      router.push({ pathname: "(tabs)/main" })
     }
   }
 
@@ -74,6 +75,7 @@ export default function Index() {
           }}></View>
         <TextInput
           style={{
+            value: { id },
             textAlign: 'center',
             fontSize: 60,
             backgroundColor: 'white',
@@ -112,7 +114,7 @@ export default function Index() {
           top: 0,
           transform: 'translate(50%,-50%)'
         }}
-          onPress={() => { setShow(false) }}>
+          onPress={cancel}>
           <ImageBackground
             source={require('../assets/images/Cross-red-circle.png')}
             style={{

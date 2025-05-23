@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { View, Text } from 'react-native'
-  import { Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 
 export default function FCEveryOrdersMain(props) {
 
@@ -19,14 +19,14 @@ export default function FCEveryOrdersMain(props) {
   if (!orders || orders.length === 0) {
     return <View><Text>No orders</Text></View>;
   }
-  return <View style={{ gap: 10, marginBlock: 30,
+  return <View style={{
+    gap: 10, marginBlock: 30,
     width: '80%', marginInline: 'auto', gap: 20
   }}>
-    {orders.map((order, index) => (      
-      <View style={{
-      }}>
-        <View key={index} style={{
-          height: windowHeight/9,
+    {orders.map((order, index) => (
+      <View key={index}>
+        <View style={{
+          height: windowHeight / 9,
           flexDirection: 'row',
           backgroundColor: 'rgb(202, 238, 232)',
           alignItems: 'center',

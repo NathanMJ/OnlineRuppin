@@ -1,43 +1,45 @@
 const tables = [{
-    id: 1,
-    orders: [0,1,2,3]
+    id: 3,
+    orders: [0,1],
+    link_id: 1234
+},
+{
+    id: 4,
+    orders: [2,3,4],
+    link_id: 1235
+},
+{
+    id: 5,
+    orders: [28,29],
+    link_id: 1111
 }]
 
-const links = [
-    {
-        id: 1234,
-        table_id: 15
-    }
-]
 
 export const order = {
     img: 'https://images.immediate.co.uk/production/volatile/sites/30/2013/05/Aubergine-and-sesame-noodles-6138de6.jpg?quality=90&resize=556,505',
     name: 'Spaghettis',
-    status: "In preparation"
+    status: "In preparation",
+    colorStatus: 'orange'
 }
 
 
 export async function getTableIdWithLinkId(linkId){
-    const res = links.find(link => link.id == linkId)
+    const res = tables.find(table => table.link_id == linkId)
     if(res){
-        return res.table_id
+        return res.id
     }
     else {
-        return false
+        return 
     }
 }
 
-export async function getOrdersWithTableLinkId(linkId) {
-    // Find the link by linkId
-    const link = links.find(link => link.id === linkId);
-    if (!link) {
-        return { status: 0 };
-    }
-    // Find the table by table_id from the link
-    const table = tables.find(tempTable => tempTable.id === link.table_id);
+export async function getOrdersWithTableId(tableId) {
+    
+    const table = tables.find(tempTable => tempTable.id === tableId);
     if (!table || !table.orders) {
-        return { status: 0 };
+        return ;
     }
     const returnOrders = table.orders;
-    return { status: 1, returnOrders };
+    console.log('get orders');
+    return returnOrders;
 }
