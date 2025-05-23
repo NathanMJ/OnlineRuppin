@@ -1,7 +1,7 @@
 .cafeMain {
     position: relative;
     height: 100vh;
-    background-image: url('/public/Pictures/Background-main-table.jpg');
+    background-image: url('/Pictures/Background-main-table.jpg');
     background-size: 1000px;
     overflow: hidden;
     padding-inline: 30px;

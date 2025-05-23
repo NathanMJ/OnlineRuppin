@@ -28,4 +28,3 @@ export const tempTimeWorker = [
         pauseId: '345538268'
     }
 ]
-

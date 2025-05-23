@@ -1,6 +1,6 @@
 import ReturnButton from "../FComponents/ReturnButton"
 
-export default function sideChoice(props) {
+export default function SideChoice(props) {
     
     const returnButton = () => {
         if(confirm("Are you sure you want to return?")) {
