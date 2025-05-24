@@ -33,7 +33,7 @@ export default function Menu() {
 
   const orderProduct = (productId) => {
     orderProductById(productId, linkApp.tableId)
-    ToastAndroid.show('ההזמנה בוצעה!', ToastAndroid.SHORT);
+    ToastAndroid.show('Ordered successfully !', ToastAndroid.SHORT);
   }
 
   useEffect(() => {
