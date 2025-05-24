@@ -1,7 +1,8 @@
 import { Image } from 'expo-image';
-import { useEffect, useState } from "react";
-import { Dimensions, ScrollView, Text, TouchableOpacity } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Dimensions, ScrollView, Text,View, TouchableOpacity } from "react-native";
 import { getProductById, getSections } from '../database.js';
+import { useFocusEffect } from 'expo-router';
 
 export default function Menu() {
   const [sections, setSections] = useState([]);
@@ -16,12 +17,19 @@ export default function Menu() {
   }, []);
 
 
+  useFocusEffect(
+    useCallback(() => {
+      setSectionId(-1);
+    }, [])
+  )
+
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
 
   const [products, setProducts] = useState([]);
 
   const orderProduct = (productId) => {
+    console.log(productId);
     
   }
 
@@ -51,14 +59,20 @@ export default function Menu() {
           backgroundColor: 'rgba(99, 98, 198, 0.75)',
           margin: 10,
           flexDirection: 'row',
-          alignItems: "center"
+          alignItems: "center",
+          borderRadius:30,
+          overflow: 'hidden'
         }}
-        onPress={() => orderProduct(product.id)}>
+          onPress={() => orderProduct(product.id)}>
           <Image source={{ uri: product.img }} style={{ width: '33%', height: '100%' }} />
-          <Text style={{
-            textAlign: 'center',
-            fontSize: 24
-          }}>{product.name} / {product.price} ₪</Text>
+          <View style={{alignItems:'center',flex:1}}>
+            <Text style={{
+              textAlign: 'center',
+              fontSize: 24,
+              color:'white'
+            }}>{product.name}</Text>
+            <Text style={{color:'white', fontSize:25}}>{product.price} ₪</Text>
+          </View>
         </TouchableOpacity>)}
     </ScrollView>
   }
