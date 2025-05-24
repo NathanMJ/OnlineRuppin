@@ -13,12 +13,12 @@ export default function Index() {
 
   //to test a page direcly without going through the pages
 
-  const goDirectly = false
+  const goDirectly = true
   if (goDirectly) {
     useFocusEffect(
       React.useCallback(() => {
         setLinkApp({ tableId: 3 })
-        router.push({ pathname: "(tabs)/main" })
+        router.push({ pathname: "(tabs)/menu" })
       }, [])
     );
   }
