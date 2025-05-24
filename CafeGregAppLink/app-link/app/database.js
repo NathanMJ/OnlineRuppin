@@ -6,14 +6,37 @@ const tables = [
     },
     {
         id: 4,
-        orders: [2, 3, 4],
+        orders: [2],
         link_id: 1235
+    }
+]
+
+const orders = [
+    {
+        id: 0,
+        product: 0,
+        status: 0
     },
     {
-        id: 5,
-        orders: [28, 29],
-        link_id: 1111
-    }]
+        id: 1,
+        product: 3,
+        status: 0
+    },
+    {
+        id: 2,
+        product: 1,
+        status: 0
+    }
+]
+
+const status = [
+    {
+        id: 0,
+        status: 'Ordered',
+        backgroundColor: 'green',
+        color: 'white'
+    }
+]
 
 const sections = [
     {
@@ -34,58 +57,77 @@ const sections = [
     }]
 
 const products = [
-  // Starters
-  {
-    id: 0,
-    img: 'https://www.simplyorganic.com/media/recipe/resized/520x520/wysiwyg/tmp/simply-oragnic-Roasted-Tomato-Bruschetta-1080x1080-thumbnail.jpg',
-    name: 'Bruschetta',
-    price: 7.50
-  },
-  {
-    id: 1,
-    img: 'https://www.onceuponachef.com/images/2023/06/greek-salad-1-1200x1477.jpg',
-    name: 'Greek Salad',
-    price: 6.00
-  },
-  {
-    id: 2,
-    img: 'https://www.ambitiouskitchen.com/wp-content/uploads/2023/02/Garlic-Bread-4.jpg',
-    name: 'Garlic Bread',
-    price: 5.00
-  },
+    // Starters
+    {
+        id: 0,
+        img: 'https://www.simplyorganic.com/media/recipe/resized/520x520/wysiwyg/tmp/simply-oragnic-Roasted-Tomato-Bruschetta-1080x1080-thumbnail.jpg',
+        name: 'Bruschetta',
+        price: 7.50
+    },
+    {
+        id: 1,
+        img: 'https://www.onceuponachef.com/images/2023/06/greek-salad-1-1200x1477.jpg',
+        name: 'Greek Salad',
+        price: 6.00
+    },
+    {
+        id: 2,
+        img: 'https://www.ambitiouskitchen.com/wp-content/uploads/2023/02/Garlic-Bread-4.jpg',
+        name: 'Garlic Bread',
+        price: 5.00
+    },
 
-  // Meals
-  {
-    id: 3,
-    img: 'https://img.taste.com.au/5qlr1PkR/taste/2016/11/spaghetti-bolognese-106560-1.jpeg',
-    name: 'Spaghetti Bolognese',
-    price: 12.50
-  },
-  {
-    id: 4,
-    img: 'https://foodal.com/wp-content/uploads/2020/04/Bright-Light-and-Lemony-30-Minute-Pasta-with-Grilled-Chicken.jpg',
-    name: 'Grilled Chicken Pasta',
-    price: 13.00
-  },
+    // Meals
+    {
+        id: 3,
+        img: 'https://img.taste.com.au/5qlr1PkR/taste/2016/11/spaghetti-bolognese-106560-1.jpeg',
+        name: 'Spaghetti Bolognese',
+        price: 12.50
+    },
+    {
+        id: 4,
+        img: 'https://foodal.com/wp-content/uploads/2020/04/Bright-Light-and-Lemony-30-Minute-Pasta-with-Grilled-Chicken.jpg',
+        name: 'Grilled Chicken Pasta',
+        price: 13.00
+    },
 
-  // Desserts
-  {
-    id: 5,
-    img: 'https://tutti-dolci.com/wp-content/uploads/2024/04/Triple-Chocolate-Brownies-3.jpg',
-    name: 'Chocolate Brownie',
-    price: 6.00
-  },
-  {
-    id: 6,
-    img: 'https://sugarspunrun.com/wp-content/uploads/2023/06/Strawberry-cheesecake-recipe-6-of-8.jpg',
-    name: 'Strawberry Cheesecake',
-    price: 6.50
-  }
+    // Desserts
+    {
+        id: 5,
+        img: 'https://tutti-dolci.com/wp-content/uploads/2024/04/Triple-Chocolate-Brownies-3.jpg',
+        name: 'Chocolate Brownie',
+        price: 6.00
+    },
+    {
+        id: 6,
+        img: 'https://sugarspunrun.com/wp-content/uploads/2023/06/Strawberry-cheesecake-recipe-6-of-8.jpg',
+        name: 'Strawberry Cheesecake',
+        price: 6.50
+    }
 ]
+
+
+export function orderProductById(productId, tableId) {
+    const orderId = (orders.length > 0 ? Math.max(...orders.map(order => order.id)) : -1) + 1;
+    const order = { id: orderId, product: productId, status: 0 }
+    orders.push(order)
+    const table = tables.find(t => t.id === tableId);
+    if (!table) {
+        throw new Error(`Table with id ${tableId} not found`);
+    }
+    if (table.orders && table.orders.length > 0) {
+        table.orders.push(orderId)
+    }
+    else {
+        table.orders = [orderId]
+    }
+}
+
+
+
 
 export async function getProductById(productId) {
     return products.find(product => product.id == productId)
-    
 }
 
 export async function getSections() {
@@ -108,7 +150,19 @@ export async function getOrdersWithTableId(tableId) {
     if (!table || !table.orders) {
         return;
     }
-    const returnOrders = table.orders;
-    console.log('get orders');
+    const ordersId = table.orders;
+
+    const returnOrders = ordersId.map(orderId => {
+        const tempOrder = orders[orderId]
+        const orderStatus = { ...status.find(temp => temp.id == tempOrder.status) }
+        delete orderStatus.id
+        const productOrder = { ...products.find(product => product.id == tempOrder.product) }
+        delete productOrder.id
+        const { status: _, product, ...orderWithout } = tempOrder;
+        return { ...orderWithout, status: orderStatus, ...productOrder }
+    })
+
+    console.log(returnOrders[0]);
+
     return returnOrders;
 }

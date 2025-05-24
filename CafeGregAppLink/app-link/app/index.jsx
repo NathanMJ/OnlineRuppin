@@ -1,6 +1,6 @@
 import { router, useFocusEffect } from 'expo-router';
 import React, { useContext, useState } from "react";
-import { ImageBackground, LogBox, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { getTableIdWithLinkId } from './database.js'
 import { LinkAppContext } from './LinkAppContext.jsx';
 
@@ -18,7 +18,7 @@ export default function Index() {
     useFocusEffect(
       React.useCallback(() => {
         setLinkApp({ tableId: 3 })
-        router.push({ pathname: "(tabs)/menu" })
+        router.push({ pathname: "(tabs)/main" })
       }, [])
     );
   }

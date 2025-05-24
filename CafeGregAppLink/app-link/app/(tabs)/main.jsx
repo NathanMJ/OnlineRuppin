@@ -20,12 +20,7 @@ export default function main() {
       const fetchOrders = async () => {
         try {
           if (linkApp.tableId) {
-            console.log('linkApp', linkApp);
-
             const tempOrders = await getOrdersWithTableId(linkApp.tableId);
-
-            console.log('tempOrders', tempOrders);
-
             if (tempOrders) {
               setOrders(tempOrders);
             }

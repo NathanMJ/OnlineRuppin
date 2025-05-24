@@ -1,12 +1,16 @@
 import { Image } from 'expo-image';
-import { useCallback, useEffect, useState } from "react";
-import { Dimensions, ScrollView, Text,View, TouchableOpacity } from "react-native";
-import { getProductById, getSections } from '../database.js';
+import { useCallback, useContext, useEffect, useState } from "react";
+import { Dimensions, ScrollView, Text, View, TouchableOpacity } from "react-native";
+import { getProductById, getSections, orderProductById} from '../database.js';
 import { useFocusEffect } from 'expo-router';
+import { ToastAndroid } from 'react-native';
+import { LinkAppContext } from '../LinkAppContext.jsx';
 
 export default function Menu() {
   const [sections, setSections] = useState([]);
   const [sectionId, setSectionId] = useState(-1)
+  const [products, setProducts] = useState([]);
+  const { linkApp, setLinkApp } = useContext(LinkAppContext);
 
   useEffect(() => {
     const fetchSections = async () => {
@@ -26,11 +30,10 @@ export default function Menu() {
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
 
-  const [products, setProducts] = useState([]);
 
   const orderProduct = (productId) => {
-    console.log(productId);
-    
+    orderProductById(productId, linkApp.tableId)
+    ToastAndroid.show('ההזמנה בוצעה!', ToastAndroid.SHORT);
   }
 
   useEffect(() => {
@@ -60,18 +63,18 @@ export default function Menu() {
           margin: 10,
           flexDirection: 'row',
           alignItems: "center",
-          borderRadius:30,
+          borderRadius: 30,
           overflow: 'hidden'
         }}
           onPress={() => orderProduct(product.id)}>
           <Image source={{ uri: product.img }} style={{ width: '33%', height: '100%' }} />
-          <View style={{alignItems:'center',flex:1}}>
+          <View style={{ alignItems: 'center', flex: 1 }}>
             <Text style={{
               textAlign: 'center',
               fontSize: 24,
-              color:'white'
+              color: 'white'
             }}>{product.name}</Text>
-            <Text style={{color:'white', fontSize:25}}>{product.price} ₪</Text>
+            <Text style={{ color: 'white', fontSize: 25 }}>{product.price} ₪</Text>
           </View>
         </TouchableOpacity>)}
     </ScrollView>

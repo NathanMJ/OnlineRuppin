@@ -33,22 +33,22 @@ export default function FCEveryOrdersMain(props) {
           borderRadius: 20,
           overflow: 'hidden'
         }}>
-          <Image source={{ uri: orderTest.img }}
+          <Image source={{ uri: order.img}}
             style={{ width: '33%', height: '100%' }} />
 
-          <Text style={{ textAlign: 'center', margin: 'auto', fontSize: 25, fontWeight: 500 }}>
-            {order.toString()}
+          <Text style={{ flex: 1, textAlign: 'center', margin: 'auto', fontSize: 28, fontWeight: 500 }}>
+            {order.name}
           </Text>
         </View>
 
         <View style={{
-          backgroundColor: 'orange',
+          backgroundColor: order.status.backgroundColor,
           width: "80%",
           margin: 'auto',
-          borderBottomLeftRadius: 10,
-          borderBottomRightRadius: 10
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15
         }}>
-          <Text style={{ textAlign: 'center', color: 'white', fontSize: 20, fontWeight: 600 }}>In preparation</Text>
+          <Text style={{ textAlign: 'center', color: order.status.color, fontSize: 20, fontWeight: 600 }}>{order.status.status}</Text>
 
         </View>
 
