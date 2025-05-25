@@ -15,7 +15,7 @@ const orders = [
     {
         id: 0,
         product: 0,
-        status: 0
+        status: 1
     },
     {
         id: 1,
@@ -25,13 +25,19 @@ const orders = [
     {
         id: 2,
         product: 1,
-        status: 0
+        status: 1
     }
 ]
 
 const status = [
     {
         id: 0,
+        status: 'Pending',
+        backgroundColor: 'red',
+        color: 'white'
+    },
+    {
+        id: 1,
         status: 'Ordered',
         backgroundColor: 'green',
         color: 'white'
@@ -123,9 +129,6 @@ export function orderProductById(productId, tableId) {
     }
 }
 
-
-
-
 export async function getProductById(productId) {
     return products.find(product => product.id == productId)
 }
@@ -153,16 +156,39 @@ export async function getOrdersWithTableId(tableId) {
     const ordersId = table.orders;
 
     const returnOrders = ordersId.map(orderId => {
-        const tempOrder = orders[orderId]
+        const orderIndex = orders.findIndex(order => order.id == orderId)
+        const tempOrder = orders[orderIndex]
         const orderStatus = { ...status.find(temp => temp.id == tempOrder.status) }
-        delete orderStatus.id
         const productOrder = { ...products.find(product => product.id == tempOrder.product) }
         delete productOrder.id
         const { status: _, product, ...orderWithout } = tempOrder;
+
         return { ...orderWithout, status: orderStatus, ...productOrder }
     })
 
-    console.log(returnOrders[0]);
-
     return returnOrders;
+}
+
+export async function changeOrderStatus(orderId, newStatus) {
+    const indexOrder = orders.findIndex(order => order.id == orderId)
+    orders[indexOrder].status = newStatus
+    return orders[indexOrder].status
+}
+
+export async function cancelOrder(orderId, tableId) {
+    //cancel the order in orders array
+    const indexOrderInOrders = orders.findIndex(order => order.id == orderId);
+    if (indexOrderInOrders !== -1) {
+        orders.splice(indexOrderInOrders, 1);
+    }
+
+    //cancel the order in the table
+    const indexTable = tables.findIndex(table => table.id == tableId)
+
+    const indexOrderInTable = tables[indexTable].orders.findIndex(order => order == orderId)
+
+    if (indexOrderInTable !== -1) {
+        tables[indexTable].orders.splice(indexOrderInTable, 1)
+    }
+    return;
 }

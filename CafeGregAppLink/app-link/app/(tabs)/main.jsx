@@ -15,32 +15,28 @@ export default function main() {
 
 
   const [orders, setOrders] = useState([])
+
+
+  const fetchOrders = async () => {
+    try {
+      if (linkApp.tableId) {
+        const tempOrders = await getOrdersWithTableId(linkApp.tableId);
+        console.log(tempOrders); 
+
+        if (tempOrders) {
+          setOrders(tempOrders);
+        }
+      }
+    } catch (error) {
+      console.error('Error in fetchOrders :', error);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
-      const fetchOrders = async () => {
-        try {
-          if (linkApp.tableId) {
-            const tempOrders = await getOrdersWithTableId(linkApp.tableId);
-            if (tempOrders) {
-              setOrders(tempOrders);
-            }
-          }
-        } catch (error) {
-          console.error('Erreur dans fetchOrders :', error);
-        }
-      };
-
       fetchOrders();
     }, [linkApp.tableId])
   );
-
-
-
-  const orderTest = {
-    img: 'https://images.immediate.co.uk/production/volatile/sites/30/2013/05/Aubergine-and-sesame-noodles-6138de6.jpg?quality=90&resize=556,505',
-    name: 'Spaghettis',
-    status: "In preparation"
-  }
 
 
   const disconnect = () => {
@@ -77,7 +73,8 @@ export default function main() {
         }}>My orders</Text>
       </View>
       <ScrollView>
-        <FCEveryOrdersMain orders={orders} />
+        <FCEveryOrdersMain orders={orders} 
+        refreshOrders={fetchOrders} />
       </ScrollView>
       <TouchableOpacity onPress={disconnect} style={{
         backgroundColor: 'rgb(207, 57, 57)',
