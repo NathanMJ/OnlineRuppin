@@ -27,6 +27,7 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
         [HttpGet("tableId/{linkId}")]
         public IActionResult GetTableId(int linkId)
         {

@@ -13,9 +13,7 @@ export default function main() {
 
   const { linkApp, setLinkApp } = useContext(LinkAppContext);
 
-
   const [orders, setOrders] = useState([])
-
 
   const fetchOrders = async () => {
     try {

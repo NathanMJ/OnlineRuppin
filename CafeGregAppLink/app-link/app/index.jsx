@@ -35,7 +35,8 @@ export default function Index() {
 
   const confirmId = async () => {
     const res = await getTableIdWithLinkId(id)
-
+    console.log(res);
+    
     if (!res) {
       alert(`The id ${id} is incorrect`)
       setId('')

@@ -1,4 +1,5 @@
 import { fetchTableIdFromServer } from './linkToServer.js'
+
 const tables = [
     {
         id: 3,
@@ -113,6 +114,19 @@ const products = [
     }
 ]
 
+export async function getTableIdWithLinkId(linkId) {
+    
+    const res2 = await fetchTableIdFromServer(linkId)
+    console.log('res2', res2);
+        
+    if (res2) {
+        return res2
+    }
+    else {
+        return
+    }
+}
+
 
 export function orderProductById(productId, tableId) {
     const orderId = (orders.length > 0 ? Math.max(...orders.map(order => order.id)) : -1) + 1;
@@ -138,21 +152,6 @@ export async function getSections() {
     return sections;
 }
 
-export async function getTableIdWithLinkId(linkId) {
-    const res2 = await fetchTableIdFromServer(linkId)
-    console.log(res2);
-    
-    const res = tables.find(table => table.link_id == linkId)
-    console.log(res);
-    
-    if (res) {
-        return res.id
-    }
-    else {
-        return
-    }
-}
-
 export async function getOrdersWithTableId(tableId) {
 
     const table = tables.find(tempTable => tempTable.id === tableId);
@@ -168,7 +167,8 @@ export async function getOrdersWithTableId(tableId) {
         const productOrder = { ...products.find(product => product.id == tempOrder.product) }
         delete productOrder.id
         const { status: _, product, ...orderWithout } = tempOrder;
-
+        console.log({ ...orderWithout, status: orderStatus, ...productOrder });
+        
         return { ...orderWithout, status: orderStatus, ...productOrder }
     })
 
