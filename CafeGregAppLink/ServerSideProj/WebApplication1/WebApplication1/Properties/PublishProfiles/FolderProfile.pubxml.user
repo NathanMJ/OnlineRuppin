@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\Lab-G700\Desktop\ENG_RN_2024-2025\Lec07 ShopDemo with Server\ServerSideProj\WebApplication1\WebApplication1\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2025-05-08T11:58:29.8630628Z||;True|2025-05-08T14:54:56.1857837+03:00||;True|2025-05-08T14:19:18.3881228+03:00||;True|2025-05-06T12:10:50.9777940+03:00||;True|2025-05-06T11:56:21.0758475+03:00||;True|2025-05-06T10:52:20.6293849+03:00||;</History>
+    <_PublishTargetUrl>C:\Users\Nathan\Desktop\OnlineRuppin\CafeGregAppLink\ServerSideProj\WebApplication1\WebApplication1\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2025-05-25T11:52:27.3958352Z||;True|2025-05-25T14:16:41.7462744+03:00||;True|2025-05-25T14:14:06.0616024+03:00||;True|2025-05-08T14:58:29.8630628+03:00||;True|2025-05-08T14:54:56.1857837+03:00||;True|2025-05-08T14:19:18.3881228+03:00||;True|2025-05-06T12:10:50.9777940+03:00||;True|2025-05-06T11:56:21.0758475+03:00||;True|2025-05-06T10:52:20.6293849+03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

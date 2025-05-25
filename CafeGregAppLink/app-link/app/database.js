@@ -1,3 +1,4 @@
+import { fetchTableIdFromServer } from './linkToServer.js'
 const tables = [
     {
         id: 3,
@@ -138,7 +139,12 @@ export async function getSections() {
 }
 
 export async function getTableIdWithLinkId(linkId) {
+    const res2 = await fetchTableIdFromServer(linkId)
+    console.log(res2);
+    
     const res = tables.find(table => table.link_id == linkId)
+    console.log(res);
+    
     if (res) {
         return res.id
     }

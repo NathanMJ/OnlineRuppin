@@ -1,8 +1,24 @@
 [
   {
-    "ContainingType": "WebApplication1.Controllers.StudentsController",
-    "Method": "Get",
-    "RelativePath": "api/Students",
+    "ContainingType": "WebApplication1.Controllers.OrdersController",
+    "Method": "GetOrdersByTableId",
+    "RelativePath": "api/Orders/table/{tableId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "tableId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.SectionsController",
+    "Method": "GetSectionsWithProducts",
+    "RelativePath": "api/Sections/total-sections",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -10,16 +26,16 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "WebApplication1.Controllers.StudentsController",
-    "Method": "Post",
-    "RelativePath": "api/Students",
-    "HttpMethod": "POST",
+    "ContainingType": "WebApplication1.Controllers.TablesController",
+    "Method": "Get",
+    "RelativePath": "api/Tables/{id}",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userdto",
-        "Type": "WebApplication1.Models.UserDTO",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -30,19 +46,30 @@
         "StatusCode": 200
       },
       {
-        "Type": "System.Void",
-        "MediaTypes": [],
-        "StatusCode": 204
-      },
-      {
         "Type": "Microsoft.AspNetCore.Mvc.ProblemDetails",
         "MediaTypes": [
           "text/plain",
           "application/json",
           "text/json"
         ],
-        "StatusCode": 400
+        "StatusCode": 404
       }
     ]
+  },
+  {
+    "ContainingType": "WebApplication1.Controllers.TablesController",
+    "Method": "GetTableId",
+    "RelativePath": "api/Tables/tableId/{linkId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "linkId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]
