@@ -27,7 +27,9 @@ export default function FCEveryOrdersMain(props) {
   }
 
   if (!orders || orders.length === 0) {
-    return <View><Text>No orders</Text></View>;
+    return <View style={{backgroundColor:'white'}}><Text style={{textAlign:'center',fontSize:30,
+      padding:30, fontWeight:600
+    }}>No orders</Text></View>;
   }
   return <View style={{
     gap: 10, marginBlock: 30,

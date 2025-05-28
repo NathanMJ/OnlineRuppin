@@ -1,34 +1,38 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\",
+  "WorkspaceRootPath": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\dbservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\dbservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\dbservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\orderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\orderdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\section.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\section.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\table.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\controllers\\sectionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\sectionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\orderscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\nathan\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\section.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\section.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\tablecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|c:\\users\\home\\desktop\\onlineruppin\\cafegregapplink\\serversideproj\\webapplication1\\webapplication1\\controllers\\sectionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4E484356-7188-481D-8DCE-A6A17D733B4C}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\sectionscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,41 +42,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Product.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Product.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Models\\Product.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Product.cs",
-              "RelativeToolTip": "WebApplication1\\Models\\Product.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "OrderDTO.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\OrderDTO.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\OrderDTO.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\OrderDTO.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\OrderDTO.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T09:09:57.472Z",
+              "WhenOpened": "2025-05-25T15:55:11.96Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Section.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Section.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Models\\Section.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Section.cs",
-              "RelativeToolTip": "WebApplication1\\Models\\Section.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T09:08:16.712Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "SectionsController.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\SectionsController.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\SectionsController.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\SectionsController.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\SectionsController.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\SectionsController.cs",
               "RelativeToolTip": "WebApplication1\\Controllers\\SectionsController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -80,54 +71,84 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "OrdersController.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\OrdersController.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\OrdersController.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\OrdersController.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\OrdersController.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\OrdersController.cs",
               "RelativeToolTip": "WebApplication1\\Controllers\\OrdersController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAiAAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-25T08:32:40.358Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "Table.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Table.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Table.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Models\\Table.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Table.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Table.cs",
               "RelativeToolTip": "WebApplication1\\Models\\Table.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-25T08:24:46.035Z"
+              "WhenOpened": "2025-05-25T08:24:46.035Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "DBServices.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\DBServices.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\DBServices.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Models\\DBServices.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\DBServices.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\DBServices.cs",
               "RelativeToolTip": "WebApplication1\\Models\\DBServices.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAgAAABRAAAAAAAAAA==",
+              "ViewState": "AQIAABkAAAAAAAAAAAAgwCYAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-25T08:04:31.211Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "TableController.cs",
-              "DocumentMoniker": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\TableController.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\TableController.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\TableController.cs",
-              "ToolTip": "C:\\Users\\Nathan\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\TableController.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\TableController.cs",
               "RelativeToolTip": "WebApplication1\\Controllers\\TableController.cs",
+<<<<<<< HEAD
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAANAAAAAAAAAA==",
+=======
+              "ViewState": "AQIAABoAAAAAAAAAAAAqwC0AAAAJAAAA",
+>>>>>>> 28ed07f10adb6f971a8d1e9ed285f12ebf7f14b4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T09:14:09.124Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Section.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Section.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\Section.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Section.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\Section.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T09:08:16.712Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Product.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\Product.cs",
+              "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Models\\Product.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\Product.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-25T09:09:57.472Z"
             }
           ]
         }
