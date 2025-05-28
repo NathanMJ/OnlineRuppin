@@ -2,23 +2,18 @@ import { useState } from "react";
 import AskIdMsg from "../FComponents/AskIdMsg";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
+import { tempCafeTables } from "../tempDB";
+import { useNavigate } from "react-router-dom";
 
 export default function CafeMain(props) {
     const [showAskId, setShowAskId] = useState(false);
     const [showSettings, setShowSettings] = useState(false)
-    const [isManager, setIsManager] = useState(false)
-    const tables = [
-        { _id: 1, customers: [1, 2, 3], orders: [1, 2, 3, 4] },
-        { _id: 2, customers: [1, 2, 3, 4], ask: 1 },
-        { _id: 3, orders: [1, 2, 3, 4] },
-        { _id: 4, customers: [1, 2, 3, 4], orders: [1, 2, 4] },
-        { _id: 5, customers: [1, 2, 3, 4], ask: 0 }
-    ]
+    const [isManager, setIsManager] = useState(true)
+    const navigate = useNavigate();
+
+    const tables = tempCafeTables
 
 
-    //  STATUS TABLE
-    // ASK 0 => ASK FOR HELP 
-    // ASK 1 => ASK TO PAY 
 
     const getAskLogo = (askCode) => {
         switch (askCode) {
@@ -30,8 +25,7 @@ export default function CafeMain(props) {
     }
 
     const clickOnTable = (id) => {
-        alert(`You clicked on the table ${id}`)
-
+        props.goto(`/menu`, { tableId: id })
     }
 
     const openSetting = () => {

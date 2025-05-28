@@ -5,13 +5,14 @@ import WorkMain from './Pages/WorkMain.jsx'
 import SideChoice from './Pages/SideChoice.jsx'
 import ToggleService from './Pages/ToggleService.jsx'
 import CafeMain from './Pages/CafeMain.jsx'
+import Menu from './Pages/Menu.jsx'
 
 function App() {
 
       const navigate = useNavigate()
 
-      const goto = (path) => {
-        navigate(path)
+      const goto = (path, states) => {
+        navigate(path, { state: states });
       }
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
           <Route path='/workMain' element={<WorkMain goto={goto}/>}></Route>
           <Route path='/toggleService' element={<ToggleService goto={goto}/>}></Route>
           <Route path='/cafeMain' element={<CafeMain goto={goto}/>}></Route>
+          <Route path='/menu' element={<Menu goto={goto}/>}></Route>
         </Routes>
       </div>
     </>

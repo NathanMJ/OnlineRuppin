@@ -11,9 +11,8 @@
     border-radius: 20px;
     border: 5px solid rgb(17, 19, 107);
     max-width: 450px;
+    z-index: 50;
 }
-
-
 
 .backgroundAskIdMessage{
     background-color: rgba(219, 26, 26, 0);
