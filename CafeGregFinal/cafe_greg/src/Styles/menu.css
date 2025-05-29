@@ -13,11 +13,14 @@
     .orderSide {
         display: flex;
         flex-direction: column;
-        width: 33vw;
+        width: 25vw;
         min-width: 400px;
-        background-color: aliceblue;
+        background-image: url(https://www.shutterstock.com/shutterstock/videos/1033300103/thumb/1.jpg?ip=x480);
+        background-size: contain;
         align-items: center;
         height: 100vh;
+        color: aliceblue;
+        border-right: 10px solid rgb(75, 9, 9);
 
         .top,
         .bottom {
@@ -36,16 +39,21 @@
         }
 
         .bottom {
-            height: 150px;
+            height: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
 
             button {
-                width: 90%;
-                height: 25%;
+                width: fit-content;
+                padding: 20px;
                 font-size: 30px;
+                border-radius: 30px;
+                background-color: rgb(104, 211, 145);
+                color: white;
+                border: white solid 5px;
+                font-weight: 600;
             }
 
             h1 {
@@ -55,7 +63,7 @@
 
         .pipe {
             width: 95%;
-            background-color: black;
+            background-color: rgb(255, 255, 255);
             height: 1px;
             margin: 10px;
         }
@@ -85,23 +93,41 @@
                 .statusContainer {
                     width: 90%;
                     display: flex;
-                    font-size: 3vh;
+                    font-size: 2.6vh;
                     text-align: center;
-                    
+                    border-radius: 10px;
+                    overflow: hidden;
+
                     h1 {
                         padding: 20px;
                     }
 
                     .status {
-                        border-radius: 30px 0 0 30px;
                         flex: 1;
-                        background-color: red;
                     }
 
-                    .timer {
-                        border-radius: 0 30px 30px 0;
+                    .timerContainer {
                         flex: 1;
                         background-color: rgb(222, 247, 240);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        color: black;
+                        position: relative;
+                        gap: 10px;
+                        text-align: center;
+
+                        .header {
+                            font-size: 1.5vh;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        .timer {
+                            margin: 0;
+                            padding: 0;
+                        }
                     }
                 }
 
@@ -112,21 +138,31 @@
                     text-align: center;
                     padding-block: 10px;
                     padding-inline: 30px;
+                    color: black;
 
                     summary {
-                        font-size: 4vh;
+                        font-size: 3.5vh;
+                        cursor: pointer;
                     }
 
                     .details {
                         border-top: 1px dotted black;
                         font-size: 3vh;
+                        cursor: default;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        p {
+                            background-color: rgba(240, 248, 255, 0.5);
+                            width: 100%;
+                        }
                     }
                 }
 
                 .mainOrder {
                     display: flex;
                     flex-direction: row;
-                    height: 15vh;
                     width: 100%;
                     background-color: rgb(102, 221, 161);
                     overflow: hidden;
@@ -155,15 +191,17 @@
                         flex-direction: column;
                         justify-content: space-evenly;
                         padding-block: 30px;
-                        color: white;
+                        gap: 10px;
+                        color: rgb(210, 240, 214);
                         align-items: center;
 
                         h1 {
                             font-size: 3vh;
                         }
 
-                        h2{
-                            font-size: 2vh;
+                        h2 {
+                            font-size: 3.5vh;
+                            font-weight: 600;
                         }
 
                     }
@@ -175,12 +213,11 @@
     }
 
     .main {
-        background-color: aqua;
+        background-color: rgb(191, 243, 211);
         flex: 1;
 
         header {
             height: 200px;
-            background-color: red;
             display: flex;
             flex-direction: row;
 
@@ -203,13 +240,19 @@
                 }
             }
 
+            .registerLogin,
+            .rightLogo {
+                background-color: rgb(111, 218, 177);
+                border-bottom: 4px solid rgb(21, 133, 55);
+
+            }
+
             .leftLogo {
                 width: 33%;
                 display: flex;
                 flex-direction: column;
 
                 .registerLogin {
-                    background-color: rgb(89, 228, 182);
                     height: 66%;
                     display: flex;
                     justify-content: center;
@@ -245,6 +288,7 @@
                         font-size: 3vh;
                         width: 80%;
                         height: 90%;
+                        transform: translateY(10px);
                         border-radius: 30px;
                     }
                 }
@@ -253,7 +297,6 @@
             }
 
             .rightLogo {
-                background-color: rgb(89, 228, 182);
                 height: 66%;
                 width: 33%;
                 display: flex;

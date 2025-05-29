@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
 
 export default function Menu() {
@@ -11,6 +11,7 @@ export default function Menu() {
     if (!tableId) {
         return <div>Error: Table ID is required</div>;
     }
+    const [totalPrice, setTotalPrice] = useState(0);
 
     const [researchedProduct, setResearchedProduct] = useState('')
     const [productsFound, setProductsFound] = useState([])
@@ -32,6 +33,7 @@ export default function Menu() {
             name: 'Pizza'
         }
     ]
+
 
     useEffect(() => {
         console.log(`Researched product: [${researchedProduct}]`);
@@ -61,7 +63,7 @@ export default function Menu() {
             status: {
                 name: 'Pending',
                 color: 'white',
-                backgroundColor: 'red'
+                backgroundColor: 'rgb(252, 71, 71)'
             },
             img: 'https://www.southernliving.com/thmb/UW4kKKL-_M3WgP7pkL6Pb6lwcgM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ham_Sandwich_011-1-49227336bc074513aaf8fdbde440eafe.jpg',
             ingredients:
@@ -90,7 +92,7 @@ export default function Menu() {
             status: {
                 name: 'Ordered',
                 color: 'white',
-                backgroundColor: 'green'
+                backgroundColor: 'rgb(117, 196, 110)'
             },
             img: 'https://www.southernliving.com/thmb/UW4kKKL-_M3WgP7pkL6Pb6lwcgM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ham_Sandwich_011-1-49227336bc074513aaf8fdbde440eafe.jpg',
             ingredients:
@@ -119,7 +121,7 @@ export default function Menu() {
             status: {
                 name: 'In preparation',
                 color: 'white',
-                backgroundColor: 'orange'
+                backgroundColor: '#fd855b'
             },
             img: 'https://www.southernliving.com/thmb/UW4kKKL-_M3WgP7pkL6Pb6lwcgM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ham_Sandwich_011-1-49227336bc074513aaf8fdbde440eafe.jpg',
             ingredients:
@@ -156,7 +158,7 @@ export default function Menu() {
             status: {
                 name: 'Ready',
                 color: 'white',
-                backgroundColor: 'blue'
+                backgroundColor: 'rgb(60, 189, 194)'
             },
             changes: [
                 {
@@ -185,7 +187,7 @@ export default function Menu() {
             status: {
                 name: 'Received',
                 color: 'white',
-                backgroundColor: 'green'
+                backgroundColor: 'rgb(109, 212, 100)'
             },
             changes: [
                 {
@@ -202,9 +204,22 @@ export default function Menu() {
     ]
 
 
+    useEffect(() => {
+        const tempTotalPrice = orders.reduce((acc, order) => {
+            return acc + (order.price || 0);
+        }, 0);
+        setTotalPrice(tempTotalPrice);
+        console.log(`Total price calculated: ${tempTotalPrice} ₪`);
+    }, [orders])
+
+    const askWaiter = () => {
+        //TO DO: 
+        //      add notification that the waiter is coming to help
+        alert('Asking the waiter for help...');
+    }
+
     const clickOnProduct = (productId) => {
         alert(`Clicked on product with ID: ${productId}`);
-        
     }
 
     return (
@@ -220,7 +235,7 @@ export default function Menu() {
                     <div className='pipe'></div>
                     <button>Order everythings</button>
                     <div className='pipe'></div>
-                    <h1>Total</h1>
+                    <h1>Total {totalPrice} ₪</h1>
                 </div>
             </div>
             <div className='main'>
@@ -233,7 +248,7 @@ export default function Menu() {
                             </button>
                         </div>
                         <div className='help'>
-                            <button>Ask a waiter</button>
+                            <button onClick={askWaiter}>Ask a waiter</button>
                         </div>
                     </div>
                     <div className='logo'>

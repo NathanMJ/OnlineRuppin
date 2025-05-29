@@ -46,12 +46,19 @@ export default function FCOrders(props) {
                         </div>
                         <div className="statusContainer">
                             <h1 className="status"
-                            style={{ color: order.status?.color || 'black',
-                                backgroundColor : order.status?.backgroundColor || 'white'
-                            }}
-                            
+                                style={{
+                                    color: order.status?.color || 'black',
+                                    backgroundColor: order.status?.backgroundColor || 'white'
+                                }}
+
                             >{order.status?.name || 'TempStatus'}</h1>
-                            <h1 className="timer">{timer}</h1>
+                            {order.status?.name === 'Received' ||
+                                <div className="timerContainer">
+
+                                    <h1 className="header">Time last status change</h1>
+                                    <h1 className="timer">{timer}</h1>
+
+                                </div>}
                         </div>
 
                         <details className="detailsContainer">
