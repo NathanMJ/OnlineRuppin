@@ -50,9 +50,9 @@
                 padding: 20px;
                 font-size: 30px;
                 border-radius: 30px;
-                background-color: rgb(104, 211, 145);
-                color: white;
-                border: white solid 5px;
+                background-color: rgb(116, 211, 136);
+                color: rgb(222, 253, 222);
+                border: rgb(137, 235, 170) solid 5px;
                 font-weight: 600;
             }
 
@@ -108,7 +108,7 @@
 
                     .timerContainer {
                         flex: 1;
-                        background-color: rgb(222, 247, 240);
+                        background-color: rgb(245, 234, 234);
                         display: flex;
                         flex-direction: column;
                         justify-content: center;
@@ -164,7 +164,7 @@
                     display: flex;
                     flex-direction: row;
                     width: 100%;
-                    background-color: rgb(102, 221, 161);
+                    background-color: rgb(56, 16, 16);
                     overflow: hidden;
                     border-radius: 30px;
 
@@ -192,7 +192,7 @@
                         justify-content: space-evenly;
                         padding-block: 30px;
                         gap: 10px;
-                        color: rgb(210, 240, 214);
+                        color: rgb(240, 211, 210);
                         align-items: center;
 
                         h1 {
