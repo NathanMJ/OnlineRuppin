@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { fetchProduct } from "../tempDB";
+import { get_product } from "../tempDB";
 
 export default function ProductPage() {
 
@@ -10,18 +10,17 @@ export default function ProductPage() {
 
     const [product, setProduct] = useState(null)
 
-    console.log(location.state);
 
     useEffect(() => {
-        console.log('useEffect for productId:', productId);
         
         if (productId === null || productId === undefined) 
             return;
 
         const fetchData = async () => {
-            console.log('fetch product data for productId:', productId);
-            const tempProduct = await fetchProduct(productId);
+            const tempProduct = await get_product(productId);
             setProduct(tempProduct);
+            console.log(tempProduct);
+            
         };
         fetchData();
     }, [productId]);

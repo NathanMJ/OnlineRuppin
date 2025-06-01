@@ -374,6 +374,118 @@ const products = [
     }]
 
 
+const ingredients = [
+    {
+        _id: -1,
+        name: 'basic_ingredient',
+        changes_detail: [
+            { change_code: 0 },
+            { change_code: 1 },
+            { change_code: 2 },
+            { change_code: 3 }]
+    },
+    {
+        _id: 0,
+        name: 'labneh'
+    },
+    {
+        _id: 1,
+        name: "lehina"
+    },
+    {
+        _id: 2,
+        name: "spiced chickpeas"
+    },
+    {
+        _id: 3,
+        name: "egg",
+        changes_detail: [
+            { change_code: 0 },
+            { change_code: 4 },
+            { change_code: 5 },
+            { change_code: 6 },
+            { change_code: 7 }]
+    },
+    {
+        _id: 4,
+        name: "spicy jalapeño spread"
+    },
+    {
+        _id: 5,
+        name: "crushed tomatoes"
+    },
+    {
+        _id: 6,
+        name: "pickles"
+    },
+    {
+        _id: 7,
+        name: "onions"
+    },
+    {
+        _id: 8,
+        name: "mushroom"
+    },
+    {
+        _id: 9,
+        name: "green onion"
+    },
+    {
+        _id: 10,
+        name: "smoked salmon",
+        changes_detail: [
+            { change_code: 0 },
+            { change_code: 1 },
+            { change_code: 2, price: 15 }]
+    },
+    {
+        _id: 11,
+        name: "spinach"
+    },
+    {
+        _id: 12,
+        name: "cheese"
+    },
+    {
+        _id: 13,
+        name: "tomato salsa"
+    },
+    {
+        _id: 14,
+        name: "ricotta with peppers"
+    },
+    {
+        _id: 15,
+        name: "hollandaise"
+    },
+    {
+        _id: 16,
+        name: "onion jam"
+    },
+    {
+        _id: 17,
+        name: "black pepper"
+    },
+    {
+        _id: 18,
+        name: "mushroom Alfredo sauce"
+    },
+    {
+        _id: 19,
+        name: "mozzarella cheese"
+    }
+]
+
+const ingredient_changes = [
+    { _id: 0, change: 'without' },
+    { _id: 1, change: 'with' },
+    { _id: 2, change: 'a lot of' },
+    { _id: 3, change: 'aside' },
+    { _id: 4, change: 'omelette' },
+    { _id: 5, change: 'hard-boiled egg' },
+    { _id: 6, change: 'sunny-side-up egg' },
+    { _id: 7, change: 'poached eggs' }
+]
 
 
 function get_sections_from_section(id) {
@@ -400,12 +512,12 @@ function get_sections_from_section(id) {
 function get_products_from_section(id) {
 
     var productIds = sections.find(section => section._id == id).products
-    
+
     if (!productIds) {
         return
     }
     var arrProducts = []
-    
+
 
     productIds.forEach((productId) => {
         var productFound = products.find((product) => product._id == productId)
@@ -417,8 +529,7 @@ function get_products_from_section(id) {
         }
     })
 
-    console.log(arrProducts);
-    
+
     return arrProducts
 }
 
@@ -430,7 +541,6 @@ export function get_from_section(id) {
     if (sections) {
         return { type: "section", sections }
     }
-    console.log('Search products');
 
 
     var products = get_products_from_section(id)
@@ -451,13 +561,137 @@ export function get_product_section(id) {
     return previousSection._id;
 }
 
-export async function fetchProduct(productId) {
-    const product = products.find(product => product._id === productId);
+
+
+export async function get_product(productId) {
+
+
+    let product = products.find(product => product._id === productId);
     if (!product) {
         console.error(`Product with ID ${productId} not found`);
         return null;
     }
+
+    //get ingredients
+    var ingredients = await get_ingredients_of_product(product.ingredients)
+
+
+
+    //remove ingredients to add them
+    delete product.ingredients
+    product = { ...product, ingredients }
+
     return product;
+
+    //get salads
+
+    if (product.salads) {
+        //get sauces
+        var salads = get_salads(product.salads)
+
+        //remove salads to add them
+        delete product.salads
+        if (salads) {
+            product = { ...product, salads }
+        }
+    }
+
+
+    //get sauces
+
+    if (product.sauces) {
+        var sauces = get_sauces(id)
+
+        //remove sauces to add them at the end
+        delete product.sauces
+        if (sauces) {
+            product = { ...product, sauces }
+        }
+    }
+
+    return product
 }
 
 
+/* undone function */
+
+
+
+
+
+async function set_correct_format_changes(change) {
+
+
+    if (!change.price) {
+        return { ...change, price: 0 }
+    }
+    return change
+}
+
+async function get_changes_ingredient(id) {
+
+    var ingredient = ingredients.find(sIngredient => sIngredient._id == id);
+
+    if (!ingredient) {
+        console.log(`Ingredient id : ${id} not found`)
+        return
+    }
+
+    var changes = ingredient.changes_detail
+
+    if (!changes) {
+        changes = ingredients.find(sIngredient => sIngredient._id == - 1).changes_detail
+    }
+
+    var full_changes = []
+
+    changes.forEach(async (change) => {
+        var price = await set_correct_format_changes(change).price
+
+        var change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
+        full_changes.push({ price, ...change_detail })
+    })
+
+    return full_changes
+}
+
+
+async function get_ingredient(id) {
+    var ingredient = ingredients.find(sIngredient => sIngredient._id == id)
+    if (!ingredient) {
+        print(`Ingredient with id : ${id} does not exist`)
+        return
+    }
+
+    console.log(ingredient.changes_detail);
+
+    var changes = await get_changes_ingredient(ingredient.changes_detail)
+
+
+
+    delete ingredient.changes_detail
+
+    return { ...ingredient, changes }
+}
+
+
+
+async function get_ingredients_of_product(ingredientsList) {
+
+
+    var ingredients = []
+
+    ingredientsList.forEach((ingredientId) => {
+        if (ingredientId._id) {
+            var ingredient = get_ingredient(ingredientId._id)
+            ingredient.change_selected = ingredientId.selected
+            // ingredients.push(ingredient)
+        }
+        else {
+            var ingredient = get_ingredient(ingredientId)
+            ingredient.change_selected = 1
+            // ingredients.push(ingredient)
+        }
+    })
+    return ingredients
+}
