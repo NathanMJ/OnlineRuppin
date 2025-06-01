@@ -261,6 +261,7 @@
                     align-items: center;
 
                     button {
+                        cursor: pointer;                        
                         width: 66%;
                         padding: 10px;
                         text-align: center;
@@ -291,6 +292,7 @@
                         width: 80%;
                         height: 90%;
                         transform: translateY(10px);
+                        cursor: pointer;                        
                         border-radius: 30px;
                     }
                 }
@@ -381,15 +383,16 @@
                     justify-content: center;
                     align-items: center;
 
-                    .backButton{
-                        width: 80%;
-                        height: 90%;
-                        font-size: 3vh;
+                    .backButton {
                         background-color: rgb(200, 24, 24);
                         color: white;
                         font-weight: 600;
+                        cursor: pointer;                        
+                        font-size: 3vh;
+                        width: 80%;
+                        height: 90%;
+                        transform: translateY(10px);
                         border-radius: 30px;
-                        cursor: pointer;
                     }
                 }
 
@@ -401,6 +404,7 @@
             flex: 1;
             padding: 30px;
             position: relative;
+            overflow: hidden;
 
             .sections {
                 width: 100%;
@@ -446,17 +450,46 @@
                 }
             }
 
-            .products{
+            .products {
                 height: 100%;
-                width: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: 30px;
-                background-color: rgb(228, 225, 19);
+                overflow-y: auto;
 
-                .product{
-                    background-color: rgb(73, 13, 13);
-                    height: 100vh;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .product {
+                    cursor: pointer;
+                    background-color: rgb(134, 229, 134);
+                    height: 33vh;
+                    border-radius: 20px;
+                    position: relative;
+                    background-position: center;
+                    background-size: cover;
+                    
+
+                    .name {
+                        font-size: 4vh;
+                        text-align: center;
+                        padding-block: 10px;
+                        border-radius: 20px 20px 0 0 ;
+                        background-color: rgb(88, 226, 129);
+                    }
+
+                    .priceContainer {
+                        font-size: 4vh;
+                        position: absolute;
+                        bottom: 0;
+                        text-align: center;
+                        background-color: aliceblue;
+                        padding: 10px 30px;
+                        right: 50%;
+                        transform: translate(50%, 50%);
+                        border-radius: 20px;
+                    }
                 }
             }
 

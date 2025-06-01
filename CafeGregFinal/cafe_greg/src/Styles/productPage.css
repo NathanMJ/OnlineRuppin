@@ -1,0 +1,56 @@
+.productPage{
+    background-color: antiquewhite;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    
+    .productDescription{
+        flex: 3;
+        background-color: lightblue;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 30px;
+
+        .name{
+            font-size: 8vh;
+        }
+
+        img{
+            width: 80%;
+            object-fit: cover;
+        }
+
+        .returnButton{
+            background-color: red;
+            color: white;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            padding: 5px 20px;
+            font-size: 60px;
+            border-radius: 20px;
+
+        }
+
+        .price{
+            font-size: 4vh;
+        }
+
+        .descriptionTitle{
+            font-size: 5vh;
+        }
+        .description{
+            font-size: 3vh;
+        }
+
+
+    }
+
+    .productChanges{
+        flex: 2;
+        background-color: lightcoral;
+    }
+}

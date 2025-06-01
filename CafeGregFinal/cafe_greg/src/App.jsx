@@ -6,6 +6,7 @@ import SideChoice from './Pages/SideChoice.jsx'
 import ToggleService from './Pages/ToggleService.jsx'
 import CafeMain from './Pages/CafeMain.jsx'
 import Menu from './Pages/Menu.jsx'
+import ProductPage from './Pages/ProductPage.jsx'
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
       const goto = (path, states) => {
         navigate(path, { state: states });
       }
+
   return (
     <>
       <div>
@@ -25,6 +27,7 @@ function App() {
           <Route path='/toggleService' element={<ToggleService goto={goto}/>}></Route>
           <Route path='/cafeMain' element={<CafeMain goto={goto}/>}></Route>
           <Route path='/menu' element={<Menu goto={goto}/>}></Route>
+          <Route path='/productPage' element={<ProductPage goto={goto}/>}></Route>
         </Routes>
       </div>
     </>

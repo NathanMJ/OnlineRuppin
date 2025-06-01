@@ -451,5 +451,13 @@ export function get_product_section(id) {
     return previousSection._id;
 }
 
+export async function fetchProduct(productId) {
+    const product = products.find(product => product._id === productId);
+    if (!product) {
+        console.error(`Product with ID ${productId} not found`);
+        return null;
+    }
+    return product;
+}
 
 

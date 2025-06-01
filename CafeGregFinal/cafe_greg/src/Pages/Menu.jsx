@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
 import { get_from_section, get_previous_section, orders } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
-export default function Menu() {
+export default function Menu(props) {
 
 
     const location = useLocation();
@@ -103,10 +103,6 @@ export default function Menu() {
         alert('Asking the waiter for help...');
     }
 
-    const clickOnProduct = (productId) => {
-        alert(`Clicked on product with ID: ${productId}`);
-    }
-
     const placeSections = () => {
         let arr = mainContent.sections;
         let count = arr.length;
@@ -144,6 +140,10 @@ export default function Menu() {
         ));
 
 
+    }
+
+    const clickOnProduct = (productId) => {
+        props.goto('/productPage', { productId: productId, tableId: tableId });
     }
 
     return (
@@ -205,8 +205,13 @@ export default function Menu() {
                         mainContent.products &&
                         <div className='products'>
                             {mainContent.products.map((product) => (
-                                <div className='product' key={product._id}>
-                                    <h2>{product.name}</h2>
+                                <div className='product' key={product._id}
+                                    style={{ backgroundImage: `url(${product.img})` }}
+                                    onClick={() => clickOnProduct(product._id)}>
+                                    <p className='name'>{product.name}</p>
+                                    <div className='priceContainer'>
+                                        <p className='price'>{product.price}₪</p>
+                                    </div>
                                 </div>
                             ))}
                         </div>}
