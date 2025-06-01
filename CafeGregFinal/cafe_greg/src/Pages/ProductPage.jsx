@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get_product } from "../tempDB";
+import FCProductChanges from "../FComponents/FCProductChanges";
 
 export default function ProductPage() {
 
@@ -50,7 +51,9 @@ export default function ProductPage() {
                 </p>
             </div>
             <div className="productChanges">
-
+                {product.ingredients.map(ingredient => (
+                    <FCProductChanges ingredient={ingredient} key={ingredient._id}/>
+                ))}
             </div>
         </div>
     )

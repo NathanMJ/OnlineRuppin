@@ -618,16 +618,6 @@ export async function get_product(productId) {
 
 
 
-
-async function set_correct_format_changes(change) {
-
-
-    if (!change.price) {
-        return { ...change, price: 0 }
-    }
-    return change
-}
-
 async function get_changes_ingredient(id) {
 
     var ingredient = ingredients.find(sIngredient => sIngredient._id == id);
@@ -646,8 +636,7 @@ async function get_changes_ingredient(id) {
     var full_changes = []
 
     changes.forEach(async (change) => {
-        var price = await set_correct_format_changes(change).price
-
+        let price = !change.price ? 0 : change.price
         var change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
         full_changes.push({ price, ...change_detail })
     })
@@ -663,10 +652,10 @@ async function get_ingredient(id) {
         return
     }
 
-    console.log(ingredient.changes_detail);
 
-    var changes = await get_changes_ingredient(ingredient.changes_detail)
+    var changes = await get_changes_ingredient(ingredient._id)
 
+    console.log('changes are', changes);
 
 
     delete ingredient.changes_detail
@@ -681,16 +670,16 @@ async function get_ingredients_of_product(ingredientsList) {
 
     var ingredients = []
 
-    ingredientsList.forEach((ingredientId) => {
+    ingredientsList.forEach(async (ingredientId) => {
         if (ingredientId._id) {
-            var ingredient = get_ingredient(ingredientId._id)
+            var ingredient = await get_ingredient(ingredientId._id)
             ingredient.change_selected = ingredientId.selected
-            // ingredients.push(ingredient)
+            ingredients.push(ingredient)
         }
         else {
-            var ingredient = get_ingredient(ingredientId)
+            var ingredient = await  get_ingredient(ingredientId)
             ingredient.change_selected = 1
-            // ingredients.push(ingredient)
+            ingredients.push(ingredient)
         }
     })
     return ingredients
