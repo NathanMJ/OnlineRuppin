@@ -91,14 +91,8 @@ export default function Menu() {
     }, [sectionId])
 
     const backInTheMenu = () => {
-        //if we are in products, go back to the sections
-
-        //if we are in sections go to the previous section or to the main section if we are in the main section
-        if (mainContent.type == "section") {
-            const previousSectionId = get_previous_section(sectionId);
-            setSectionId(previousSectionId);
-        }
-
+        const previousSectionId = get_previous_section(sectionId);
+        setSectionId(previousSectionId);
     }
 
 

@@ -446,6 +446,20 @@
                 }
             }
 
+            .products{
+                height: 100%;
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 30px;
+                background-color: rgb(228, 225, 19);
+
+                .product{
+                    background-color: rgb(73, 13, 13);
+                    height: 100vh;
+                }
+            }
+
         }
     }
 }

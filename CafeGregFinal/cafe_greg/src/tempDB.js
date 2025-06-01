@@ -446,5 +446,10 @@ export function get_previous_section(id) {
     return previousSection._id;
 }
 
+export function get_product_section(id) {
+    const previousSection = sections.find(section => section.products.includes(id));
+    return previousSection._id;
+}
+
 
 
