@@ -50,7 +50,9 @@ export default function ProductPage() {
                     {product.description}
                 </p>
             </div>
+
             <div className="productChanges">
+                <h1>Ingredients</h1>
                 {product.ingredients.map(ingredient => (
                     <FCProductChanges ingredient={ingredient} key={ingredient._id}/>
                 ))}
