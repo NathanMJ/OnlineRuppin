@@ -6,13 +6,31 @@
     top: 50vh;
     left: 50vw;
     transform: translate(-50%, -50%);
-}
+    color: black;
+    z-index: 10;
+    border-radius: 10px;
+    padding: 20px;
+    border: rgb(74, 16, 128) 7px solid;
 
-.settingsCafeMain  .background {
-    background-color: rgb(0, 0, 0);
-    position: fixed;
-    width: 200vw;
-    transform: translate(-50%, -50%);
-    height: 200vh;
-    display: flex;
+    .background {
+        background-color: rgba(0, 0, 0, 0);
+        position: fixed;
+        width: 200vw;
+        transform: translate(-50%, -50%);
+        height: 200vh;
+        display: flex;
+        z-index: -1;
+    }
+    div{
+        text-align: center;
+    }
+    img{
+        cursor: pointer;
+        width: 10vh;
+    }
+
+    .managerSections{
+        display: flex;
+        
+    }
 }

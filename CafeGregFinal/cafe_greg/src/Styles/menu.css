@@ -1,0 +1,497 @@
+:root {
+    --background-color: rgb(0, 0, 0) --header-background-color: rgb(117, 167, 117);
+}
+
+.menuPage {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+
+
+    .orderSide {
+        display: flex;
+        flex-direction: column;
+        width: 25vw;
+        min-width: 400px;
+        background-image: url(https://www.shutterstock.com/shutterstock/videos/1033300103/thumb/1.jpg?ip=x480);
+        background-size: contain;
+        align-items: center;
+        height: 100vh;
+        color: aliceblue;
+        border-right: 10px solid rgb(75, 9, 9);
+
+        .top,
+        .bottom {
+            width: 100%;
+            flex-direction: column;
+            justify-items: center;
+            align-content: center;
+        }
+
+        .top {
+            height: 100px;
+
+            h1 {
+                font-size: 50px;
+            }
+        }
+
+        .bottom {
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            button {
+                width: fit-content;
+                padding: 20px;
+                font-size: 30px;
+                border-radius: 30px;
+                background-color: rgb(116, 211, 136);
+                color: rgb(222, 253, 222);
+                border: rgb(137, 235, 170) solid 5px;
+                font-weight: 600;
+            }
+
+            h1 {
+                font-size: 40px;
+            }
+        }
+
+        .pipe {
+            width: 95%;
+            background-color: rgb(255, 255, 255);
+            height: 1px;
+            margin: 10px;
+        }
+
+        button {
+            width: 90%;
+        }
+
+        .orders {
+            flex: 1;
+            width: 90%;
+            overflow: auto;
+            padding-block: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+
+            .order {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .statusContainer {
+                    width: 90%;
+                    display: flex;
+                    font-size: 2.6vh;
+                    text-align: center;
+                    border-radius: 10px;
+                    overflow: hidden;
+
+                    h1 {
+                        padding: 20px;
+                    }
+
+                    .status {
+                        flex: 1;
+                    }
+
+                    .timerContainer {
+                        flex: 1;
+                        background-color: rgb(245, 234, 234);
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        color: black;
+                        position: relative;
+                        gap: 10px;
+                        text-align: center;
+
+                        .header {
+                            font-size: 1.5vh;
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        .timer {
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
+                }
+
+                .detailsContainer {
+                    background-color: rgb(223, 223, 223);
+                    border-radius: 0 0 10px 10px;
+                    font-size: 2vh;
+                    text-align: center;
+                    padding-block: 10px;
+                    padding-inline: 30px;
+                    color: black;
+
+                    summary {
+                        font-size: 3.5vh;
+                        cursor: pointer;
+                    }
+
+                    .details {
+                        border-top: 1px dotted black;
+                        font-size: 3vh;
+                        cursor: default;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+
+                        p {
+                            background-color: rgba(240, 248, 255, 0.5);
+                            width: 100%;
+                        }
+                    }
+                }
+
+                .mainOrder {
+                    display: flex;
+                    flex-direction: row;
+                    width: 100%;
+                    background-color: rgb(73, 13, 13);
+                    overflow: hidden;
+                    border-radius: 30px;
+
+                    .imageContainer {
+                        flex: 1;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        background-color: rgb(255, 255, 255);
+                        border-radius: 30px 0 0 30px;
+                        overflow: hidden;
+
+                        img {
+                            height: 100%;
+                            width: 100%;
+                            object-fit: cover;
+                            object-position: center;
+                        }
+                    }
+
+                    .textContent {
+                        flex: 2;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-evenly;
+                        padding-block: 30px;
+                        gap: 10px;
+                        color: rgb(240, 211, 210);
+                        align-items: center;
+
+                        h1 {
+                            font-size: 3vh;
+                        }
+
+                        h2 {
+                            font-size: 3.5vh;
+                            font-weight: 600;
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    .main {
+        background-color: rgb(191, 243, 211);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+
+        header {
+            height: 200px;
+            display: flex;
+            flex-direction: row;
+
+            .logo {
+                flex: 1;
+                background-color: rgb(72, 201, 151);
+                border-radius: 0 0 20px 20px;
+                border: solid rgb(21, 133, 55);
+                border-width: 0 5px 5px 5px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                padding: 10px;
+
+                img {
+                    width: 80%;
+                    height: 75%;
+                    object-fit: contain;
+                }
+            }
+
+            .registerLogin,
+            .research {
+                background-color: rgb(111, 218, 177);
+                border-bottom: 4px solid rgb(21, 133, 55);
+
+            }
+
+            .leftLogo {
+                width: 33%;
+                display: flex;
+                flex-direction: column;
+
+                .registerLogin {
+                    height: 66%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    button {
+                        cursor: pointer;                        
+                        width: 66%;
+                        padding: 10px;
+                        text-align: center;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 2vh;
+                        border-radius: 20px;
+                        font-weight: 600;
+
+                        .littleText {
+                            margin-top: 3px;
+                            font-weight: 400;
+                            font-size: 75%;
+                        }
+                    }
+                }
+
+                .help {
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    button {
+                        font-size: 3vh;
+                        width: 80%;
+                        height: 90%;
+                        transform: translateY(10px);
+                        cursor: pointer;                        
+                        border-radius: 30px;
+                    }
+                }
+
+
+            }
+
+            .rightLogo {
+                width: 33%;
+                display: flex;
+                flex-direction: column;
+
+                .research {
+                    height: 66%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .researchContainer {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        position: relative;
+                    }
+
+                    input {
+                        height: 40%;
+                        width: 66%;
+                        padding: 10px;
+                        text-align: center;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 100%;
+                        font-weight: 600;
+                    }
+
+                    .researchedsProducts {
+                        position: absolute;
+                        width: 66%;
+                        top: 100%;
+                        background-color: beige;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                        border-radius: 0 0 10px 10px;
+                        overflow: hidden;
+
+
+                        .researchedProduct {
+                            cursor: pointer;
+                            background-color: rgb(226, 226, 204);
+                            display: flex;
+                            flex-direction: row;
+                            min-height: 4vh;
+                            padding-block: 5px;
+
+                            .imageContainer {
+                                flex: 1;
+
+                                img {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                    object-position: center;
+                                }
+                            }
+
+                            h3 {
+                                flex: 3;
+                                margin: auto;
+                                text-align: center;
+                                font-size: 3vh;
+                            }
+
+                        }
+
+                    }
+                }
+
+
+                .backButtonContainer {
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .backButton {
+                        background-color: rgb(200, 24, 24);
+                        color: white;
+                        font-weight: 600;
+                        cursor: pointer;                        
+                        font-size: 3vh;
+                        width: 80%;
+                        height: 90%;
+                        transform: translateY(10px);
+                        border-radius: 30px;
+                    }
+                }
+
+            }
+
+        }
+
+        .menu {
+            flex: 1;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+
+            .sections {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+
+                .row {
+                    display: flex;
+                    flex-direction: row;
+                    flex: 1;
+                    gap: 30px;
+
+                    .sections {
+                        background-color: rgb(63, 167, 97);
+                        flex: 1;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        cursor: pointer;
+                        border-radius: 20px;
+                        position: relative;
+                        overflow: hidden;
+                        background-size: cover;
+                        background-position: center;
+
+                        h1 {
+                            font-size: 5vh;
+                            font-weight: 600;
+                            background-color: rgba(13, 61, 8, 0.358);
+                            width: 100%;
+                            text-align: center;
+                            position: absolute;
+                            top: 20%;
+                            transform: translateY(-50%);
+                            color: rgb(177, 235, 197);
+                        }
+
+
+
+                    }
+                }
+            }
+
+            .products {
+                height: 100%;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 30px;
+                overflow-y: auto;
+
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                .product {
+                    cursor: pointer;
+                    background-color: rgb(134, 229, 134);
+                    height: 33vh;
+                    border-radius: 20px;
+                    position: relative;
+                    background-position: center;
+                    background-size: cover;
+                    
+
+                    .name {
+                        font-size: 4vh;
+                        text-align: center;
+                        padding-block: 10px;
+                        border-radius: 20px 20px 0 0 ;
+                        background-color: rgb(88, 226, 129);
+                    }
+
+                    .priceContainer {
+                        font-size: 4vh;
+                        position: absolute;
+                        bottom: 0;
+                        text-align: center;
+                        background-color: aliceblue;
+                        padding: 10px 30px;
+                        right: 50%;
+                        transform: translate(50%, 50%);
+                        border-radius: 20px;
+                    }
+                }
+            }
+
+        }
+    }
+}

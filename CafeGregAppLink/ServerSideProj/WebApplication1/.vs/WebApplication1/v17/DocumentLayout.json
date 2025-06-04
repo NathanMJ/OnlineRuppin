@@ -116,7 +116,11 @@
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\TableController.cs",
               "ToolTip": "C:\\Users\\home\\Desktop\\OnlineRuppin\\CafeGregAppLink\\ServerSideProj\\WebApplication1\\WebApplication1\\Controllers\\TableController.cs",
               "RelativeToolTip": "WebApplication1\\Controllers\\TableController.cs",
+<<<<<<< HEAD
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAANAAAAAAAAAA==",
+=======
               "ViewState": "AQIAABoAAAAAAAAAAAAqwC0AAAAJAAAA",
+>>>>>>> 28ed07f10adb6f971a8d1e9ed285f12ebf7f14b4
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-29T09:14:09.124Z",
               "EditorCaption": ""
