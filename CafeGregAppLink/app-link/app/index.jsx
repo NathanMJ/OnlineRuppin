@@ -1,7 +1,8 @@
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useFocusEffect } from 'expo-router';
 import React, { useContext, useState } from "react";
-import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { getTableIdWithLinkId } from './database.js'
+import { Button, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { getTableIdWithLinkId } from './database.js';
 import { LinkAppContext } from './LinkAppContext.jsx';
 
 export default function Index() {
@@ -13,7 +14,7 @@ export default function Index() {
 
   //to test a page direcly without going through the pages
 
-  const goDirectly = false 
+  const goDirectly = false
   if (goDirectly) {
     useFocusEffect(
       React.useCallback(() => {
@@ -22,6 +23,58 @@ export default function Index() {
       }, [])
     );
   }
+
+  // QR code scan test
+
+  const [scanning, setScanning] = useState(true)
+  const [facing, setFacing] = useState('back');
+  const [permission, requestPermission] = useCameraPermissions();
+  const [camera, setCamera] = useState(null);
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
+  function toggleCameraFacing() {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
+  }
+  const btnSnap = async () => {
+    const photo = await camera.takePictureAsync({
+      quality: 0.5, // Adjust this value (0.0 - 1.0) for picture quality
+      skipProcessing: true, // Set to true to skip processing
+    });
+    console.log(photo.uri);
+  }
+  if (scanning) {
+
+    return (
+      <View style={styles.container}>
+        <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
+              <Text style={styles.text}>Flip Camera</Text>
+            </TouchableOpacity>
+          </View>
+        </CameraView>
+        <View style={{ margin: 20, alignItems: 'center', borderRadius: 5, borderWidth: 2, borderColor: 'blue', padding: 10 }}>
+          <Button title="snap" onPress={btnSnap} />
+        </View>
+      </View>
+    );
+
+
+  }
+
+
+
 
 
   const pressOnBtn = () => {
@@ -36,13 +89,13 @@ export default function Index() {
   const confirmId = async () => {
     const res = await getTableIdWithLinkId(id)
     console.log(res);
-    
+
     if (!res) {
       alert(`The id ${id} is incorrect`)
       setId('')
     }
     else {
-      setLinkApp({ tableId: res})
+      setLinkApp({ tableId: res })
       router.push({ pathname: "(tabs)/main" })
     }
   }
@@ -192,8 +245,39 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     fontSize: 40
   },
-  messageId: {
-
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  camera: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  buttonContainer: {
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    padding: 15,
+    borderRadius: 10,
+    borderColor: 'white',
+    borderWidth: 1,
+  },
+  text: {
+    fontSize: 18,
+    color: 'white',
+    textAlign: 'center',
+  },
+  snapContainer: {
+    margin: 20,
+    alignItems: 'center',
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: 'blue',
+    padding: 10,
   }
 });
 
