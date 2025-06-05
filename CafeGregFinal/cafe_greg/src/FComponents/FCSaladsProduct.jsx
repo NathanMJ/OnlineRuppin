@@ -1,5 +1,4 @@
 export default function FCSaladsProduct(props) {
-    console.log(props.salads);
 
     const writePrice = (price) => {
         if (price == 0) {

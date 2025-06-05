@@ -10,7 +10,6 @@ export default function FCSaucesProduct(props) {
         return '+' + price + '₪'
     } 
 
-    console.log(props.selectedSauces);
     
     
     return (

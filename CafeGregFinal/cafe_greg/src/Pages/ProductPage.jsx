@@ -27,13 +27,12 @@ export default function ProductPage(props) {
         if (productId === null || productId === undefined)
             return;
 
-        const fetchData = async () => {
+        const fetchProduct = async () => {
             const tempProduct = await get_product(productId);
             setProduct(tempProduct);
-            console.log(tempProduct);
 
         };
-        fetchData();
+        fetchProduct();
     }, [productId]);
 
 
@@ -62,18 +61,14 @@ export default function ProductPage(props) {
     };
 
     const addTheCurrentOrder = () => {
-        console.log('Add the order to the table');
-
         props.goto('/menu', { tableId })
     }
 
     const selectSalad = (saladId) => {
-        console.log(saladId);
         setSelectedSalad(saladId)
     }
 
     const addRemoveSauce = (sauceId) => {
-        console.log(sauceId);
     }
 
     return (
@@ -93,11 +88,11 @@ export default function ProductPage(props) {
             <div className="rightPage">
                 <div className="contentProduct">
 
-                    {/* <h1 className="title">Ingredients</h1>
+                    <h1 className="title">Ingredients</h1>
                     {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
                     ))}
-                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''} */}
+                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}
 
                     <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addRemoveSauce={addRemoveSauce} />
 

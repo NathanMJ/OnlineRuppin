@@ -361,7 +361,7 @@ const products = [
         img: "https://gregcafe.co.il/wp-content/uploads/2025/01/בורקס-טורקי-scaled.jpg",
         price: 59.00,
         description: "Bourekas stuffed with cheeses, served with labneh and olive oil, green tahini and spiced chickpeas, hard-boiled egg, spicy jalapeño spread, crushed tomatoes and olive oil. Served with pickles and fresh vegetables.",
-        ingredients: [0, 1, 2, 3, 4, 5, 6],
+        ingredients: [0, 1, 2, { _id: 3, selected: 5 }, 4, 5, 6],
         sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
     },
     {
@@ -630,8 +630,6 @@ export async function get_product(productId) {
 
     let sauces = []
     if (product.sauces && product.sauces.length > 0) {
-        console.log(product.sauces);
-
         sauces = await get_sauces(product.sauces)
     }
 
@@ -650,7 +648,7 @@ export async function get_product(productId) {
 async function get_sauces(sauceIds) {
 
     if (!sauceIds || sauceIds.length === 0) {
-        console.log(`No sauces`)
+        console.error(`No sauces`)
         return
     }
 
@@ -658,15 +656,12 @@ async function get_sauces(sauceIds) {
     sauceIds.forEach((id_sauce) => {
         let sauceFound = sauces.find(sauce => sauce._id == id_sauce)
         if (!sauceFound) {
-            console.log(`The sauce with the id : ${id_sauce} was not found`)
+            console.error(`The sauce with the id : ${id_sauce} was not found`)
         }
         else {
             everySauces.push(sauceFound)
         }
     })
-
-    console.log('everySauces', everySauces);
-
     return everySauces
 }
 
@@ -691,14 +686,18 @@ async function get_salads(saladList) {
 
 async function get_changes_ingredient(id) {
 
+    //TODO : if the ingredients got changes dont go there direcly use the one he got
     var ingredient = ingredients.find(sIngredient => sIngredient._id == id);
 
     if (!ingredient) {
         console.error(`Ingredient id : ${id} not found`)
         return
     }
+    console.log('ingredient', ingredient.name);
 
     var changes = ingredient.changes_detail
+
+    console.log(changes);
 
     if (!changes) {
         changes = ingredients.find(sIngredient => sIngredient._id == - 1).changes_detail
@@ -711,8 +710,6 @@ async function get_changes_ingredient(id) {
         var change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
         full_changes.push({ price, ...change_detail })
     })
-
-
     return full_changes
 }
 
@@ -727,6 +724,7 @@ async function get_ingredient(id) {
 
     var changes = await get_changes_ingredient(ingredient._id)
 
+
     delete ingredient.changes_detail
 
     return { ...ingredient, changes }
@@ -739,6 +737,7 @@ async function get_ingredients_of_product(ingredientsList) {
     var ingredients = []
 
     ingredientsList.forEach(async (ingredientId) => {
+
         if (ingredientId._id) {
             var ingredient = await get_ingredient(ingredientId._id)
             ingredient.change_selected = ingredientId.selected
