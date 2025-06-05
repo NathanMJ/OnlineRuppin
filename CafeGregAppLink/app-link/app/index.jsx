@@ -1,16 +1,13 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { router, useFocusEffect } from 'expo-router';
 import React, { useContext, useState } from "react";
-import { Button, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { getTableIdWithLinkId } from './database.js';
 import { LinkAppContext } from './LinkAppContext.jsx';
 
 export default function Index() {
 
   const { linkApp, setLinkApp } = useContext(LinkAppContext)
-  const [id, setId] = useState('')
-  const [show, setShow] = useState(false)
-
 
   //to test a page direcly without going through the pages
 
@@ -26,7 +23,7 @@ export default function Index() {
 
   // QR code scan test
 
-  const [scanning, setScanning] = useState(true)
+  const [scanning, setScanning] = useState(false)
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
@@ -43,29 +40,52 @@ export default function Index() {
       </View>
     );
   }
-  function toggleCameraFacing() {
-    setFacing(current => (current === 'back' ? 'front' : 'back'));
-  }
-  const btnSnap = async () => {
-    const photo = await camera.takePictureAsync({
-      quality: 0.5, // Adjust this value (0.0 - 1.0) for picture quality
-      skipProcessing: true, // Set to true to skip processing
-    });
-    console.log(photo.uri);
-  }
-  if (scanning) {
 
+  const close = () => {
+    setScanning(false)
+  }
+
+  const confirmId = async (id) => {
+    const res = await getTableIdWithLinkId(id)
+    console.log(res);
+
+    if (!res) {
+      alert(`The id ${id} is incorrect`)
+    }
+    else {
+      setLinkApp({ tableId: res })
+      router.push({ pathname: "(tabs)/main" })
+    }
+  }
+
+
+
+  if (scanning) {
     return (
       <View style={styles.container}>
-        <CameraView style={styles.camera} facing={facing} ref={ref => setCamera(ref)}>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-              <Text style={styles.text}>Flip Camera</Text>
-            </TouchableOpacity>
-          </View>
+        <CameraView style={styles.camera}
+          facing={facing} ref={ref => setCamera(ref)}
+          onBarcodeScanned={({ data }) => {
+            console.log('data', data)
+            close()
+            confirmId(data)
+          }}>
         </CameraView>
-        <View style={{ margin: 20, alignItems: 'center', borderRadius: 5, borderWidth: 2, borderColor: 'blue', padding: 10 }}>
-          <Button title="snap" onPress={btnSnap} />
+        <View style={{ height: 100 }}>
+          <TouchableOpacity onPress={close}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'red',
+              height: 100
+            }}>
+            <Text style={{
+              textAlign: 'center',
+              fontSize: 50,
+              fontWeight: 600,
+              color: 'white'
+            }}>Close</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -75,109 +95,10 @@ export default function Index() {
 
 
 
-
-
   const pressOnBtn = () => {
-    setShow(true)
+    setScanning(true)
   }
 
-  const cancel = () => {
-    setShow(false)
-    setId('')
-  }
-
-  const confirmId = async () => {
-    const res = await getTableIdWithLinkId(id)
-    console.log(res);
-
-    if (!res) {
-      alert(`The id ${id} is incorrect`)
-      setId('')
-    }
-    else {
-      setLinkApp({ tableId: res })
-      router.push({ pathname: "(tabs)/main" })
-    }
-  }
-
-  const messageId = () => {
-    if (show)
-      return <View
-        style={{
-          backgroundColor: 'rgb(183, 221, 250)',
-          justifyContent: 'center',
-          alignItems: 'center',
-          padding: 20,
-          borderRadius: 10,
-          width: '80%',
-          zIndex: 2,
-          position: 'absolute',
-          top: '50%',
-          transform: 'translateY(-100%)'
-        }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 35
-          }}>Enter your link id :</Text>
-        <View
-          style={{
-            backgroundColor: 'rgb(29, 45, 60)',
-            width: 100,
-            height: 2,
-            margin: 10
-          }}></View>
-        <TextInput
-          style={{
-            value: { id },
-            textAlign: 'center',
-            fontSize: 60,
-            backgroundColor: 'white',
-            borderRadius: 10,
-            width: '100%',
-          }}
-          keyboardType="numeric"
-          value={id}
-          onChangeText={text => setId(text.replace(/[^0-9]/g, ""))}
-          placeholder="ID"
-          maxLength={4}
-        />
-        <TouchableOpacity
-          style={{
-            marginTop: 10,
-            width: '80%',
-            backgroundColor: 'rgb(45, 207, 45)',
-            borderRadius: 10,
-            borderColor: 'white',
-            borderWidth: 2
-          }}
-          onPress={confirmId}>
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'white',
-              fontSize: 30,
-              fontWeight: 500
-            }}>
-            Validate
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{
-          position: 'absolute',
-          right: 0,
-          top: 0,
-          transform: 'translate(50%,-50%)'
-        }}
-          onPress={cancel}>
-          <ImageBackground
-            source={require('../assets/images/Cross-red-circle.png')}
-            style={{
-              width: 50,
-              height: 50,
-            }} />
-        </TouchableOpacity>
-      </View>
-  }
 
   return (
     <ImageBackground source={{
@@ -195,12 +116,11 @@ export default function Index() {
           <Text style={styles.textHeader}>Cafe Greg</Text>
           <Text style={styles.textHeader}>Link App</Text>
         </View>
-        {messageId()}
         <TouchableOpacity
           style={styles.button}
           onPress={pressOnBtn}>
           <Text style={styles.textBtn}>
-            Start
+            Scan the QR-link
           </Text>
         </TouchableOpacity>
 
@@ -243,11 +163,10 @@ const styles = StyleSheet.create({
   textBtn: {
     color: 'white',
     fontWeight: 600,
-    fontSize: 40
+    fontSize: 35
   },
   container: {
-    flex: 1,
-    backgroundColor: '#000',
+    flex: 1
   },
   camera: {
     flex: 1,
@@ -258,13 +177,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 20,
-  },
-  button: {
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    padding: 15,
-    borderRadius: 10,
-    borderColor: 'white',
-    borderWidth: 1,
   },
   text: {
     fontSize: 18,
