@@ -205,6 +205,87 @@
                     }
                 }
             }
+
+            .saucesContainer {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+
+                .sauces {
+                    width: 90%;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    text-align: center;
+                    gap: 20px;
+
+                    .selected {
+                        opacity: 1 !important;
+                    }
+
+                    .sauce {
+                        overflow: hidden;
+                        align-items: center;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        border-radius: 10px;
+
+                        .counterSection {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+
+                            p {
+                                text-align: center;
+                                flex: 1;
+                                background-color: aliceblue;
+                                font-size: 4vh;
+                                font-weight: 600;
+                            }
+
+                            .quantity {
+                                font-weight: 400;
+                                background-color: antiquewhite;
+                            }
+                        }
+
+                        .name {
+                            width: 100%;
+                            font-size: 25px;
+                            padding: 5px;
+                            background-color: rgba(255, 255, 255, 0.562);
+                        }
+
+                        .price {
+                            width: 100%;
+                            font-size: 40px;
+                            color: rgb(218, 228, 236);
+                            background-color: rgb(50, 173, 91);
+                            padding: 10px;
+                        }
+
+                        .imageContainer {
+                            width: 100%;
+                            height: 200px;
+
+                            img {
+                                height: 100%;
+                                width: 100%;
+                                object-fit: cover;
+                            }
+                        }
+
+                        .counterSection {
+                            height: 40px;
+                            background-color: rgb(255, 0, 0);
+                            width: 100%;
+
+                        }
+
+                    }
+                }
+            }
         }
 
 

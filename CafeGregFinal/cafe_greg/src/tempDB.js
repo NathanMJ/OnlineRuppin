@@ -625,30 +625,50 @@ export async function get_product(productId) {
         salads = await get_salads(product.salads); // ✅ await ici
     }
 
-    const newProduct = {
-        ...product,
-        ingredients,
-        salads
-    };
-
-    return newProduct;
 
     //get sauces
 
-    if (product.sauces) {
-        var sauces = get_sauces(id)
+    let sauces = []
+    if (product.sauces && product.sauces.length > 0) {
+        console.log(product.sauces);
 
-        //remove sauces to add them at the end
-        delete product.sauces
-        if (sauces) {
-            product = { ...product, sauces }
-        }
+        sauces = await get_sauces(product.sauces)
     }
 
-    return product
+
+    const newProduct = {
+        ...product,
+        ingredients,
+        salads,
+        sauces
+    };
+
+    return newProduct;
 }
 
 
+async function get_sauces(sauceIds) {
+
+    if (!sauceIds || sauceIds.length === 0) {
+        console.log(`No sauces`)
+        return
+    }
+
+    let everySauces = []
+    sauceIds.forEach((id_sauce) => {
+        let sauceFound = sauces.find(sauce => sauce._id == id_sauce)
+        if (!sauceFound) {
+            console.log(`The sauce with the id : ${id_sauce} was not found`)
+        }
+        else {
+            everySauces.push(sauceFound)
+        }
+    })
+
+    console.log('everySauces', everySauces);
+
+    return everySauces
+}
 
 
 async function get_salads(saladList) {
@@ -691,7 +711,7 @@ async function get_changes_ingredient(id) {
         var change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
         full_changes.push({ price, ...change_detail })
     })
-  
+
 
     return full_changes
 }
@@ -732,3 +752,5 @@ async function get_ingredients_of_product(ingredientsList) {
     })
     return ingredients
 }
+
+

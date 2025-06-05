@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { get_product } from "../tempDB";
 import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
 import FCSaladsProduct from "../FComponents/FCSaladsProduct.jsx";
+import FCSaucesProduct from "../FComponents/FCSaucesProduct.jsx";
 
 export default function ProductPage(props) {
 
@@ -10,9 +11,16 @@ export default function ProductPage(props) {
     const { productId, tableId } = location.state;
     const [product, setProduct] = useState(null)
 
-    //temp
-
     const [selectedSalad, setSelectedSalad] = useState(0);
+    const [selectedSauces, setSelectedSauces] = useState([])
+
+    /*  Template :
+
+        selectedSauce = {
+            id,
+            quantity        
+        } 
+    */
 
     useEffect(() => {
 
@@ -60,8 +68,12 @@ export default function ProductPage(props) {
     }
 
     const selectSalad = (saladId) => {
-        console.log(saladId);        
+        console.log(saladId);
         setSelectedSalad(saladId)
+    }
+
+    const addRemoveSauce = (sauceId) => {
+        console.log(sauceId);
     }
 
     return (
@@ -81,11 +93,14 @@ export default function ProductPage(props) {
             <div className="rightPage">
                 <div className="contentProduct">
 
-                    <h1 className="title">Ingredients</h1>
+                    {/* <h1 className="title">Ingredients</h1>
                     {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
                     ))}
-                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}
+                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''} */}
+
+                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addRemoveSauce={addRemoveSauce} />
+
                 </div>
                 <div className="orderTheProductContainer">
                     <button className="orderTheProduct" onClick={addTheCurrentOrder}>Order product</button>
