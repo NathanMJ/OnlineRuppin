@@ -221,6 +221,50 @@ export const orders = [
 ]
 
 
+
+const sauces = [
+    { _id: 0, name: "Silan" },
+    { _id: 1, name: "Tehina" },
+    { _id: 2, name: "Pesto" },
+    { _id: 3, name: "Crushed tomatoes" },
+    { _id: 4, name: "Sweet chili" },
+    { _id: 5, name: "Teriyaki" },
+    { _id: 6, name: "Skhug" },
+    { _id: 7, name: "Vinaigrette" },
+    { _id: 8, name: "Garlic butter" },
+    { _id: 9, name: "Mayonnaise" },
+    { _id: 10, name: "Jam" },
+    { _id: 11, name: "Parmesan" },
+    { _id: 12, name: "Raw tahini" },
+    { _id: 13, name: "Garlic sauce" },
+    { _id: 14, name: "Thousand Islands" },
+    { _id: 15, name: "Ketchup" },
+    { _id: 16, name: "Spicy pepper salsa" }
+]
+
+const salads = [
+    {
+        _id: 0,
+        name: "No salad"
+    },
+    {
+        _id: 1,
+        name: "Chopped salad",
+        description: "tomato, cucumber, onion, parsley, olive oil & lemon"
+    },
+    {
+        _id: 2,
+        name: "Green salad",
+        description: "lettuce mix, sliced cucumber, cherry tomatoes, citrus vinaigrette, rice crisps, red & white cabbage"
+    },
+    {
+        _id: 3,
+        name: "Galilee salad",
+        description: "red quinoa, black lentils, greens, cranberries, almonds"
+    }
+]
+
+
 export const sections = [
     {
         _id: 0,
@@ -492,7 +536,7 @@ function get_sections_from_section(id) {
 
     var sectionsId = sections.find(section => section._id == id).child_sections
     if (sectionsId == undefined || sectionsId == null) {
-        console.log('No sections found')
+        console.error('No sections found')
         return
     }
 
@@ -500,7 +544,7 @@ function get_sections_from_section(id) {
     sectionsId.forEach((eachId) => {
         var section = sections.find(element => element._id == eachId)
         if (!section) {
-            console.log(`Section ${eachId} does not exist`)
+            console.error(`Section ${eachId} does not exist`)
         }
         else {
             sectionsArr.push(section)
@@ -522,7 +566,7 @@ function get_products_from_section(id) {
     productIds.forEach((productId) => {
         var productFound = products.find((product) => product._id == productId)
         if (!productFound) {
-            console.log(`The product with the id ${productId} was not found`)
+            console.error(`The product with the id ${productId} was not found`)
         }
         else {
             arrProducts.push(productFound)
@@ -560,48 +604,34 @@ export function get_product_section(id) {
     const previousSection = sections.find(section => section.products.includes(id));
     return previousSection._id;
 }
-
-
 export async function get_product(productId) {
-    let product = products.find(product => product._id == productId);
+    const originalProduct = products.find(product => product._id == productId);
 
-    console.log('product', product);
-    console.log('productId', productId);
-
-    if (!product) {
+    if (!originalProduct) {
         console.error(`Product with ID ${productId} not found`);
         return null;
     }
 
-    let ingredients = [];
+    // Copie propre de l'objet sans le modifier directement
+    const product = { ...originalProduct };
 
-    // Ne fais ça que si product.ingredients existe
+    let ingredients = [];
     if (product.ingredients && product.ingredients.length > 0) {
-        ingredients = await get_ingredients_of_product(product.ingredients);
+        ingredients = await get_ingredients_of_product(product.ingredients); // ✅ await ici
     }
 
-    // Ne touche pas à l’objet original
+    let salads = [];
+    if (product.salads && product.salads.length > 0) {
+        salads = await get_salads(product.salads); // ✅ await ici
+    }
+
     const newProduct = {
         ...product,
-        ingredients
+        ingredients,
+        salads
     };
 
     return newProduct;
-
-
-    //get salads
-
-    if (product.salads) {
-        //get sauces
-        var salads = get_salads(product.salads)
-
-        //remove salads to add them
-        delete product.salads
-        if (salads) {
-            product = { ...product, salads }
-        }
-    }
-
 
     //get sauces
 
@@ -619,8 +649,23 @@ export async function get_product(productId) {
 }
 
 
-/* undone function */
 
+
+async function get_salads(saladList) {
+
+    var selectedSalads = []
+    if (!saladList) {
+        return
+    }
+    saladList.forEach(function (element) {
+        var id = (element._id ? element._id : element)
+        var salad = salads.find(s => s._id == id)
+
+        var price = (element.price ? element.price : 0)
+        selectedSalads.push({ ...salad, price })
+    })
+    return selectedSalads
+}
 
 
 
@@ -629,7 +674,7 @@ async function get_changes_ingredient(id) {
     var ingredient = ingredients.find(sIngredient => sIngredient._id == id);
 
     if (!ingredient) {
-        console.log(`Ingredient id : ${id} not found`)
+        console.error(`Ingredient id : ${id} not found`)
         return
     }
 
@@ -646,6 +691,7 @@ async function get_changes_ingredient(id) {
         var change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
         full_changes.push({ price, ...change_detail })
     })
+  
 
     return full_changes
 }
@@ -661,14 +707,10 @@ async function get_ingredient(id) {
 
     var changes = await get_changes_ingredient(ingredient._id)
 
-    console.log('changes are', changes);
-
-
     delete ingredient.changes_detail
 
     return { ...ingredient, changes }
 }
-
 
 
 async function get_ingredients_of_product(ingredientsList) {

@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get_product } from "../tempDB";
 import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
+import FCSaladsProduct from "../FComponents/FCSaladsProduct.jsx";
 
 export default function ProductPage(props) {
 
     const location = useLocation();
-    const {productId, tableId } = location.state;
+    const { productId, tableId } = location.state;
     const [product, setProduct] = useState(null)
-    
 
+    //temp
+
+    const [selectedSalad, setSelectedSalad] = useState(0);
 
     useEffect(() => {
 
@@ -52,14 +55,18 @@ export default function ProductPage(props) {
 
     const addTheCurrentOrder = () => {
         console.log('Add the order to the table');
-        
-        props.goto('/menu', {tableId})
+
+        props.goto('/menu', { tableId })
     }
 
+    const selectSalad = (saladId) => {
+        console.log(saladId);        
+        setSelectedSalad(saladId)
+    }
 
     return (
         <div className="productPage">
-            <div className="productDescription">
+            <div className="leftPage">
                 <button className="returnButton"
                     onClick={returnBtn}>Return</button>
                 <h1 className="name">{product.name}</h1>
@@ -71,13 +78,18 @@ export default function ProductPage(props) {
                 </p>
             </div>
 
-            <div className="productChanges">
-                <h1 className="title">Ingredients</h1>
-                {product.ingredients.map(ingredient => (
-                    <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
-                ))}
+            <div className="rightPage">
+                <div className="contentProduct">
 
-                <button className="orderTheProduct" onClick={addTheCurrentOrder}>Order product</button>
+                    <h1 className="title">Ingredients</h1>
+                    {product.ingredients.map(ingredient => (
+                        <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
+                    ))}
+                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}
+                </div>
+                <div className="orderTheProductContainer">
+                    <button className="orderTheProduct" onClick={addTheCurrentOrder}>Order product</button>
+                </div>
 
             </div>
 

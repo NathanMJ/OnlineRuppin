@@ -5,7 +5,7 @@
     display: flex;
     overflow: hidden;
 
-    .productDescription {
+    .leftPage {
         flex: 3;
         background-color: lightblue;
         display: flex;
@@ -62,80 +62,169 @@
 
     }
 
-    .productChanges {
+    .rightPage {
         flex: 6;
-        background-color: rgb(94, 147, 159);
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 30px;
-        overflow-y: scroll;
+        background-color: rgb(94, 147, 159);
 
-        &::-webkit-scrollbar {
-            display: none;
-        }
-
-        .orderTheProduct{
-            width: 70%;
-            font-size: 5vh;
-            border-radius: 30px;
-            background-color: green;
-            color: white;
-            padding: 4px;
+        .addPay {
+            background-color: rgb(190, 60, 21) !important;
+            color: rgb(207, 224, 231) !important;
         }
 
 
         .title {
             font-size: 5vh;
-            padding-top: 20px;
+            padding-block: 20px;
+            text-align: center;
         }
 
-        .ingredients {
+        .contentProduct {
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
+            gap: 30px;
+            overflow-y: scroll;
 
-            .ingredientName {
-                font-size: 4vh;
-                text-align: center;
-                margin-bottom: 20px;
+            &::-webkit-scrollbar {
+                display: none;
             }
 
-            .changesContainer {
-                display: flex;
-                flex-direction: row;
-                width: 90%;
-                border-radius: 8px;
-                justify-content: space-between;
-                gap: 1.5px;
-                text-align: center;
-                overflow: hidden;
 
-                .selectedChange {
-                    background-color: rgb(65, 141, 65) !important;
-                    color: rgb(126, 251, 126);
+            .ingredients {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+
+                .ingredientName {
+                    font-size: 4vh;
+                    text-align: center;
+                    margin-bottom: 20px;
                 }
 
-                .change {
-                    background-color: lightgray;
-                    width: 100%;
-                    padding: 1px;
-                    padding-block: 10px;
+                .changesContainer {
                     display: flex;
-                    flex-direction: column;
+                    flex-direction: row;
+                    width: 90%;
                     justify-content: space-between;
-                    gap: 5px;
+                    gap: 1.5px;
+                    text-align: center;
 
-                    .name {
-                        font-size: 3vh;
+                    .firstChange {
+                        border-top-left-radius: 8px;
+                        border-bottom-left-radius: 8px;
                     }
 
-                    .price {
-                        font-size: 1.5vh;
+                    .lastChange {
+                        border-top-right-radius: 8px;
+                        border-bottom-right-radius: 8px;
+                    }
+
+                    .selectedChange {
+                        box-shadow: 0 0 0 !important;
+                        filter: brightness(0.8);
+                        transform: translateY(15px);
+                        z-index: 0 !important;
+                    }
+
+                    .change {
+                        z-index: 1;
+                        box-shadow: rgba(0, 0, 0, 0.466) 0px 15px 10px;
+                        background-color: lightgray;
+                        width: 100%;
+                        padding-top: 10px;
+                        gap: 20px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+
+                        .name {
+                            font-size: 4vh;
+                        }
+
+                        .price {
+                            font-size: 3vh;
+                            justify-self: flex-end;
+                            padding-block: 5px;
+
+                        }
+                    }
+                }
+            }
+
+            .saladsContainer {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+
+                .salads {
+                    width: 90%;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                    text-align: center;
+                    gap: 20px;
+
+                    .selected {
+                        opacity: 1 !important;
+                    }
+
+                    .salad {
+                        opacity: 0.65;
+                        height: 400px;
+                        background-position: center;
+                        background-size: cover;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        align-items: center;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+
+                        .name {
+                            width: 100%;
+                            font-size: 40px;
+                            background-color: rgba(255, 189, 91, 0.562);
+                        }
+
+                        .price {
+                            width: 100%;
+                            font-size: 40px;
+                            color: rgb(218, 228, 236);
+                            background-color: rgb(50, 173, 91);
+                        }
+
+                        img {
+                            height: 100%;
+                            object-fit: cover;
+                        }
+
                     }
                 }
             }
         }
+
+
+        .orderTheProductContainer {
+            height: fit-content;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-block: 20px;
+
+            .orderTheProduct {
+                margin: auto;
+                width: 70%;
+                font-size: 5vh;
+                border-radius: 30px;
+                background-color: green;
+                color: white;
+                padding: 4px;
+            }
+        }
+
     }
 }
