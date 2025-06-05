@@ -1,27 +1,26 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { get_product } from "../tempDB";
-import FCProductChanges from "../FComponents/FCProductChanges";
+import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
 
-export default function ProductPage() {
-
+export default function ProductPage(props) {
 
     const location = useLocation();
-    const productId = location.state.productId;
-
+    const {productId, tableId } = location.state;
     const [product, setProduct] = useState(null)
+    
 
 
     useEffect(() => {
-        
-        if (productId === null || productId === undefined) 
+
+        if (productId === null || productId === undefined)
             return;
 
         const fetchData = async () => {
             const tempProduct = await get_product(productId);
             setProduct(tempProduct);
             console.log(tempProduct);
-            
+
         };
         fetchData();
     }, [productId]);
@@ -34,6 +33,27 @@ export default function ProductPage() {
 
     if (product === null) {
         return <div>Loading product...</div>; // Attente du fetch
+    }
+
+    const changeIngredient = (ingredientId, newChange) => {
+
+        const updatedProduct = {
+            ...product,
+            ingredients: product.ingredients.map(ingredient => {
+                if (ingredient._id === ingredientId) {
+                    return { ...ingredient, change_selected: newChange };
+                }
+                return ingredient;
+            })
+        };
+
+        setProduct(updatedProduct);
+    };
+
+    const addTheCurrentOrder = () => {
+        console.log('Add the order to the table');
+        
+        props.goto('/menu', {tableId})
     }
 
 
@@ -52,11 +72,15 @@ export default function ProductPage() {
             </div>
 
             <div className="productChanges">
-                <h1>Ingredients</h1>
+                <h1 className="title">Ingredients</h1>
                 {product.ingredients.map(ingredient => (
-                    <FCProductChanges ingredient={ingredient} key={ingredient._id}/>
+                    <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
                 ))}
+
+                <button className="orderTheProduct" onClick={addTheCurrentOrder}>Order product</button>
+
             </div>
+
         </div>
     )
 }

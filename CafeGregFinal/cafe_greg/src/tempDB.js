@@ -562,26 +562,32 @@ export function get_product_section(id) {
 }
 
 
-
 export async function get_product(productId) {
+    let product = products.find(product => product._id == productId);
 
+    console.log('product', product);
+    console.log('productId', productId);
 
-    let product = products.find(product => product._id === productId);
     if (!product) {
         console.error(`Product with ID ${productId} not found`);
         return null;
     }
 
-    //get ingredients
-    var ingredients = await get_ingredients_of_product(product.ingredients)
+    let ingredients = [];
 
+    // Ne fais ça que si product.ingredients existe
+    if (product.ingredients && product.ingredients.length > 0) {
+        ingredients = await get_ingredients_of_product(product.ingredients);
+    }
 
+    // Ne touche pas à l’objet original
+    const newProduct = {
+        ...product,
+        ingredients
+    };
 
-    //remove ingredients to add them
-    delete product.ingredients
-    product = { ...product, ingredients }
+    return newProduct;
 
-    return product;
 
     //get salads
 
@@ -677,7 +683,7 @@ async function get_ingredients_of_product(ingredientsList) {
             ingredients.push(ingredient)
         }
         else {
-            var ingredient = await  get_ingredient(ingredientId)
+            var ingredient = await get_ingredient(ingredientId)
             ingredient.change_selected = 1
             ingredients.push(ingredient)
         }
