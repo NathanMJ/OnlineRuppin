@@ -693,11 +693,9 @@ async function get_changes_ingredient(id) {
         console.error(`Ingredient id : ${id} not found`)
         return
     }
-    console.log('ingredient', ingredient.name);
 
     var changes = ingredient.changes_detail
 
-    console.log(changes);
 
     if (!changes) {
         changes = ingredients.find(sIngredient => sIngredient._id == - 1).changes_detail

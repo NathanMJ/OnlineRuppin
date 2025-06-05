@@ -68,7 +68,52 @@ export default function ProductPage(props) {
         setSelectedSalad(saladId)
     }
 
-    const addRemoveSauce = (sauceId) => {
+
+
+    const addSauce = (sauceId) => {
+        const exist = selectedSauces.find(sauce => sauce.id === sauceId)
+        console.log('exist', exist);
+
+        //if the sauce is already in selectedSauces use changeQuantitySauce(sauceId, '+')
+        if (exist) {
+            changeQuantitySauce(sauceId, '+')
+        }
+        else {
+            //if not existing add it in selectedSauces
+            selectedSauces.push({ id: sauceId, quantity: 1 })
+        }
+
+    }
+
+    const changeQuantitySauce = (sauceId, mark) => {
+
+        const indexSauce = selectedSauces.findIndex(sauce => sauce.id == sauceId)
+
+        if (indexSauce == null) {
+            return
+        }
+
+        let tempSelectedSauces = [...selectedSauces];
+        let sauce = { ...tempSelectedSauces[indexSauce] };
+
+        switch (mark) {
+            case '-':
+                sauce.quantity--;
+                if (sauce.quantity === 0) {
+                    tempSelectedSauces.splice(indexSauce, 1);
+                } else {
+                    tempSelectedSauces[indexSauce] = sauce;
+                }
+                setSelectedSauces(tempSelectedSauces);
+                return;
+
+            case '+':
+                sauce.quantity++;
+                tempSelectedSauces[indexSauce] = sauce;
+                setSelectedSauces(tempSelectedSauces);
+                return;
+        }
+
     }
 
     return (
@@ -87,14 +132,14 @@ export default function ProductPage(props) {
 
             <div className="rightPage">
                 <div className="contentProduct">
-
+                    {/*
                     <h1 className="title">Ingredients</h1>
-                    {product.ingredients.map(ingredient => (
+                     {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
                     ))}
-                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}
+                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''} */}
 
-                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addRemoveSauce={addRemoveSauce} />
+                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />
 
                 </div>
                 <div className="orderTheProductContainer">
