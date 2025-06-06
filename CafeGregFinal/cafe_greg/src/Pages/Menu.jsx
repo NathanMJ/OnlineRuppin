@@ -3,13 +3,17 @@ import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
 import { get_from_section, get_previous_section, orders } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
+import FCQRcode from '../FComponents/FCQRcode.jsx';
 export default function Menu(props) {
 
 
     const location = useLocation();
+    const [showQRcode, setShowQRcode] = useState(true)
+
     const tableId = location.state?.tableId || null;
     if (!tableId) {
-        return <div>Error: Table ID is required</div>;
+        alert('Error: Table ID is required')
+        props.goto('/cafeMain')
     }
 
     //For orders side :
@@ -146,8 +150,12 @@ export default function Menu(props) {
         props.goto('/productPage', { productId: productId, tableId: tableId });
     }
 
+
     return (
         <div className='menuPage'>
+
+            <FCQRcode show={showQRcode} hide={() => setShowQRcode(false)}></FCQRcode>
+
             <div className='orderSide'>
                 <div className='top'>
                     <h1>My orders</h1>
@@ -170,13 +178,16 @@ export default function Menu(props) {
                                 <p>Register/Login</p>
                                 <p className='littleText'>See my previous orders</p>
                             </button>
+                            <div className='qrCode'>
+                                <img src="../Pictures/Qr-code-logo.png" onClick={() => setShowQRcode(!showQRcode)} />
+                            </div>
                         </div>
                         <div className='help'>
                             <button onClick={askWaiter}>Ask a waiter</button>
                         </div>
                     </div>
                     <div className='logo'>
-                        <img src="../Pictures/Cafe-greg-logo.png" alt="" />
+                        <img src="../Pictures/Cafe-greg-logo.png" onClick={() => props.goto('/cafeMain')} />
                     </div>
                     <div className='rightLogo'>
                         <div className='research'>

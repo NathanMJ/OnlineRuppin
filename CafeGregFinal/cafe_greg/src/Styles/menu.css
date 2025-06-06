@@ -2,11 +2,61 @@
     --background-color: rgb(0, 0, 0) --header-background-color: rgb(117, 167, 117);
 }
 
+
+@keyframes qrCodeAnimation {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
 .menuPage {
     height: 100vh;
     width: 100vw;
     display: flex;
     flex-direction: row;
+
+
+    .FCQRcode {
+        position: fixed;
+        z-index: 20;
+        top: 50vh;
+        left: 50vw;
+        transform: translate(-50%, -50%);
+        background-color: bisque;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        padding: 50px;
+        border-radius: 20px;
+        animation: qrCodeAnimation 0.5s normal;
+
+        h1 {
+            font-size: 4vh;
+        }
+
+        img {
+            border-radius: 20px;
+            width: 50vh;
+        }
+
+        .cross{
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transform: translate(50%, -50%);
+            width: 100px;
+        }
+    }
+
 
 
     .orderSide {
@@ -245,7 +295,6 @@
             .research {
                 background-color: rgb(111, 218, 177);
                 border-bottom: 4px solid rgb(21, 133, 55);
-
             }
 
             .leftLogo {
@@ -256,11 +305,28 @@
                 .registerLogin {
                     height: 66%;
                     display: flex;
+                    gap: 20px;
                     justify-content: center;
+                    padding: 20px;
                     align-items: center;
 
+                    .qrCode {
+                        height: 80%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+
+                        img {
+                            height: 80%;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            padding: 3px;
+                            background-color: rgb(0, 0, 0);
+                        }
+                    }
+
                     button {
-                        cursor: pointer;                        
+                        cursor: pointer;
                         width: 66%;
                         padding: 10px;
                         text-align: center;
@@ -287,11 +353,12 @@
                     align-items: center;
 
                     button {
+                        z-index: 10;
                         font-size: 3vh;
                         width: 80%;
                         height: 90%;
                         transform: translateY(10px);
-                        cursor: pointer;                        
+                        cursor: pointer;
                         border-radius: 30px;
                     }
                 }
@@ -386,7 +453,7 @@
                         background-color: rgb(200, 24, 24);
                         color: white;
                         font-weight: 600;
-                        cursor: pointer;                        
+                        cursor: pointer;
                         font-size: 3vh;
                         width: 80%;
                         height: 90%;
@@ -468,13 +535,13 @@
                     position: relative;
                     background-position: center;
                     background-size: cover;
-                    
+
 
                     .name {
                         font-size: 4vh;
                         text-align: center;
                         padding-block: 10px;
-                        border-radius: 20px 20px 0 0 ;
+                        border-radius: 20px 20px 0 0;
                         background-color: rgb(88, 226, 129);
                     }
 
