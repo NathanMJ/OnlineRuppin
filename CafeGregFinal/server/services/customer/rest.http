@@ -1,0 +1,16 @@
+@Host = http://localhost:5500/api/customer
+### get every customers
+GET {{Host}}
+### get customer by id
+GET {{Host}}/profile/345538268
+### add customer or change it
+POST {{Host}}/add
+content-type: application/json
+{
+  "id": "345538270",
+  "contact": "nathanmimoun201@gmail.com",
+  "name": "Joe"
+}
+### Clean the database
+DELETE {{Host}}/clean
+

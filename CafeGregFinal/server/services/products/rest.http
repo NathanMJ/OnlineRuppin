@@ -1,0 +1,5 @@
+@Host = http://localhost:5500/api/product
+### get every customers
+GET {{Host}}
+### get customer by id
+GET {{Host}}/0
