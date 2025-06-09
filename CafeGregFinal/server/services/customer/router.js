@@ -11,7 +11,7 @@ const customerRouter = Router();
 
 customerRouter
     .get('/', logger, getAllCustomers) // Get all customers
-    .get('/profile/:id', logger, getCustomer) // Get a customer by ID
+    .get('/:id', logger, getCustomer) // Get a customer by ID
     .post('/add', logger, addCustomer) // Add a new customer
     .delete('/clean',logger, cleanCustomers); // Clean customers 
 

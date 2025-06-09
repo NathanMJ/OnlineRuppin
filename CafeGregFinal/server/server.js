@@ -24,6 +24,7 @@ server.use(express.urlencoded({ extended: true }))
 server.use('/api/customer', customerRouter)
 server.use('/api/product', productRouter)
 
+
 //start server
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

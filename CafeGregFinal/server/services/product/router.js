@@ -15,3 +15,19 @@ productRouter
     .get('/:id', logger, getProduct) 
 
 export default productRouter;
+
+
+
+// import { Router } from 'express';
+
+// const productRouter = Router();
+
+// productRouter
+//   .get('/', (req, res) => {
+//     res.json({ message: 'Tous les produits' });
+//   })
+//   .get('/:id', (req, res) => {
+//     res.json({ message: `Produit avec ID ${req.params.id}` });
+//   });
+
+// export default productRouter;

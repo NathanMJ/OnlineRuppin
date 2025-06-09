@@ -13,6 +13,8 @@ export async function getAllCustomers(req, res) {
 
 export async function getCustomer(req, res) {
     //check permits     
+
+    
     let customer = await Customer.findCustomer(req.params.id);
 
     if (!customer) {
@@ -23,8 +25,7 @@ export async function getCustomer(req, res) {
 
 export async function addCustomer(req, res) {
 
-    let { id, contact, name} = req.body;
-    const ogCustomer = new Customer(id, contact, name);
+    let { id, contact, name } = req.body;
 
     if (!id) {
         return res.status(400).json({ message: "Id is missing" });
@@ -36,20 +37,22 @@ export async function addCustomer(req, res) {
         return res.status(400).json({ message: "Name can not be empty" });
     }
 
-    //check if the id already exist
-    let customer = await Customer.findCustomer(id); 
+    const ogCustomer = new Customer(id, contact, name);
 
-        
+    //check if the id already exist
+    let customer = await Customer.findCustomer(id);
+
+
     if (customer) {
-        console.log("Customer already exist");
-        
+        return res.status(200).json({ message: 'Customer already exist', customer });
+
         return
-        if(updatedCustomer.changes.length > 0)
+        if (updatedCustomer.changes.length > 0)
             return res.status(200).json({ message: 'Customer successfully changed!', customer: updatedCustomer });
-        else 
+        else
             return res.status(200).json({ message: 'No changes were made to the customer.' });
-    } else {       
-        const newCustomer = await Customer.addCustomer(ogCustomer);        
+    } else {
+        const newCustomer = await Customer.addCustomer(ogCustomer);
         return res.status(200).json({ message: 'Customer successfully added!', customer: newCustomer });
     }
 
