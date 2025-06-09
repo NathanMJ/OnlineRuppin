@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AskIdMsg from "../FComponents/AskIdMsg";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { tempCafeTables } from "../tempDB";
 import { useNavigate } from "react-router-dom";
+import { fetchDB } from "../fetchDB";
+
 
 export default function CafeMain(props) {
     const [showAskId, setShowAskId] = useState(false);
@@ -11,8 +13,24 @@ export default function CafeMain(props) {
     const [isManager, setIsManager] = useState(true)
     const navigate = useNavigate();
 
-    const tables = tempCafeTables
+    const [tables, setTables] = useState([])
 
+    const fetchUrl = 'http://localhost:5500/api'
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const resFetch = await fetchDB(`${fetchUrl}/table`);
+                console.log(resFetch);
+                setTables(resFetch); // si tu veux les stocker
+            } catch (err) {
+                console.error("Erreur lors du fetch :", err);
+            }
+        };
+
+        fetchData();
+    }, []);
 
 
     const getAskLogo = (askCode) => {

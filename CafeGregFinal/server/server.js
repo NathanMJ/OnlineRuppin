@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
-import customerRouter from './services/customer/router.js';
 import 'dotenv/config';
+import customerRouter from './services/customer/router.js';
 import productRouter from './services/product/router.js';
+import tableRouter from './services/table/router.js';
 
 //set server port
 const PORT = process.env.PORT || 5500
@@ -23,6 +24,7 @@ server.use(express.urlencoded({ extended: true }))
 //add microservices routes here
 server.use('/api/customer', customerRouter)
 server.use('/api/product', productRouter)
+server.use('/api/table', tableRouter)
 
 
 //start server
