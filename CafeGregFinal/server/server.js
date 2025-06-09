@@ -3,7 +3,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import customerRouter from './services/customer/router.js';
 import 'dotenv/config';
-import productRouter from './services/products/router.js';
+import productRouter from './services/product/router.js';
 
 //set server port
 const PORT = process.env.PORT || 5500
