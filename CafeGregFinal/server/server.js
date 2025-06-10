@@ -35,11 +35,3 @@ server.listen(PORT, () => {
 
 
 
-/*
-
-
-Create an init server to add customer, orders, products, tables, etc...
-
-*/
-
-    

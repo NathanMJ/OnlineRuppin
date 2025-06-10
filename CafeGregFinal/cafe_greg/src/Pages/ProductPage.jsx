@@ -62,13 +62,13 @@ export default function ProductPage(props) {
     };
 
     const addTheCurrentOrder = () => {
+        //TO DO: add the current order to the list (in props)
         props.goto('/menu', { tableId })
     }
 
     const selectSalad = (saladId) => {
         setSelectedSalad(saladId)
     }
-
 
 
     const addSauce = (sauceId) => {
@@ -117,6 +117,12 @@ export default function ProductPage(props) {
 
     }
 
+    const addAnIngredient = (indexAddIngredient) => {
+    }
+    
+    console.log(product);
+    
+
     return (
         <div className="productPage">
             <div className="leftPage">
@@ -134,14 +140,14 @@ export default function ProductPage(props) {
             <div className="rightPage">
                 <div className="contentProduct">
 
-                    {/* <h1 className="title">Ingredients</h1>
-                     {product.ingredients.map(ingredient => (
+                    <h1 className="title">Ingredients</h1>
+                    {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
                     ))}
-                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}*/}
+                    <FCAddIngredients addAnIngredient={addAnIngredient} adds={product.adds} />
+                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />
+                    {/*{product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}*/}
 
-                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} /> 
-                    <FCAddIngredients adds={product.adds} />
 
                 </div>
                 <div className="orderTheProductContainer">

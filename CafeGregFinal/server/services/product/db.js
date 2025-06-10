@@ -33,16 +33,26 @@ export async function findProductById(id) {
         
         const db = client.db(process.env.DB_NAME); 
         const product = (await db.collection("products")
-  .aggregate([{ $match: { _id: id } }, {
-    $lookup: {
+      .aggregate([
+        { $match: { _id: id } },
+        {
+          $lookup: {
         from: "ingredients",
-        localField:"ingredients",
-        foreignField:'_id',
+        localField: "ingredients",
+        foreignField: "_id",
         as: "ingredients"
-
-    }
-  }])
-  .toArray())[0];
+          }
+        },
+        {
+          $lookup: {
+        from: "sauces",
+        localField: "sauces",
+        foreignField: "_id",
+        as: "sauces"
+          }
+        }
+      ])
+      .toArray())[0];
 
        return product;       
     }   catch (error){

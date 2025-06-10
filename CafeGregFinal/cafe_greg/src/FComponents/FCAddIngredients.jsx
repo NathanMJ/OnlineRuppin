@@ -20,11 +20,8 @@ export default function FCAddIngredients(props) {
     }
 
     const clickOnAnIngredient = (index) => {
-        //TO DO: check if he is already in the ingredient
-        console.log(index);
-
-        //TO DO: add the ingredient to ingredient (temporary with a cross to remove it)
         setShowIngredients(false)
+        props.addAnIngredient(index)
     }
 
 

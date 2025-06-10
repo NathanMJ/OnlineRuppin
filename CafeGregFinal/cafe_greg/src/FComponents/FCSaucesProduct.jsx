@@ -40,7 +40,7 @@ export default function FCSaucesProduct(props) {
         <div className="saucesContainer">
             <h1 className="title">Sauces (max {maxAdd} each)</h1>
             <div className="buttonAddLogo" onClick={clickOnAddASauce}>
-                <p className="content">Add sauces <span style={{fontWeight:600}}>+</span></p>
+                <p className="content">Add sauces <span style={{fontWeight:600}}>{!showSauces ? '+' : '-'}</span></p>
             </div>
             <div
                 className="addableSauce"
