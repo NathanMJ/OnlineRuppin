@@ -4,6 +4,7 @@ import { get_product } from "../tempDB";
 import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
 import FCSaladsProduct from "../FComponents/FCSaladsProduct.jsx";
 import FCSaucesProduct from "../FComponents/FCSaucesProduct.jsx";
+import FCAddIngredients from "../FComponents/FCAddIngredients.jsx";
 
 export default function ProductPage(props) {
 
@@ -132,14 +133,15 @@ export default function ProductPage(props) {
 
             <div className="rightPage">
                 <div className="contentProduct">
-                    
-                    <h1 className="title">Ingredients</h1>
+
+                    {/* <h1 className="title">Ingredients</h1>
                      {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
                     ))}
-                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}
+                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}*/}
 
-                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />
+                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} /> 
+                    <FCAddIngredients adds={product.adds} />
 
                 </div>
                 <div className="orderTheProductContainer">

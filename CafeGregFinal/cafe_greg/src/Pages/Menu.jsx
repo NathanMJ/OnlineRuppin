@@ -8,13 +8,22 @@ export default function Menu(props) {
 
 
     const location = useLocation();
-    const [showQRcode, setShowQRcode] = useState(true)
+    const tableId = location.state?.tableId ?? null;
+    console.log(location.state);
+    console.log(tableId);
+    
+    
 
-    const tableId = location.state?.tableId || null;
-    if (!tableId) {
-        alert('Error: Table ID is required')
-        props.goto('/cafeMain')
+    if (tableId === null || tableId === undefined) {
+
+        return <div></div>
+        // props.goto('/cafeMain')
     }
+
+    const [showQRcode, setShowQRcode] = useState(false)
+
+    console.log(location.state);
+
 
     //For orders side :
 

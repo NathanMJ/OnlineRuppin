@@ -206,28 +206,28 @@
                 }
             }
 
+            .buttonAddLogo {
+                border: antiquewhite solid 3px;
+                background-color: rgb(230, 213, 193);
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                border-radius: 20px;
+
+                .content {
+                    font-size: 50px;
+                    padding: 20px;
+                }
+            }
+
             .saucesContainer {
                 display: flex;
                 flex-direction: column;
                 width: 100%;
                 align-items: center;
                 gap: 20px;
-
-                .buttonAddLogo {
-                    border: antiquewhite solid 3px;
-                    background-color: rgb(230, 213, 193);
-                    text-align: center;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-                    border-radius: 20px;
-
-                    .content {
-                        font-size: 50px;
-                        padding: 20px;
-                    }
-                }
 
                 .addableSauce {
                     overflow-y: auto;
@@ -243,7 +243,7 @@
                     }
 
                     .sauce {
-                                cursor: pointer;
+                        cursor: pointer;
                         border-radius: 5px;
                         display: flex;
                         align-items: center;
@@ -273,10 +273,6 @@
                     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
                     text-align: center;
                     gap: 20px;
-
-                    .selected {
-                        opacity: 1 !important;
-                    }
 
                     .sauce {
                         overflow: hidden;
@@ -338,6 +334,66 @@
 
                     }
                 }
+            }
+
+            .addIngredientsContainer {
+
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                align-items: center;
+                gap: 20px;
+
+                .everyIngredientsContainer {
+
+                    background-color: rgba(0, 0, 0, 0.233);
+                    margin: auto;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 30px;
+                    border-radius: 40px;
+                    width: 90%;
+                    overflow: hidden;
+
+                    &::-webkit-scrollbar {
+                        display: none;
+                    }
+
+
+                    .ingredientContainer {
+                        width: 100%;
+                        background-color: aliceblue;
+                        display: grid;
+                        grid-template-areas: 'image name'
+                            'image price';
+                        grid-template-columns: 4fr 5fr;
+                        grid-template-rows: 2fr 1fr;
+                        text-align: center;
+                        border-radius: 40px;
+                        overflow: hidden;
+                        cursor: pointer;
+
+                        h1 {
+                            margin: auto;
+                            grid-area: name;
+                            font-size: 5vh;
+                        }
+
+                        h2 {
+                            grid-area: price;
+                            font-size: 6vh;
+                            font-weight: 500;
+                            width: 100%;
+                            margin: auto;
+                        }
+
+                        img {
+                            grid-area: image;
+                            width: 100%;
+                        }
+                    }
+                }
+
             }
         }
 

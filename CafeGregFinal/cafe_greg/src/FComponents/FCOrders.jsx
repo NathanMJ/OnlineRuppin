@@ -2,8 +2,16 @@ import { useState, useEffect } from "react";
 
 export default function FCOrders(props) {
 
+    const removeOrder = (id) => {
+        console.log('remove order ' + id);
+    }
+
+    const confirmOrder = (id) => {
+        console.log('confirm order ' + id);
+    }
     const useCountdown = (initialTime) => {
         const [time, setTime] = useState(initialTime);
+
 
         useEffect(() => {
             if (!time) return;
@@ -34,15 +42,20 @@ export default function FCOrders(props) {
                 const timer = useCountdown(order.timer || '13:10:00');
                 return (
                     <div className='order' key={index}>
-                        <div className="mainOrder">
-                            <div className="imageContainer">
-                                <img src={order.img} />
+                        <div className="mainOrderContainer">
+                            {order.status?.name === 'Pending' && <img onClick={() => removeOrder(order._id)} src='../Pictures/Cross.png' className="cross" />}
+                            {order.status?.name === 'Pending' && <img onClick={() => confirmOrder(order._id)} src='../Pictures/Confirmation.png' className="validate" />}
+                            <div className="mainOrder">
+                                <div className="imageContainer">
+                                    <img src={order.img} />
+                                </div>
+
+                                <div className="textContent">
+                                    <h1>{order.name}</h1>
+                                    <h2>{order.price}₪</h2>
+                                </div>
                             </div>
 
-                            <div className="textContent">
-                                <h1>{order.name}</h1>
-                                <h2>{order.price}₪</h2>
-                            </div>
                         </div>
                         <div className="statusContainer">
                             <h1 className="status"
@@ -52,12 +65,10 @@ export default function FCOrders(props) {
                                 }}
 
                             >{order.status?.name || 'TempStatus'}</h1>
-                            {order.status?.name === 'Received' ||
+                            {order.status?.name === 'Received' || order.status?.name === 'Pending' ||
                                 <div className="timerContainer">
-
                                     <h1 className="header">Time last status change</h1>
                                     <h1 className="timer">{timer}</h1>
-
                                 </div>}
                         </div>
 
@@ -76,9 +87,6 @@ export default function FCOrders(props) {
                                 })}
                             </div>
                         </details>
-                        <div className="details">
-
-                        </div>
                     </div>
                 )
             })}

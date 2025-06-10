@@ -10,8 +10,6 @@ export default function FCSaucesProduct(props) {
     const writePrice = (price, quantity) => {
         if (!price)
             price = 0
-
-
         const realPrice = calcAdd(quantity) + price
         console.log(realPrice);
 
@@ -65,7 +63,6 @@ export default function FCSaucesProduct(props) {
 
                     //find the sauce in sauces
                     const sauce = props.sauces.find(searchSauce => searchSauce._id == sauceObj.id)
-                    console.log(sauce);
 
                     return <div className="sauce" key={sauce._id}>
                         <h1 className="name">{sauce.name}</h1>
