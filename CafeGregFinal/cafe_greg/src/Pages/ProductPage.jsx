@@ -9,11 +9,12 @@ import FCAddIngredients from "../FComponents/FCAddIngredients.jsx";
 export default function ProductPage(props) {
 
     const location = useLocation();
-    const { productId, tableId } = location.state;
+    const { productId, tableId, sectionId } = location.state;
     const [product, setProduct] = useState(null)
 
-    const [selectedSalad, setSelectedSalad] = useState(0);
+    const [selectedSalad, setSelectedSalad] = useState(1);
     const [selectedSauces, setSelectedSauces] = useState([])
+    const [addedIngredients, setAddedIngredients] = useState([])
 
     /*  Template :
 
@@ -24,7 +25,6 @@ export default function ProductPage(props) {
     */
 
     useEffect(() => {
-
         if (productId === null || productId === undefined)
             return;
 
@@ -36,9 +36,10 @@ export default function ProductPage(props) {
         fetchProduct();
     }, [productId]);
 
-
     const returnBtn = () => {
-        window.history.back();
+        //TO DO: return to the menu but with the section not reset
+        props.goto('/menu', { tableId, sectionId})
+        
     }
 
 
@@ -118,10 +119,21 @@ export default function ProductPage(props) {
     }
 
     const addAnIngredient = (indexAddIngredient) => {
+        const addedIngredient = product.adds[indexAddIngredient]
+        //check if the ingredient is already added
+        if (addedIngredients.some(ingredient => ingredient.name === addedIngredient.name)) {
+            console.log('Already exist');
+            return
+        }
+        const tempAddedIngredients = [...addedIngredients, addedIngredient];
+        setAddedIngredients(tempAddedIngredients)
     }
-    
-    console.log(product);
-    
+
+    const removeAnAddedIngredient = (name) => {
+        const newAddedIngredients = addedIngredients.filter(ing => ing.name != name)
+        setAddedIngredients(newAddedIngredients)
+    }
+
 
     return (
         <div className="productPage">
@@ -140,13 +152,13 @@ export default function ProductPage(props) {
             <div className="rightPage">
                 <div className="contentProduct">
 
-                    <h1 className="title">Ingredients</h1>
+                     <h1 className="title">Ingredients</h1> 
                     {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} key={ingredient._id} />
-                    ))}
-                    <FCAddIngredients addAnIngredient={addAnIngredient} adds={product.adds} />
+                    ))} 
+                    <FCAddIngredients addedIngredients={addedIngredients} addAnIngredient={addAnIngredient} removeAnAddedIngredient={removeAnAddedIngredient} adds={product.adds} />
                     <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />
-                    {/*{product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}*/}
+                    {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad}/> : ''}
 
 
                 </div>

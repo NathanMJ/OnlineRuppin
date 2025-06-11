@@ -1,0 +1,45 @@
+.FCRegisterCustomerSide{
+    background: linear-gradient(to bottom,rgb(230, 207, 193),rgb(163, 127, 95));
+    width: 50vw;
+    height: 100vh;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
+.FCRegisterCustomerSide form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3vh;
+}
+
+.FCRegisterCustomerSide h1 {
+    font-size: 7vh;
+    font-weight: 700;
+}
+
+.FCRegisterCustomerSide form h2 {
+    font-size: 3vh;
+}
+
+.FCRegisterCustomerSide button {
+    width: 75%;
+    font-size: 5vh ;
+}
+
+.FCRegisterCustomerSide .labelInputDiv{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    width: 90%;
+}
+
+.FCRegisterCustomerSide .labelInputDiv input{
+    font-size: 3vh;
+    max-width: 100%;
+}

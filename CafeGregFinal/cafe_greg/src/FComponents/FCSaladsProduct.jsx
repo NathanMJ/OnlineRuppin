@@ -7,8 +7,6 @@ export default function FCSaladsProduct(props) {
         return '+' + price + '₪'
     }
 
-
-
     return (
         <div className="saladsContainer">
             <h1 className="title">Salad to choose</h1>

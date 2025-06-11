@@ -13,7 +13,12 @@ export default function CafeMain(props) {
     const [isManager, setIsManager] = useState(true)
     const navigate = useNavigate();
 
-    const [tables, setTables] = useState([])
+    const [tables, setTables] = useState([
+        {
+            _id:1,
+            customers:[123,4]
+        }
+    ])
 
     const fetchUrl = 'http://localhost:5500/api'
 

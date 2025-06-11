@@ -7,6 +7,7 @@ import ToggleService from './Pages/ToggleService.jsx'
 import CafeMain from './Pages/CafeMain.jsx'
 import Menu from './Pages/Menu.jsx'
 import ProductPage from './Pages/ProductPage.jsx'
+import CustomerRegisterLogin from './Pages/CustomerRegisterLogin.jsx'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
           <Route path='/cafeMain' element={<CafeMain goto={goto}/>}></Route>
           <Route path='/menu' element={<Menu goto={goto}/>}></Route>
           <Route path='/productPage' element={<ProductPage goto={goto}/>}></Route>
+          <Route path='/customerRegisterLogin' element={<CustomerRegisterLogin goto={goto}/>}></Route>
         </Routes>
       </div>
     </>

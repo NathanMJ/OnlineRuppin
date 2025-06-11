@@ -1,10 +1,18 @@
-import './App.css'
+import { useEffect, useState } from 'react'
+import FCLoginCustomerSide from '../FComponents/FCLoginCustomerSide.jsx';
+import FCRegisterCustomerSide from '../FComponents/FCRegisterCustomerSide.jsx';
+import FCHeaderCustomers from '../FComponents/FCHeaderCustomers.jsx';
+import ReturnButton from '../FComponents/ReturnButton.jsx';
+import { useLocation } from 'react-router-dom';
 
-function App() {
+export default function CustomerRegisterLogin(props) {
+
+  const location = useLocation()
+  const { tableId } = location.state
 
   const [customersDB, setCustomersDB] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
 
-  const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
+  const [customers, setCustomers] = useState(location.state?.customers ?? [])
 
 
   const correctID = (id) => {
@@ -49,10 +57,10 @@ function App() {
     //send a message to the customer to confirm it's him
 
     //temp message
-    if(isPhone(customer.contact)) {
+    if (isPhone(customer.contact)) {
       alert('A message will be sent to your phone number to confirm')
     }
-    else if(isEmail(customer.contact)) {
+    else if (isEmail(customer.contact)) {
       alert('A message will be sent to your email to confirm')
     }
     else {
@@ -148,16 +156,19 @@ function App() {
     console.log('customers', customers);
   }, [customers])
 
+  const clickOnReturnBtn = () =>{
+    
+    props.goto('/menu', { tableId })
+  }
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <HeaderCustomers logOut={logOut} customers={customers} ></HeaderCustomers>
+        <FCHeaderCustomers logOut={logOut} customers={customers} ></FCHeaderCustomers>
         <FCRegisterCustomerSide register={register} ></FCRegisterCustomerSide>
         <FCLoginCustomerSide login={login}></FCLoginCustomerSide>
-        <FCReturnButton bottom={'20px'} left={'20px'} size={'5vh'}></FCReturnButton>
+        <ReturnButton returnButton={clickOnReturnBtn} bottom={'20px'} left={'20px'} ></ReturnButton>
+        {/* <FCReturnButton bottom={'20px'} left={'20px'} size={'5vh'}></FCReturnButton> */}
       </div>
     </>
   )
 }
-
-export default App

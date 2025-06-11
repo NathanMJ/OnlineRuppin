@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from 'react';
 
 export default function FCSaucesProduct(props) {
     const maxAdd = 3;
     const eachAddPrice = 1
     const tempImage = 'https://www.emballagefute.com/1028-large_default/pots-a-sauce.jpg'
+
+    const sectionRef = useRef(null)
 
     const [showSauces, setShowSauces] = useState(false)
 
@@ -14,13 +16,22 @@ export default function FCSaucesProduct(props) {
         console.log(realPrice);
 
         if (realPrice == 0) {
-            return <h1 className="price">Free</h1> 
+            return <h1 className="price">Free</h1>
         }
         return <h1 className="price addPay">+ {realPrice} ₪</h1>
     }
 
     const clickOnAddASauce = () => {
         setShowSauces(!showSauces)
+        if (!showSauces) {
+            setTimeout(() => {
+                sectionRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+            }, 500)
+        }
+
     }
 
     const clickOnASauce = (sauceId) => {
@@ -31,24 +42,24 @@ export default function FCSaucesProduct(props) {
     const calcAdd = (quantity) => {
         if (quantity <= maxAdd)
             return 0
-        let toMuch = Number(quantity) - maxAdd 
-        console.log(toMuch);        
+        let toMuch = Number(quantity) - maxAdd
+        console.log(toMuch);
         return eachAddPrice * toMuch
     }
 
     return (
         <div className="saucesContainer">
             <h1 className="title">Sauces (max {maxAdd} each)</h1>
-            <div className="buttonAddLogo" onClick={clickOnAddASauce}>
-                <p className="content">Add sauces <span style={{fontWeight:600}}>{!showSauces ? '+' : '-'}</span></p>
+            <div className="buttonAddLogo" onClick={clickOnAddASauce}
+            >
+                <p className="content">Add sauces <span style={{ fontWeight: 600 }}>{!showSauces ? '+' : '-'}</span></p>
             </div>
             <div
                 className="addableSauce"
                 style={{
                     maxHeight: showSauces ? '50vh' : '0px',
                     transition: 'max-height 0.5s ease'
-                }}
-            >
+                }} ref={sectionRef}>
                 {props.sauces.map(sauce => (
                     <div className="sauce" key={sauce._id} onClick={() => clickOnASauce(sauce._id)}>
                         <div className="imageContainer">

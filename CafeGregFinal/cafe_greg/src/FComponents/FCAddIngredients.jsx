@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function FCAddIngredients(props) {
     const tempImage = 'https://www.emballagefute.com/1028-large_default/pots-a-sauce.jpg'
 
-    const [showIngredients, setShowIngredients] = useState(true)
+    const [showIngredients, setShowIngredients] = useState(false)
+
+    const sectionRef = useRef(null)
 
     const writePrice = (price) => {
         if (!price)
@@ -17,6 +19,9 @@ export default function FCAddIngredients(props) {
 
     const clickOnAddAnIngredient = () => {
         setShowIngredients(!showIngredients)
+        sectionRef.current?.scrollIntoView({ behavior: 'smooth', 
+            block: 'center' });
+
     }
 
     const clickOnAnIngredient = (index) => {
@@ -24,6 +29,9 @@ export default function FCAddIngredients(props) {
         props.addAnIngredient(index)
     }
 
+    const clickOnRemoveAnAddedIngredient = (name) => {
+        props.removeAnAddedIngredient(name)
+    }
 
     if (!props.adds) {
         return
@@ -38,7 +46,7 @@ export default function FCAddIngredients(props) {
                 style={{
                     maxHeight: showIngredients ? '50vh' : '0px',
                     transition: 'max-height 0.5s ease'
-                }}>
+                }} ref={sectionRef}>
 
                 {props.adds.map((add, index) => (
                     <div className="ingredientContainer" key={index} onClick={() => clickOnAnIngredient(index)}>
@@ -47,8 +55,23 @@ export default function FCAddIngredients(props) {
                         {writePrice(add.price)}
                     </div>
                 ))}
+
             </div>
 
+            {props.addedIngredients?.length > 0 &&
+                <div className="addedIngredients">
+                    {props.addedIngredients.map((eachIng, index) => (
+                        <div className="wrapEachAddedIngredient" key={index}>
+                            <div className="eachAddedIngredient">
+                                <img src={eachIng.img || tempImage} />
+                                <h1>{eachIng.name}</h1>
+                                {writePrice(eachIng.price)}
+                            </div>
+                            <h3 onClick={() => clickOnRemoveAnAddedIngredient(eachIng.name)} >Remove item</h3>
+                        </div>
+                    ))}
+                </div>
+            }
         </div>
     )
 

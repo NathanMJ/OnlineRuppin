@@ -354,7 +354,7 @@ export const sections = [
 
 
 
-const products = [
+export const products = [
     {
         _id: 0,
         name: "Turkish Bourekas",

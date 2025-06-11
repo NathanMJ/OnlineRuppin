@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
-import { get_from_section, get_previous_section, orders } from '../tempDB.js';
+import { get_from_section, get_previous_section, orders, products} from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
+
 export default function Menu(props) {
 
+    //TODO: when arrived here make a fetch of every section and every products (for research) for now its from tempDB
 
     const location = useLocation();
     const tableId = location.state?.tableId ?? null;
     console.log(location.state);
     console.log(tableId);
-    
-    
+
+    const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
+
+
 
     if (tableId === null || tableId === undefined) {
 
@@ -46,23 +50,6 @@ export default function Menu(props) {
     const [researchedProduct, setResearchedProduct] = useState('')
     const [productsFound, setProductsFound] = useState([])
 
-    const products = [
-        {
-            _id: 1,
-            img: 'https://www.southernliving.com/thmb/UW4kKKL-_M3WgP7pkL6Pb6lwcgM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ham_Sandwich_011-1-49227336bc074513aaf8fdbde440eafe.jpg',
-            name: 'Sandwich'
-        },
-        {
-            _id: 2,
-            img: 'https://www.southernliving.com/thmb/UW4kKKL-_M3WgP7pkL6Pb6lwcgM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ham_Sandwich_011-1-49227336bc074513aaf8fdbde440eafe.jpg',
-            name: 'Boker pour 3 personnes'
-        },
-        {
-            _id: 3,
-            img: 'https://www.southernliving.com/thmb/UW4kKKL-_M3WgP7pkL6Pb6lwcgM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Ham_Sandwich_011-1-49227336bc074513aaf8fdbde440eafe.jpg',
-            name: 'Pizza'
-        }
-    ]
 
 
     useEffect(() => {
@@ -88,12 +75,11 @@ export default function Menu(props) {
 
     //For sections/products 
 
-    const [sectionId, setSectionId] = useState(0);
+    const [sectionId, setSectionId] = useState(location.state?.sectionId ?? 0);
     const [mainContent, setMainContent] = useState([]);
 
     useEffect(() => {
         if (sectionId != null && sectionId != undefined) {
-            console.log(`Go with sectionId : ${sectionId}`);
             // Fetch sections from the server 
             let res = get_from_section(sectionId)
             console.log(res);
@@ -156,9 +142,13 @@ export default function Menu(props) {
     }
 
     const clickOnProduct = (productId) => {
-        props.goto('/productPage', { productId: productId, tableId: tableId });
+        props.goto('/productPage', { productId, tableId, sectionId });
     }
 
+    const clickOnRegisterLogin = () => {
+        //TODO: instead of send customers he will just send the tableId and with the table id take the customers from the database
+        props.goto('/customerRegisterLogin', { tableId, customers })
+    }
 
     return (
         <div className='menuPage'>
@@ -183,7 +173,7 @@ export default function Menu(props) {
                 <header>
                     <div className='leftLogo'>
                         <div className='registerLogin'>
-                            <button>
+                            <button onClick={clickOnRegisterLogin}>
                                 <p>Register/Login</p>
                                 <p className='littleText'>See my previous orders</p>
                             </button>
