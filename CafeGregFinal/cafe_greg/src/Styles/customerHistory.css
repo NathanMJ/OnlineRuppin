@@ -1,0 +1,17 @@
+.customerHistory {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+
+    .filterSide {
+        flex: 1;
+        background-color: rgb(159, 214, 214);
+    }
+
+    .historySide {
+        background-color: rgb(18, 167, 167);
+        flex: 2;
+    }
+}
