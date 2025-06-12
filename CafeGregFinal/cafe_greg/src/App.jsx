@@ -8,6 +8,7 @@ import CafeMain from './Pages/CafeMain.jsx'
 import Menu from './Pages/Menu.jsx'
 import ProductPage from './Pages/ProductPage.jsx'
 import CustomerRegisterLogin from './Pages/CustomerRegisterLogin.jsx'
+import CustomersHistory from './Pages/CustomersHistory.jsx'
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
           <Route path='/menu' element={<Menu goto={goto}/>}></Route>
           <Route path='/productPage' element={<ProductPage goto={goto}/>}></Route>
           <Route path='/customerRegisterLogin' element={<CustomerRegisterLogin goto={goto}/>}></Route>
+          <Route path='/customerHistory' element={<CustomersHistory goto={goto}/>}></Route>
         </Routes>
       </div>
     </>
