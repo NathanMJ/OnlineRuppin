@@ -12,8 +12,18 @@ export default function CustomerRegisterLogin(props) {
 
   const [customersDB, setCustomersDB] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
 
-  const [customers, setCustomers] = useState(location.state?.customers ?? [])
+  // const [customers, setCustomers] = useState(location.state?.customers ?? [])
 
+
+  const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' },
+  { name: 'John', id: '345538268', contact: '0584020406' },
+  { name: 'Mick', id: '345538268', contact: '0584020406' },
+  { name: 'Jordan', id: '345538268', contact: '0584020406' },
+  { name: 'Sarah', id: '345538268', contact: '0584020406' },
+  { name: 'Johnathan', id: '345538268', contact: '0584020406' },
+  { name: 'Jojo', id: '345538268', contact: '0584020406' },
+  { name: 'Frank', id: '345538268', contact: '0584020406' }
+  ])
 
   const correctID = (id) => {
     let regexIsID = /^[0-9]{8,9}$/;
@@ -156,18 +166,18 @@ export default function CustomerRegisterLogin(props) {
     console.log('customers', customers);
   }, [customers])
 
-  const clickOnReturnBtn = () =>{
-    
+  const clickOnReturnBtn = () => {
+
     props.goto('/menu', { tableId })
   }
   return (
     <>
-      <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <div style={{ display: 'flex', flexDirection: 'row' }} className='customerRegisterLoginPage'>
         <FCHeaderCustomers logOut={logOut} customers={customers} ></FCHeaderCustomers>
         <FCRegisterCustomerSide register={register} ></FCRegisterCustomerSide>
         <FCLoginCustomerSide login={login}></FCLoginCustomerSide>
         <ReturnButton returnButton={clickOnReturnBtn} bottom={'20px'} left={'20px'} ></ReturnButton>
-        {/* <FCReturnButton bottom={'20px'} left={'20px'} size={'5vh'}></FCReturnButton> */}
+
       </div>
     </>
   )

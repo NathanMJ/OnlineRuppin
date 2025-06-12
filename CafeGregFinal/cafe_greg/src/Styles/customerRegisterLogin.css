@@ -1,0 +1,246 @@
+.customerRegisterLoginPage {
+
+
+    .FCLoginCustomerSide {
+        background: linear-gradient(to bottom, rgb(189, 236, 223), rgb(93, 129, 120));
+        width: 50vw;
+        height: 100vh;
+        color: black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5%;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3vh;
+        }
+
+        h1 {
+            font-size: 7vh;
+            font-weight: 700;
+        }
+
+        form h2 {
+            font-size: 3vh;
+        }
+
+        button {
+            width: 75%;
+            font-size: 5vh;
+        }
+
+        .labelInputDiv {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 90%;
+        }
+
+        .labelInputDiv input {
+            font-size: 3vh;
+            max-width: 100%;
+        }
+
+
+    }
+
+    .FCRegisterCustomerSide {
+        background: linear-gradient(to bottom, rgb(230, 207, 193), rgb(163, 127, 95));
+        width: 50vw;
+        height: 100vh;
+        color: black;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5%;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3vh;
+        }
+
+        h1 {
+            font-size: 7vh;
+            font-weight: 700;
+        }
+
+        form h2 {
+            font-size: 3vh;
+        }
+
+        button {
+            width: 75%;
+            font-size: 5vh;
+        }
+
+
+        .labelInputDiv {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            width: 90%;
+        }
+
+        .labelInputDiv input {
+            font-size: 3vh;
+            max-width: 100%;
+        }
+
+    }
+
+    button {
+        border-radius: 8px;
+        border: 1px solid transparent;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        background-color: #1a1a1a;
+        color: white;
+        cursor: pointer;
+        transition: border-color 0.25s;
+    }
+
+    button:hover {
+        border-color: #646cff;
+    }
+
+    button:focus,
+    button:focus-visible {
+        outline: 4px auto -webkit-focus-ring-color;
+    }
+
+    .goDown {
+        animation: headerFromTopToDown 1s forwards;
+
+        .historyContainer {
+            opacity: 1 !important;
+        }
+
+
+
+    }
+
+    .goUp {
+        animation: headerFromDownToUp 1s forwards;
+
+        .historyContainer {
+            opacity: 0 !important;
+        }
+    }
+
+
+
+    .headerCustomers {
+        width: 100vw;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        display: flex;
+        flex-direction: row;
+        background-color: rgb(0, 0, 0, 0.25);
+
+
+        .customersContainer {
+            display: flex;
+            height: 100%;
+            margin-block: auto;
+            padding-block: 50px;
+            flex: 2;
+            align-items: center;
+            gap: 30px;
+            flex: 1;
+            overflow-x: auto;
+
+
+            .customerContainer {
+                border: 3px solid white;
+                background: linear-gradient(90deg, rgba(255, 255, 255, 0.59), rgba(0, 0, 0, 0.19));
+                padding: 8px 12px;
+                border-radius: 25px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                .name {
+                    font-size: 70px;
+                }
+
+                .id {
+                    font-size: 30px;
+                }
+
+            }
+        }
+
+        .historyContainer {
+            bottom: 0px;
+            right: 30px;
+            transform: translateY(50%);
+            border-radius: 30px;
+            opacity: 0;
+        }
+
+        .showCustomersButton {
+            left: 50%;
+            bottom: 0px;
+            border-radius: 0px 0px 30px 30px;
+            transform: translate(-50%, 100%);
+        }
+
+        .showCustomersButton,
+        .historyContainer {
+            display: flex;
+            position: absolute;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background-color: rgb(255, 255, 255);
+            overflow: hidden;
+            padding: 10px;
+            gap: 5px;
+
+            h1 {
+                text-align: center;
+                font-size: 40px;
+                display: flex;
+            }
+
+            img {
+                width: 50px;
+                filter: brightness(2);
+            }
+
+        }
+    }
+}
+
+@keyframes headerFromTopToDown {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes headerFromDownToUp {
+    100% {
+        transform: translateY(-100%);
+    }
+
+    0% {
+        transform: translateY(0%);
+    }
+}
