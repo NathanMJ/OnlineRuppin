@@ -1,11 +1,16 @@
+import { useState } from "react";
+
 export default function FCHeaderCustomers(props) {
 
+    const [showCustomers, setShowCustomers] = useState(null)
+
+    //TODO: if customer is empty we cant open the header
 
     if (props.customers.length == 0) {
-        return (<></>)
+        return (<h1>No customers</h1>)
     }
 
-    function getRandomColor() {
+    const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
         let color = '#';
         for (let i = 0; i < 6; i++) {
@@ -14,49 +19,36 @@ export default function FCHeaderCustomers(props) {
         return color;
     }
 
+    const clickOnOpenHeader = () => {
+        setShowCustomers(!showCustomers)
+    }
 
-    const size = '5vh'
     return (
-        <div className='headerCustomers' style={{
-            width: '100vw',
-            position: 'fixed',
-            top: '0px',
-            left: '0px',
-            display: 'flex',
-            flexDirection: 'row',
-            padding: size,
-            gap: size,
-            overflowX: 'auto',
-            backgroundColor: 'rgb(0, 0, 0, 0.25)',
-        }}>
-            <h1>Customers :</h1>
-            {props.customers.map(customer =>
-                <div key={customer.id} style={{
-                    position: 'relative'
-                }}>
+        <div className={`headerCustomers ${showCustomers && 'show'}`}>
+            <div className='customersContainer'>
 
-                    <p style={{
-                        fontSize: size,
-                        background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.59), rgba(0, 0, 0, 0.19))',
-                        backgroundColor: getRandomColor(),
-                        padding: '8px 12px',
-                        borderRadius: '25px',
-                        border: '3px solid white'
-                    }}>{customer.name}</p>
+                {props.customers.map((customer, index) =>
+                    <div key={index} style={{
+                        position: 'relative', backgroundColor: getRandomColor()
+                    }} className="customerContainer">
+                        <h1 className="name" >{customer.name}</h1>
+                        <h2 className="id">({customer.id})</h2>
+                        <img src='./Pictures/Cross.png' onClick={() => props.logOut(customer.id)} />
+                    </div>
+                )}
+            </div>
 
-                    <img style={{
-                        borderRadius: '100%',
-                        border: '3px solid white',
-                        position: 'absolute',
-                        top: '0px',
-                        right: '0px',
-                        transform: 'translate(50%, -50%)',
-                        width: size,
-                    }} src='./Pictures/Cross.png' onClick={() => props.logOut(customer.id)} />
+            <div className="historyContainer" onClick={() => props.goto('/customerHistory', { customers: props.customers })}>
+                <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/history2.png" />
+                <h1>See your order's history</h1>
+            </div>
 
-                </div>
+            <div className="showCustomersButton" onClick={clickOnOpenHeader}>
+                <img src="https://www.kindpng.com/picc/m/76-768103_customer-feedback-and-reviews-observablehq-logo-hd-png.png" />
+                <h1>{!showCustomers ? 'See' : 'Hide'} logged customers</h1>
+            </div>
 
 
-            )} </div>
+        </div>
     )
 }
