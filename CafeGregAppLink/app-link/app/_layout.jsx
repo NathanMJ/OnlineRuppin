@@ -5,15 +5,10 @@ export default function RootLayout() {
     <LinkAppProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index"></Stack.Screen>
+        <Stack.Screen name="helpToConnect"></Stack.Screen>
         <Stack.Screen name="(tabs)"></Stack.Screen>
       </Stack>
     </LinkAppProvider>
   </>;
 }
 
-
-/*
-        <Stack.Screen name="login" options={{ title: "Login" }}></Stack.Screen>
-        <Stack.Screen name="register" options={{ title: "Register" }}></Stack.Screen>
-        <Stack.Screen name="(tabs)" options={{ title: "Tabs" }}></Stack.Screen>
- */

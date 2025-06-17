@@ -71,22 +71,26 @@ export default function Index() {
             confirmId(data)
           }}>
         </CameraView>
-        <View style={{ height: 100 }}>
-          <TouchableOpacity onPress={close}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: 'red',
-              height: 100
-            }}>
-            <Text style={{
-              textAlign: 'center',
-              fontSize: 50,
-              fontWeight: 600,
-              color: 'white'
-            }}>Close</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={close}
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'red',
+            paddingInline: 40,
+            paddingBlock: 20,
+            borderRadius: 10,
+            position: 'absolute',
+            top: '80%',
+            left: '50%',
+            transform: 'translateX(-100%)'
+          }}>
+          <Text style={{
+            textAlign: 'center',
+            fontSize: 50,
+            fontWeight: 600,
+            color: 'white'
+          }}>Close</Text>
+        </TouchableOpacity>
       </View>
     );
 
@@ -96,7 +100,11 @@ export default function Index() {
 
 
   const pressOnBtn = () => {
-    setScanning(true)
+    //TO DO: set the scanning to true and open the camera and scan the qrcode for real
+
+    setLinkApp({ tableId: 0 })
+    router.push({ pathname: "(tabs)/main" })
+    // setScanning(true)
   }
 
 
@@ -124,6 +132,16 @@ export default function Index() {
           </Text>
         </TouchableOpacity>
 
+      </View>
+
+      <View className='helpButton'
+        style={{ flexDirection: 'row', position: 'absolute', bottom: 30, right: 30 }}>
+        <View style={{ position: 'absolute', left: 20, backgroundColor: 'rgb(156, 162, 163)', width: 100, borderRadius: 100, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>Help me</Text>
+        </View>
+        <View style={{ backgroundColor: 'rgb(156, 162, 163)', width: 100, borderRadius: 100, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 60, textAlign: 'center', borderRadius: 100, color: 'white' }}>?</Text>
+        </View>
       </View>
     </ImageBackground >
   );
@@ -166,6 +184,7 @@ const styles = StyleSheet.create({
     fontSize: 35
   },
   container: {
+    position: 'relative',
     flex: 1
   },
   camera: {

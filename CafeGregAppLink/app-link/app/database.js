@@ -116,8 +116,10 @@ const products = [
 
 export async function getTableIdWithLinkId(linkId) {
     
-    const res2 = await fetchTableIdFromServer(linkId)
-    console.log('res2', res2);
+    return 0
+    
+    const tableId = await fetchTableIdFromServer(linkId)
+    console.log('tableId', tableId);
         
     if (res2) {
         return res2

@@ -13,9 +13,13 @@ export default function main() {
 
   const { linkApp, setLinkApp } = useContext(LinkAppContext);
 
-  const [orders, setOrders] = useState([])
+  const [orders, setOrders] = useState([{ "id": 0, "img": "https://www.simplyorganic.com/media/recipe/resized/520x520/wysiwyg/tmp/simply-oragnic-Roasted-Tomato-Bruschetta-1080x1080-thumbnail.jpg", "name": "Bruschetta", "price": 7.5, "status": { "backgroundColor": "green", "color": "white", "id": 1, "status": "Ordered" } }, { "id": 1, "img": "https://img.taste.com.au/5qlr1PkR/taste/2016/11/spaghetti-bolognese-106560-1.jpeg", "name": "Spaghetti Bolognese", "price": 12.5, "status": { "backgroundColor": "red", "color": "white", "id": 0, "status": "Pending" } }])
+
+  //TODO : get for real the order from the database
 
   const fetchOrders = async () => {
+    //TODO: the orders are not fetched for real here
+    return
     try {
       if (linkApp.tableId) {
         const tempOrders = await getOrdersWithTableId(linkApp.tableId);
@@ -71,8 +75,8 @@ export default function main() {
         }}>My orders</Text>
       </View>
       <ScrollView>
-        <FCEveryOrdersMain orders={orders} 
-        refreshOrders={fetchOrders} />
+        <FCEveryOrdersMain orders={orders}
+          refreshOrders={fetchOrders} />
       </ScrollView>
       <TouchableOpacity onPress={disconnect} style={{
         backgroundColor: 'rgb(207, 57, 57)',
