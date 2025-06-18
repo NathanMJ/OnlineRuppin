@@ -107,6 +107,10 @@ export default function Index() {
     // setScanning(true)
   }
 
+  const clickOnHelpMe = () => {
+    router.push({ pathname: "helpToConnect" })
+  }
+
 
   return (
     <ImageBackground source={{
@@ -134,15 +138,23 @@ export default function Index() {
 
       </View>
 
-      <View className='helpButton'
-        style={{ flexDirection: 'row', position: 'absolute', bottom: 30, right: 30 }}>
-        <View style={{ position: 'absolute', left: 20, backgroundColor: 'rgb(156, 162, 163)', width: 100, borderRadius: 100, height: 100, justifyContent: 'center', alignItems: 'center' }}>
-          <Text>Help me</Text>
+      <TouchableOpacity className='helpButton' onPress={clickOnHelpMe()}
+        style={{ flexDirection: 'row', position: 'absolute', bottom: 30, right: 30, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ position: 'absolute', right: 0, backgroundColor: 'rgb(156, 162, 163)', borderRadius: 100, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 30, fontWeight: 700, color: 'white', padding: 14 }}>Help me             </Text>
         </View>
-        <View style={{ backgroundColor: 'rgb(156, 162, 163)', width: 100, borderRadius: 100, height: 100, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{
+          elevation: 30,
+          backgroundColor: 'rgb(156, 162, 163)',
+          width: 100,
+          borderRadius: 100,
+          height: 100,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
           <Text style={{ fontSize: 60, textAlign: 'center', borderRadius: 100, color: 'white' }}>?</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     </ImageBackground >
   );
 }
