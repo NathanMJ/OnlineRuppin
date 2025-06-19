@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+
 export default function HelpToConnect() {
 
     const [pageIndex, setPageIndex] = useState(0)
@@ -11,22 +12,23 @@ export default function HelpToConnect() {
 
     const arrow = 'https://static-00.iconduck.com/assets.00/arrow-circle-right-icon-512x512-b8acao5m.png'
 
+
     const pagesExplain = [
         {
             text: 'Scan the QR Logo on your given tablet',
-            img: ''
+            img: require('../assets/images/Page-1-explaination.jpg')
         },
         {
             text: 'A QR code will appear',
-            img: ''
+            img: require('../assets/images/Page-2-explaination.jpg')
         },
         {
             text: 'Click on the button in link app',
-            img: ''
+            img: require('../assets/images/Page-3-explaination.jpg')
         },
         {
             text: 'Scan the QR code and now you can order from your phone !',
-            img: ''
+            img: require('../assets/images/Page-4-explaination.jpg')
         }
     ]
 
@@ -54,18 +56,24 @@ export default function HelpToConnect() {
             </View>
             <View style={styles.explainView}>
                 <Text style={{ fontSize: 40, textAlign: "center", fontWeight: 600 }}>{pagesExplain[pageIndex].text}</Text>
-                <View style={{ flex: 1 }}>
-
-                </View>
+                {pagesExplain[pageIndex].img ? (
+                    <ImageBackground
+                        style={{ flex: 1 }}
+                        source={pagesExplain[pageIndex].img}
+                        imageStyle={{ resizeMode: "contain" }}
+                    />
+                ) : (
+                    <View style={{ flex: 1 }} />
+                )}
                 <View style={{ flexDirection: "row", justifyContent: 'space-between' }}>
-                    <TouchableOpacity style={{ display: pageIndex == 0 ? 'none' : 'block' }} onPress={() => clickOnArrow('left')}>
+                    <TouchableOpacity style={{ display: pageIndex == 0 ? 'none' : 'flex' }} onPress={() => clickOnArrow('left')}>
                         <Image
                             source={{ uri: arrow }}
                             style={{ transform: [{ scaleX: -1 }], width: 60, height: 60, alignSelf: 'center' }}
                         />
                     </TouchableOpacity>
                     <View style={{ flex: 1 }}></View>
-                    <TouchableOpacity style={{ display: pageIndex == pagesExplain.length - 1 ? 'none' : 'block' }} onPress={() => clickOnArrow('right')}>
+                    <TouchableOpacity style={{ display: pageIndex == pagesExplain.length - 1 ? 'none' : 'flex' }} onPress={() => clickOnArrow('right')}>
                         <Image
                             source={{ uri: arrow }}
                             style={{ width: 60, height: 60, alignSelf: 'center' }}
