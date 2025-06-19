@@ -11,12 +11,12 @@ export default function Index() {
 
   //to test a page direcly without going through the pages
 
-  const goDirectly = false
+  const goDirectly = true
   if (goDirectly) {
     useFocusEffect(
       React.useCallback(() => {
         setLinkApp({ tableId: 3 })
-        router.push({ pathname: "(tabs)/main" })
+        router.push({ pathname: "(registerTab)/login" })
       }, [])
     );
   }
@@ -138,7 +138,7 @@ export default function Index() {
 
       </View>
 
-      <TouchableOpacity className='helpButton' onPress={clickOnHelpMe()}
+      <TouchableOpacity className='helpButton' onPress={clickOnHelpMe}
         style={{ flexDirection: 'row', position: 'absolute', bottom: 30, right: 30, justifyContent: 'center', alignItems: 'center' }}>
         <View style={{ position: 'absolute', right: 0, backgroundColor: 'rgb(156, 162, 163)', borderRadius: 100, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ fontSize: 30, fontWeight: 700, color: 'white', padding: 14 }}>Help me             </Text>

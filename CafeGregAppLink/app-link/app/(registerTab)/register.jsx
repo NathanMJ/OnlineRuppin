@@ -1,7 +1,7 @@
-import React from 'react'
+import { Text, View } from 'react-native'
 
 export default function register() {
   return (
-    <div>register</div>
+    <View><Text>Register</Text></View>
   )
 }
