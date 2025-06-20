@@ -1,10 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
-import { ImageBackground, Animated, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function login() {
 
+
+
+    
     const [customers, setCustomers] = useState([
+        { name: 'Nathan', id: '345538268' },
+        { name: 'Nathan', id: '345538268' },
+        { name: 'Nathan', id: '345538268' },
+        { name: 'Nathan', id: '345538268' },
+        { name: 'Nathan', id: '345538268' },
+        { name: 'Nathan', id: '345538268' },
+        { name: 'Nathan', id: '345538268' },
         { name: 'Nathan', id: '345538268' },
         { name: 'John', id: '345532268' }
     ])
@@ -39,14 +49,16 @@ export default function login() {
                         <Ionicons name="person-circle-outline" size={50} color="black" />
                     </TouchableOpacity>
                 </View>
-                <View style={{ marginBlock: 10 }}>
-                    {customers?.length > 0 && customers.map((customer, index) => (
+                <ScrollView style={{ height: '100%', overflow: 'scroll' }}>
+                    <Text style={{ textAlign: 'center', fontSize: 33 }}>Logged customers :</Text>
+                    {customers?.length > 0 ? customers.map((customer, index) => (
                         <View key={index}>
                             <Text style={{ textAlign: 'center', fontSize: 40 }}>{customer.name}</Text>
                             <Text style={{ textAlign: 'center', fontSize: 20 }}>(Tz : {customer.id})</Text>
                         </View>
-                    ))}
-                </View>
+                    )) :
+                        <Text>No logged one</Text>}
+                </ScrollView>
             </View>
         </ImageBackground>
     )
