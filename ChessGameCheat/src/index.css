@@ -4,10 +4,20 @@
   height: 100vh;
   width: 100vw;
   background-color: antiquewhite;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+
+  .turn {
+
+    font-size: 60px;
+  }
+
 
   .chessGame {
-    width: 100%;
-
+    background-color: rgb(84, 73, 57);
     display: flex;
     flex-direction: column;
 
@@ -15,6 +25,8 @@
       display: flex;
       flex-direction: row;
       flex: 1;
+      justify-content: center;
+      align-items: center;
 
       .squares.even {
         background-color: rgb(207, 235, 209);
@@ -25,12 +37,11 @@
       }
 
       .squares.selected {
-        filter: brightness(0.8);
+        background-color: rgb(245, 227, 65) !important;
       }
 
       .squares.trajectory {
         position: relative;
-        /* filter: brightness(2); */
         overflow: hidden;
       }
 
@@ -42,7 +53,23 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
-        background: radial-gradient(circle at center, rgba(0, 0, 0, 0.5) 0%, transparent 50%);
+        background: radial-gradient(circle at center, rgba(0, 0, 0, 0.246) 0%, transparent 50%);
+      }
+
+      .squares.canBeTaken {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .squares.canBeTaken::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        background: radial-gradient(circle at center, rgba(255, 0, 0, 0.736) 0%, transparent 50%);
       }
 
       .squares {
@@ -56,11 +83,11 @@
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
-        }
+          width: 100%;
 
-        .pawn.white {
-          color: white;
-          text-shadow: black 1px 1px 1px;
+          img {
+            width: 100%;
+          }
         }
 
         .helpSquare {
