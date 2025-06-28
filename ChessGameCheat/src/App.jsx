@@ -3,114 +3,52 @@ import { use, useEffect, useState } from 'react'
 function App() {
   /*
   TODO:
-    we can eat your own pawn
-    set red color to the pawn you can take
+    the king can not move to a square where it can be eaten by a pawn of the other color
+    a pawn can not move if it would put the king in check
+    if the king is in check, the player must move the king or a pawn to block the check
+    if the king is in check and there is no way to block the check or move the king, the player loses
   */
+
+  const normalGame = []
 
   const heightGame = 8;
   const widthGame = 8;
   const sizeSquare = 80;
 
   const [turn, setTurn] = useState('white')
+  const [front, setFront] = useState(turn == 'white' ? 1 : -1)
+
   const [clickedSquare, setClickedSquare] = useState(null)
   const [previewSquares, setPreviewSquares] = useState([])
   const [eatSquares, setEatSquares] = useState([])
-  const [game, setGame] = useState([
-    {
-      name: 'pawn',
-      color: 'white',
-      x: 0,
-      y: 5
-    }, {
-      name: 'knight',
-      color: 'black',
-      x: 1,
-      y: 5
-    }, {
-      name: 'knight',
-      color: 'white',
-      x: 2,
-      y: 5
-    }, {
-      name: 'pawn',
-      color: 'white',
-      x: 5,
-      y: 3
-    }, {
-      name: 'pawn',
-      color: 'black',
-      x: 1,
-      y: 4
-    }, {
-      name: 'pawn',
-      color: 'black',
-      x: 6,
-      y: 3,
-      enPassant: true
-    }, {
-      name: 'pawn',
-      color: 'white',
-      x: 6,
-      y: 6
-    }, {
-      name: 'pawn',
-      color: 'black',
-      x: 6,
-      y: 5
-    }, {
-      name: 'rook',
-      color: 'black',
-      x: 4,
-      y: 4
-    }, {
-      name: 'rook',
-      color: 'white',
-      x: 4,
-      y: 6
-    }, {
-      name: 'pawn',
-      color: 'white',
-      x: 7,
-      y: 3
-    }, {
-      name: 'queen',
-      color: 'white',
-      x: 0,
-      y: 0
-    }, {
-      name: 'queen',
-      color: 'white',
-      x: 0,
-      y: 7
-    }, {
-      name: 'queen',
-      color: 'white',
-      x: 7,
-      y: 7
-    }, {
-      name: 'queen',
-      color: 'white',
-      x: 7,
-      y: 0
-    }, {
-      name: 'queen',
-      color: 'black',
-      x: 3,
-      y: 4
-    }, {
-      name: 'bishop',
-      color: 'black',
-      x: 1,
-      y: 1
-    }, {
-      name: 'bishop',
-      color: 'white',
-      x: 1,
-      y: 2
+  const [game, setGame] = useState([{
+    name: 'pawn',
+    color: 'black',
+    x: 7,
+    y: 3
+  }])
+
+  useEffect(() => {
+    if (clickedSquare) {
+      const pawn = isAPawn(clickedSquare.x, clickedSquare.y)
+      if (pawn)
+        console.log('pawn clicked:', pawn);
     }
-  ])
+  }, [clickedSquare])
+
+  useEffect(() => {
+    setFront(Math.pow(-1, turn == 'white' ? 0 : 1))
+  }, [turn])
+
+
 
   const clickOnSquare = (x, y) => {
+    if (clickedSquare && clickedSquare.x == x && clickedSquare.y == y) {
+      setClickedSquare(null)
+      setPreviewSquares([])
+      setEatSquares([])
+      return
+    }
     //if the square is selected move the pawn to the square
     const isSelected = [...previewSquares, ...eatSquares].some(square => square.x == x && square.y == y)
     if (isSelected) {
@@ -126,11 +64,21 @@ function App() {
   }
 
   const movePawnTo = (x, y) => {
+
     let newGame = game
     //find the pawn
     const pawnIndex = newGame.findIndex(pawn => pawn.x == clickedSquare.x && pawn.y == clickedSquare.y)
     //remove the pawn
     let [ogPawn] = newGame.splice(pawnIndex, 1)
+    //if the pawn is a pawn and the square to go is two squares forward, set the en passant property
+    if (ogPawn.name == 'pawn' && Math.abs(y - clickedSquare.y) == 2) {
+      ogPawn.enPassant = true
+    }
+    //if the pawn is a pawn and the square before is a pawn of the other color remove it
+    if (ogPawn.name == 'pawn' && isAPawn(x, y - front, otherColor(turn))) {
+      console.log(`removing pawn at ${x}, ${y - front}`);
+      newGame = newGame.filter(pawn => !(pawn.x == x && pawn.y == y - front))
+    }
     //remove the new location
     newGame = newGame.filter(pawn => !(pawn.x == x && pawn.y == y))
     //insert the pawn with the new location
@@ -170,47 +118,26 @@ function App() {
     // movements = ['one forward', '+', 'square', 'X', 'L', 'front left', 'front right']
 
     let movements = []
+
     switch (pawn.name) {
       case 'pawn':
-        if (pawn.color == 'white') {
-          if (!isAPawn(x, y - 1)) {
-            movements = ['one forward']
-          }
-          if (y == widthGame - 2 && !isAPawn(x, y - 2)) {
-            movements.push('two forward')
-          }
-          if (isAPawn(x + 1, y - 1, 'black')) {
-            movements.push('front right')
-          }
-          if (isAPawn(x - 1, y - 1, 'black')) {
-            movements.push('front left')
-          }
-          if (isAPawn(x + 1, y, 'black')?.hasOwnProperty('enPassant')) {
-            movements.push('en passant right')
-          }
-          if (isAPawn(x - 1, y, 'black')?.hasOwnProperty('enPassant')) {
-            movements.push('en passant left')
-          }
+        if (!isAPawn(x, y + front)) {
+          movements = ['one forward']
         }
-        else if (pawn.color == 'black') {
-          if (!isAPawn(x, y + 1)) {
-            movements = ['one forward']
-          }
-          if (y == 1 && !isAPawn(x, y + 2)) {
-            movements.push('two forward')
-          }
-          if (isAPawn(x - 1, y + 1, 'white')) {
-            movements.push('front right')
-          }
-          if (isAPawn(x + 1, y + 1, 'white')) {
-            movements.push('front left')
-          }
-          if (isAPawn(x - 1, y, 'white')?.hasOwnProperty('enPassant')) {
-            movements.push('en passant right')
-          }
-          if (isAPawn(x + 1, y, 'white')?.hasOwnProperty('enPassant')) {
-            movements.push('en passant left')
-          }
+        if (y == 1 && !isAPawn(x, y + 2 * (front))) {
+          movements.push('two forward')
+        }
+        if (isAPawn(x + 1, y + front, otherColor(turn))) {
+          movements.push('front right')
+        }
+        if (isAPawn(x - 1, y + front, otherColor(turn))) {
+          movements.push('front left')
+        }
+        if (isAPawn(x + 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
+          movements.push('en passant right')
+        }
+        if (isAPawn(x - 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
+          movements.push('en passant left')
         }
         break
       case 'queen':
@@ -225,46 +152,32 @@ function App() {
       case 'knight':
         movements = ['L']
         break
+      case 'king':
+        movements = ['square']
+        break
     }
 
 
     let tempPreviewSquares = []
     let tempEatSquares = []
-    if (pawn.color == 'white') {
-      if (movements.some(movement => movement == 'one forward')) {
-        tempPreviewSquares.push({ x, y: y - 1 })
-        if (movements.some(movement => movement == 'two forward')) {
-          tempPreviewSquares.push({ x, y: y - 2 })
-        }
-      }
-      if (movements.some(movement => movement == 'front right')) {
-        tempPreviewSquares.push({ x: x + 1, y: y - 1 })
-      }
-      if (movements.some(movement => movement == 'en passant right')) {
-        tempEatSquares.push({ x: x + 1, y: y - 1 })
-      }
-      if (movements.some(movement => movement == 'front left')) {
-        tempPreviewSquares.push({ x: x - 1, y: y - 1 })
-      }
-      if (movements.some(movement => movement == 'en passant left')) {
-        tempEatSquares.push({ x: x - 1, y: y - 1 })
-      }
+    if (movements.includes('one forward')) {
+      tempPreviewSquares.push({ x, y: y + front })
     }
-    else if (pawn.color == 'black') {
-      if (movements.some(movement => movement == 'one forward')) {
-        tempPreviewSquares.push({ x, y: y + 1 })
-        if (movements.some(movement => movement == 'two forward')) {
-          tempPreviewSquares.push({ x, y: y + 2 })
-        }
-      }
-      if (movements.some(movement => movement == 'front right' || movement == 'en passant right')) {
-        tempPreviewSquares.push({ x: x - 1, y: y + 1 })
-      }
-      if (movements.some(movement => movement == 'front left' || movement == 'en passant left')) {
-        tempPreviewSquares.push({ x: x + 1, y: y + 1 })
-      }
+    if (movements.includes('two forward')) {
+      tempPreviewSquares.push({ x, y: y + 2 * front })
     }
-
+    if (movements.includes('front right')) {
+      tempPreviewSquares.push({ x: x + 1, y: y + front })
+    }
+    if (movements.includes('en passant right')) {
+      tempEatSquares.push({ x: x + 1, y: y + front })
+    }
+    if (movements.includes('front left')) {
+      tempPreviewSquares.push({ x: x - 1, y: y + front })
+    }
+    if (movements.includes('en passant left')) {
+      tempEatSquares.push({ x: x - 1, y: y + front })
+    }
     if (movements.includes('+')) {
       //right side
       for (let i = 1; i + x < widthGame; i++) {
@@ -377,12 +290,28 @@ function App() {
       }
     }
     if (movements.includes('L')) {
-      for (let a = 1, b = (a == 1 ? 2 : 1); a <= 2; a++) {
+      for (let a = 1; a <= 2; a++) {
+        let b = (a == 1 ? 2 : 1)
         for (let c = 1; c <= 2; c++)
           for (let d = 1; d <= 2; d++) {
-            tempPreviewSquares.push({ x: x + a * Math.pow(-1, c), y: y + b * Math.pow(-1, d) })
-
+            let newX = x + a * Math.pow(-1, c)
+            let newY = y + b * Math.pow(-1, d)
+            if (!isAPawn(newX, newY, turn))
+              tempPreviewSquares.push({ x: newX, y: newY })
           }
+      }
+    }
+    if (movements.includes('square')) {
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          if (i == 0 && j == 0) continue // skip the current square
+          let newX = x + i
+          let newY = y + j
+          if (isAPawn(newX, newY, turn)) continue // skip if there is a pawn of the same color
+          if (0 <= newX && newX < widthGame && 0 <= newY && newY < heightGame) {
+            tempPreviewSquares.push({ x: newX, y: newY })
+          }
+        }
       }
     }
     //change the preview square where there is a pawn to eatSquares 
@@ -403,12 +332,20 @@ function App() {
     return game.find(pawn => pawn.x == x && pawn.y == y)
   }
 
+  const otherColor = (color) => {
+    if (color == 'white')
+      return 'black'
+    else if (color == 'black')
+      return 'white'
+    return null
+  }
+
   const setHelpEmplacement = (x, y) => {
     const help = true
     if (!help)
       return
     let writeOnSide = x == 0
-    let writeOnLastLine = y == widthGame - 1
+    let writeOnLastLine = y == 0
     if (writeOnSide || writeOnLastLine)
       return <div className='helpSquare'>
         {writeOnLastLine && <p className='letterPosition'>{String.fromCharCode(x + 97)}</p>}
@@ -441,23 +378,25 @@ function App() {
     <div className='mainPage'>
       <h1 className='turn'>{turn == 'white' ? 'White' : 'Black'} turn</h1>
       <div className='chessGame'>
-        {[...Array(heightGame)].map((_, indexRow) => (
-          <div className='rows' key={indexRow}>
-            {[...Array(widthGame)].map((_, indexColumn) => (
-              <div className={`squares ${(indexRow + indexColumn) % 2 == 0 ? 'even' : 'odd'} ${isSelected(indexColumn, indexRow) ? 'selected' : ''} 
-              ${isTrajectory(indexColumn, indexRow) && 'trajectory'}
-                ${isAnEatenSquare(indexColumn, indexRow) && 'canBeTaken'}
+        {[...Array(heightGame)].map((_, indexRow) => {
+          const invertedIndexRow = heightGame - 1 - indexRow
+          return (
+            <div className='rows' key={indexRow}>
+              {[...Array(widthGame)].map((_, indexColumn) => (
+                <div className={`squares ${(invertedIndexRow + indexColumn) % 2 == 0 ? 'even' : 'odd'} ${isSelected(indexColumn, invertedIndexRow) ? 'selected' : ''} 
+              ${isTrajectory(indexColumn, invertedIndexRow) && 'trajectory'}
+                ${isAnEatenSquare(indexColumn, invertedIndexRow) && 'canBeTaken'}
               `}
-                key={indexColumn}
-
-                style={{ height: `${sizeSquare}px`, width: `${sizeSquare}px` }}
-                onClick={() => { clickOnSquare(indexColumn, indexRow) }}>
-                {setHelpEmplacement(indexColumn, indexRow)}
-                {setPawns(indexColumn, indexRow)}
-              </div>
-            ))}
-          </div>
-        ))}
+                  key={indexColumn}
+                  style={{ height: `${sizeSquare}px`, width: `${sizeSquare}px` }}
+                  onClick={() => { clickOnSquare(indexColumn, invertedIndexRow) }}>
+                  {setHelpEmplacement(indexColumn, invertedIndexRow)}
+                  {setPawns(indexColumn, invertedIndexRow)}
+                </div>
+              ))}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
