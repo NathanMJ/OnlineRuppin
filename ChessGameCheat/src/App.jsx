@@ -3,46 +3,81 @@ import { use, useEffect, useState } from 'react'
 function App() {
   /*
   TODO:
-    the king can not move to a square where it can be eaten by a pawn of the other color
-    a pawn can not move if it would put the king in check
-    if the king is in check, the player must move the king or a pawn to block the check
-    if the king is in check and there is no way to block the check or move the king, the player loses
+  set the "stalemate" condition (win)
+  set the "draw" condition
   */
-
-  const normalGame = []
 
   const heightGame = 8;
   const widthGame = 8;
-  const sizeSquare = 80;
+  const sizeSquare = 60;
 
-  const [turn, setTurn] = useState('white')
-  const [front, setFront] = useState(turn == 'white' ? 1 : -1)
+  /*
+    a0Rw
+  */
+
+  let normalGame = [
+    { x: 0, y: 0, color: 'white', name: 'rook' },
+    { x: 7, y: 0, color: 'white', name: 'rook' },
+    { x: 2, y: 0, color: 'white', name: 'bishop' },
+    { x: 5, y: 0, color: 'white', name: 'bishop' },
+    { x: 1, y: 0, color: 'white', name: 'knight' },
+    { x: 6, y: 0, color: 'white', name: 'knight' },
+    { x: 3, y: 0, color: 'white', name: 'king' },
+    { x: 4, y: 0, color: 'white', name: 'queen' },
+  ]
+  for (let i = 0; i < 8; i++) {
+    normalGame.push({ x: i, y: 1, color: 'white', name: 'pawn' })
+  }
+
+  const lengthNormalGame = normalGame.length
+  for (let i = 0; i < lengthNormalGame; i++) {
+    normalGame.push({
+      x: normalGame[i].x,
+      y: heightGame - 1 - normalGame[i].y,
+      color: normalGame[i].color == 'white' ? 'black' : 'white',
+      name: normalGame[i].name
+    })
+  }
+
+
+  const [winner, setWinner] = useState(null)
+
 
   const [clickedSquare, setClickedSquare] = useState(null)
   const [previewSquares, setPreviewSquares] = useState([])
   const [eatSquares, setEatSquares] = useState([])
-  const [game, setGame] = useState([{
-    name: 'pawn',
-    color: 'black',
-    x: 7,
-    y: 3
-  }])
+  const [currentGame, setCurrentGame] = useState({
+    turn: 'white',
+    pawns: [
+      { x: 0, y: 5, color: 'white', name: 'pawn' },
+      { x: 7, y: 2, color: 'black', name: 'pawn' },
+    ]
+  })
+
+  const [incomingMovements, setIncomingMovements] = useState([])
+
+  const setTurn = (turn) => {
+    setCurrentGame(prevGame => ({ ...prevGame, turn }))
+  }
+
+  const setPawns = (pawns) => {
+    setCurrentGame(prevGame => ({ ...prevGame, pawns }))
+  }
 
   useEffect(() => {
     if (clickedSquare) {
-      const pawn = isAPawn(clickedSquare.x, clickedSquare.y)
+      const pawn = isAPawn(currentGame.pawns, clickedSquare.x, clickedSquare.y)
       if (pawn)
         console.log('pawn clicked:', pawn);
     }
   }, [clickedSquare])
 
-  useEffect(() => {
-    setFront(Math.pow(-1, turn == 'white' ? 0 : 1))
-  }, [turn])
-
-
 
   const clickOnSquare = (x, y) => {
+    if (winner) {
+      alert(`The game is over, ${winner} won!`)
+    }
+
     if (clickedSquare && clickedSquare.x == x && clickedSquare.y == y) {
       setClickedSquare(null)
       setPreviewSquares([])
@@ -51,11 +86,25 @@ function App() {
     }
     //if the square is selected move the pawn to the square
     const isSelected = [...previewSquares, ...eatSquares].some(square => square.x == x && square.y == y)
+    let pawns = currentGame.pawns
     if (isSelected) {
-      game.forEach(pawn => {
-        delete pawn.enPassant
-      })
-      movePawnTo(x, y)
+
+      const pawn = isAPawn(pawns, clickedSquare.x, clickedSquare.y)
+      const newPawns = movePawnTo(pawn, x, y, pawns)
+      setClickedSquare()
+      setEatSquares([])
+      setPreviewSquares([])
+
+      setPawns(newPawns)
+      setTurn(currentGame.turn == 'white' ? 'black' : 'white')
+
+      //if the opponnent can not play anymore, he won
+      const pawnCanMove = aPawnCanMove(otherColor(currentGame.turn), newPawns)
+      if (!pawnCanMove) {
+        setWinner(otherColor(currentGame.turn))
+        return
+      }
+
     }
     else {
       setClickedSquare({ x, y })
@@ -63,42 +112,38 @@ function App() {
     }
   }
 
-  const movePawnTo = (x, y) => {
-
-    let newGame = game
-    //find the pawn
-    const pawnIndex = newGame.findIndex(pawn => pawn.x == clickedSquare.x && pawn.y == clickedSquare.y)
-    //remove the pawn
-    let [ogPawn] = newGame.splice(pawnIndex, 1)
+  const movePawnTo = (ogPawn, x, y, pawns) => {
+    const copyPawn = { ...ogPawn }
+    //cleaned everyEnPassant property
+    pawns.forEach(pawn => {
+      delete pawn.enPassant
+    })
+    const front = getFront(ogPawn.color)
+    //erase the pawn
+    pawns = pawns.filter(pawn => !(pawn.x == ogPawn.x && pawn.y == ogPawn.y))
     //if the pawn is a pawn and the square to go is two squares forward, set the en passant property
-    if (ogPawn.name == 'pawn' && Math.abs(y - clickedSquare.y) == 2) {
+    if (ogPawn.name == 'pawn' && Math.abs(y - ogPawn.y) == 2) {
       ogPawn.enPassant = true
     }
     //if the pawn is a pawn and the square before is a pawn of the other color remove it
-    if (ogPawn.name == 'pawn' && isAPawn(x, y - front, otherColor(turn))) {
-      console.log(`removing pawn at ${x}, ${y - front}`);
-      newGame = newGame.filter(pawn => !(pawn.x == x && pawn.y == y - front))
+    if (ogPawn.name == 'pawn' && isAPawn(pawns, x, y - front, otherColor(ogPawn.color))) {
+      pawns = pawns.filter(pawn => !(pawn.x == x && pawn.y == y - front))
     }
     //remove the new location
-    newGame = newGame.filter(pawn => !(pawn.x == x && pawn.y == y))
+    pawns = pawns.filter(pawn => !(pawn.x == x && pawn.y == y))
+
     //insert the pawn with the new location
     if (ogPawn.name == 'pawn') {
-      if (ogPawn.color == 'white' && y == 0) {
-        ogPawn.name = 'queen'
+      if (ogPawn.color == 'white' && y == heightGame - 1) {
+        copyPawn.name = 'queen'
       }
-      if (ogPawn.color == 'black' && y == heightGame - 1) {
-        ogPawn.name = 'queen'
+      if (ogPawn.color == 'black' && y == 0) {
+        copyPawn.name = 'queen'
       }
     }
-    console.log(ogPawn);
-    newGame = [...newGame, { ...ogPawn, x, y }]
-    console.log(newGame);
-    setGame(newGame)
-    setClickedSquare()
-    setEatSquares([])
-    setPreviewSquares([])
-    setTurn(turn == 'white' ? 'black' : 'white')
-    return
+    pawns = [...pawns, { ...copyPawn, x, y }]
+    //return the game
+    return pawns
   }
 
 
@@ -108,35 +153,38 @@ function App() {
     }
   }, [clickedSquare])
 
-  const setEveryPreviewSquare = (x, y) => {
-    const pawn = game.find(pawn => pawn.x == x && pawn.y == y)
-    if (!pawn || pawn.color != turn) {
-      setPreviewSquares([])
-      return
-    }
-
+  const getFront = (color) => {
+    return color == 'white' ? 1 : -1
+  }
+  const getMovementsOfPawn = (pawns, pawn) => {
+    const front = getFront(pawn.color)
+    const turn = pawn.color
+    let { x, y } = pawn
     // movements = ['one forward', '+', 'square', 'X', 'L', 'front left', 'front right']
 
     let movements = []
 
     switch (pawn.name) {
       case 'pawn':
-        if (!isAPawn(x, y + front)) {
-          movements = ['one forward']
+
+        if (!isAPawn(pawns, x, y + front)) {
+          movements.push('one forward')
+          if (((y == 1 && pawn.color == 'white') ||
+            (y == heightGame - 2 && pawn.color == 'black'))
+            && !isAPawn(pawns, x, y + 2 * (front))) {
+            movements.push('two forward')
+          }
         }
-        if (y == 1 && !isAPawn(x, y + 2 * (front))) {
-          movements.push('two forward')
-        }
-        if (isAPawn(x + 1, y + front, otherColor(turn))) {
+        if (isAPawn(pawns, x + 1, y + front, otherColor(turn))) {
           movements.push('front right')
         }
-        if (isAPawn(x - 1, y + front, otherColor(turn))) {
+        if (isAPawn(pawns, x - 1, y + front, otherColor(turn))) {
           movements.push('front left')
         }
-        if (isAPawn(x + 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
+        if (isAPawn(pawns, x + 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
           movements.push('en passant right')
         }
-        if (isAPawn(x - 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
+        if (isAPawn(pawns, x - 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
           movements.push('en passant left')
         }
         break
@@ -156,7 +204,6 @@ function App() {
         movements = ['square']
         break
     }
-
 
     let tempPreviewSquares = []
     let tempEatSquares = []
@@ -181,13 +228,12 @@ function App() {
     if (movements.includes('+')) {
       //right side
       for (let i = 1; i + x < widthGame; i++) {
-        const pawn = isAPawn(x + i, y)
-        console.log({ x: x + i, y });
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x + i, y)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x + i, y })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x: x + i, y })
           }
           break;
@@ -195,13 +241,12 @@ function App() {
       }
       //left side
       for (let i = 1; x - i >= 0; i++) {
-        const pawn = isAPawn(x - i, y)
-        console.log({ x: x - i, y });
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x - i, y)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x - i, y })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x: x - i, y })
           }
           break;
@@ -210,12 +255,12 @@ function App() {
 
       //top side
       for (let i = 1; i + y < heightGame; i++) {
-        const pawn = isAPawn(x, y + i)
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x, y + i)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x, y: y + i })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x, y: y + i })
           }
           break;
@@ -223,12 +268,12 @@ function App() {
       }
       //bottom side
       for (let i = 1; y - i >= 0; i++) {
-        const pawn = isAPawn(x, y - i)
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x, y - i)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x, y: y - i })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x, y: y - i })
           }
           break;
@@ -238,12 +283,12 @@ function App() {
     if (movements.includes('x')) {
       //botton right side
       for (let i = 1; i + y < heightGame && i + x < heightGame; i++) {
-        const pawn = isAPawn(x + i, y + i)
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x + i, y + i)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x + i, y: y + i })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x: x + i, y: y + i })
           }
           break;
@@ -251,12 +296,12 @@ function App() {
       }
       //botton left side
       for (let i = 1; y + i < heightGame && x - i >= 0; i++) {
-        const pawn = isAPawn(x - i, y + i)
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x - i, y + i)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x - i, y: y + i })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x: x - i, y: y + i })
           }
           break;
@@ -264,12 +309,12 @@ function App() {
       }
       //top left side
       for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
-        const pawn = isAPawn(x - i, y - i)
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x - i, y - i)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x - i, y: y - i })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x: x - i, y: y - i })
           }
           break;
@@ -277,12 +322,12 @@ function App() {
       }
       //top right side
       for (let i = 1; y - i >= 0 && x + i >= 0; i++) {
-        const pawn = isAPawn(x + i, y - i)
-        if (!pawn) {
+        const findedPawn = isAPawn(pawns, x + i, y - i)
+        if (!findedPawn) {
           tempPreviewSquares.push({ x: x + i, y: y - i })
         }
         else {
-          if (pawn.color != turn) {
+          if (findedPawn.color != turn) {
             tempPreviewSquares.push({ x: x + i, y: y - i })
           }
           break;
@@ -296,7 +341,7 @@ function App() {
           for (let d = 1; d <= 2; d++) {
             let newX = x + a * Math.pow(-1, c)
             let newY = y + b * Math.pow(-1, d)
-            if (!isAPawn(newX, newY, turn))
+            if (!isAPawn(pawns, newX, newY, turn))
               tempPreviewSquares.push({ x: newX, y: newY })
           }
       }
@@ -307,29 +352,73 @@ function App() {
           if (i == 0 && j == 0) continue // skip the current square
           let newX = x + i
           let newY = y + j
-          if (isAPawn(newX, newY, turn)) continue // skip if there is a pawn of the same color
+          if (isAPawn(pawns, newX, newY, turn)) continue // skip if there is a pawn of the same color
           if (0 <= newX && newX < widthGame && 0 <= newY && newY < heightGame) {
             tempPreviewSquares.push({ x: newX, y: newY })
           }
         }
       }
     }
+
     //change the preview square where there is a pawn to eatSquares 
 
-    tempEatSquares = [...tempEatSquares, ...tempPreviewSquares.filter(square => isAPawn(square.x, square.y))]
-    tempPreviewSquares = tempPreviewSquares.filter(square => !isAPawn(square.x, square.y))
+    tempEatSquares = [...tempEatSquares, ...tempPreviewSquares.filter(square => isAPawn(pawns, square.x, square.y))]
+    tempPreviewSquares = tempPreviewSquares.filter(square => !isAPawn(pawns, square.x, square.y))
+    return { tempPreviewSquares, tempEatSquares }
+  }
 
+  const aPawnCanMove = (color, pawns) => {
+    const otherColorPawns = pawns.filter(pawn => pawn.color == color)
+    if (otherColorPawns.length == 0) {
+      return false
+    }
+
+    for (let pawn of otherColorPawns) {
+      const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(pawns, pawn)
+
+      if (tempEatSquares.length > 0 || tempPreviewSquares.length > 0)
+        return true
+    }
+    return false
+  }
+
+  const setEveryPreviewSquare = (x, y) => {
+    const pawn = currentGame.pawns.find(pawn => pawn.x == x && pawn.y == y)
+    if (!pawn || pawn.color != currentGame.turn) {
+      setPreviewSquares([])
+      return
+    }
+
+    const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(currentGame.pawns, pawn)
+
+    //if a pawn can be eaten by another pawn of the color's turn set tempPreviewSquares to empty
+    if (tempEatSquares.length > 0 || aPawnCanBeEat(currentGame.pawns, currentGame.turn)) {
+      tempPreviewSquares.length = 0
+    }
     setPreviewSquares(tempPreviewSquares)
     setEatSquares(tempEatSquares)
   }
 
-  const isAPawn = (x, y, color) => {
+  const aPawnCanBeEat = (pawns, color) => {
+    for (let pawn of pawns) {
+      if (pawn.color == color) {
+        const { tempEatSquares } = getMovementsOfPawn(pawns, pawn)
+        if (tempEatSquares.length > 0) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  const isAPawn = (pawns, x, y, color) => {
+
     if (!(0 <= x && x < widthGame && 0 <= y && y <= heightGame))
       return false
     if (color) {
-      return game.find(pawn => pawn.x == x && pawn.y == y && pawn.color == color)
+      return pawns.find(pawn => pawn.x == x && pawn.y == y && pawn.color == color)
     }
-    return game.find(pawn => pawn.x == x && pawn.y == y)
+    return pawns.find(pawn => pawn.x == x && pawn.y == y)
   }
 
   const otherColor = (color) => {
@@ -358,6 +447,7 @@ function App() {
       && clickedSquare.y == y
       && clickedSquare.x == x;
   }
+
   const isTrajectory = (x, y) => {
     const isTrajectory = previewSquares.some(square => square.x == x && square.y == y)
     return isTrajectory
@@ -367,16 +457,117 @@ function App() {
     const isTrajectory = eatSquares.some(square => square.x == x && square.y == y)
     return isTrajectory
   }
-  const setPawns = (x, y) => {
-    const pawn = game.find(pawns => pawns.x == x && pawns.y == y)
+
+  const writePawns = (x, y, game) => {
+
+    const pawn = game.pawns.find(pawns => pawns.x == x && pawns.y == y)
     if (pawn) {
       return <div className={`pawn`}><img src={`/${pawn.color}_${pawn.name}.webp`}></img></div >
     }
   }
 
+  const seeTheGameInXMovements = (x) => {
+    const preventInfiniteLoop = 30
+    let games = [currentGame]
+    let otherTurnGame = []
+    for (let i = 0; i < x; i++) {
+
+      if (i >= preventInfiniteLoop) {
+        console.warn('Prevented infinite loop in seeTheGameInXMovements')
+        return
+      }
+      //take every pawn 
+      for (let game of games) {
+        if (game.winner)
+          continue //skip the game if it has a winner
+        const canTake = aPawnCanBeEat(game.pawns, game.turn)
+
+        for (let pawn of game.pawns) {
+          if (pawn.color != game.turn)
+            continue
+          //if one pawn can eat, only play the tempEatSquares
+
+          //take every movement of the pawn
+          const { tempPreviewSquares, tempEatSquares } = getMovementsOfPawn(game.pawns, pawn)
+
+          //make every movement and add it to a temporary game
+          //if the pawn can eat, only take the eat squares
+          let movingSquares = []
+          if (tempEatSquares.length > 0) {
+            movingSquares = tempEatSquares
+          }
+          else if (tempPreviewSquares.length > 0 && !canTake) {
+            movingSquares = tempPreviewSquares
+          }
+          if (movingSquares.length > 0) {
+            for (let movingSquare of movingSquares) {
+              const newPawns = movePawnTo(pawn, movingSquare.x, movingSquare.y, game.pawns)
+              if (!aPawnCanMove(otherColor(pawn.color), newPawns)) {
+
+                otherTurnGame.push({ pawns: newPawns, turn: otherColor(pawn.color), winner: otherColor(pawn.color) })
+              } else {
+                otherTurnGame.push({ pawns: newPawns, turn: otherColor(pawn.color) })
+              }
+            }
+          }
+
+        }
+        //here you got every possible movement of the pawns for the curret game
+      }
+      //here we got every possible games in x movements
+      games = otherTurnGame
+
+      //clean every double game
+      setIncomingMovements(otherTurnGame)
+      otherTurnGame = []
+    }
+  }
+
+  const [futur, setFutur] = useState(1)
+
+
+  useEffect(() => {
+    seeTheGameInXMovements(futur)
+  }, [futur, currentGame])
+
+
+  const myColor = 'white'
+
+
+  const writeGame = (game) => {
+    return (<div className={`chessGame ${!game.winner ? '' : game.winner == myColor ? 'won' : 'loose'}`}>
+      {[...Array(heightGame)].map((_, indexRow) => {
+        const invertedIndexRow = heightGame - 1 - indexRow
+        return (
+          <div className='rows' key={indexRow}>
+            {[...Array(widthGame)].map((_, indexColumn) => (
+              <div className={`squares ${(invertedIndexRow + indexColumn) % 2 == 0 ? 'even' : 'odd'}`}
+                key={indexColumn}>
+                {writePawns(indexColumn, invertedIndexRow, game)}
+              </div>
+            ))}
+          </div>
+        )
+      })}
+    </div>
+    )
+  }
+
   return (
     <div className='mainPage'>
-      <h1 className='turn'>{turn == 'white' ? 'White' : 'Black'} turn</h1>
+      <div className='incomingMovements'>
+        {incomingMovements.map((game, index) => (
+          <div key={index}>{writeGame(game)}</div>
+        ))}
+      </div>
+      <h1>The quantity of movements : {incomingMovements.length}</h1>
+      <input
+        type="number"
+        style={{ width: '50px', fontSize: 30 }}
+        value={futur}
+        onChange={(e) => setFutur(e.target.value)}
+      />
+      <h1 className='turn'>{winner ? `${winner} won !` : `${currentGame.turn == 'white' ? 'White' : 'Black'} turn`}</h1>
       <div className='chessGame'>
         {[...Array(heightGame)].map((_, indexRow) => {
           const invertedIndexRow = heightGame - 1 - indexRow
@@ -391,7 +582,7 @@ function App() {
                   style={{ height: `${sizeSquare}px`, width: `${sizeSquare}px` }}
                   onClick={() => { clickOnSquare(indexColumn, invertedIndexRow) }}>
                   {setHelpEmplacement(indexColumn, invertedIndexRow)}
-                  {setPawns(indexColumn, invertedIndexRow)}
+                  {writePawns(indexColumn, invertedIndexRow, currentGame)}
                 </div>
               ))}
             </div>

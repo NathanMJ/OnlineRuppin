@@ -6,20 +6,47 @@
   background-color: antiquewhite;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 40px;
+  gap: 10px;
+
+  .incomingMovements {
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    width: 100%;
+    flex-shrink: 0; 
+
+    .chessGame.won {
+      background-color: green !important;
+    }
+
+    .chessGame.loose {
+      background-color: red !important;
+    }
+
+    .chessGame {
+      padding: 5px;
+      margin: 10px 7px;
+      background-color: rgb(141, 141, 141);
+
+      .squares {
+        width: 20px !important;
+        height: 20px !important;
+        cursor: default !important;
+      }
+    }
+  }
 
   .turn {
-
     font-size: 60px;
   }
 
 
   .chessGame {
-    background-color: rgb(84, 73, 57);
     display: flex;
     flex-direction: column;
+    border: black 1px solid;
 
     .rows {
       display: flex;
@@ -27,6 +54,7 @@
       flex: 1;
       justify-content: center;
       align-items: center;
+      gap: 0;
 
       .squares.even {
         background-color: rgb(207, 235, 209);
