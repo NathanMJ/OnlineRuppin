@@ -1,11 +1,8 @@
 import { use, useEffect, useState } from 'react'
+import { contractGame, decontractGame } from './concatGame'
+import { compareGame, getByteSize } from './test';
 
 function App() {
-  /*
-  TODO:
-  set the "stalemate" condition (win)
-  set the "draw" condition
-  */
 
   const heightGame = 8;
   const widthGame = 8;
@@ -14,6 +11,8 @@ function App() {
   /*
     a0Rw
   */
+
+  //Create white pawns first 
 
   let normalGame = [
     { x: 0, y: 0, color: 'white', name: 'rook' },
@@ -25,9 +24,11 @@ function App() {
     { x: 3, y: 0, color: 'white', name: 'king' },
     { x: 4, y: 0, color: 'white', name: 'queen' },
   ]
-  for (let i = 0; i < 8; i++) {
+
+  for (let i = 0; i < widthGame; i++) {
     normalGame.push({ x: i, y: 1, color: 'white', name: 'pawn' })
   }
+
 
   const lengthNormalGame = normalGame.length
   for (let i = 0; i < lengthNormalGame; i++) {
@@ -47,12 +48,12 @@ function App() {
   const [previewSquares, setPreviewSquares] = useState([])
   const [eatSquares, setEatSquares] = useState([])
   const [currentGame, setCurrentGame] = useState({
+    pawns: normalGame,
     turn: 'white',
-    pawns: [
-      { x: 0, y: 5, color: 'white', name: 'pawn' },
-      { x: 7, y: 2, color: 'black', name: 'pawn' },
-    ]
+    winner: null
   })
+
+
 
   const [incomingMovements, setIncomingMovements] = useState([])
 
@@ -467,6 +468,10 @@ function App() {
   }
 
   const seeTheGameInXMovements = (x) => {
+    // Keep the winning games in memory with the path 
+    // Max of 1000 movements 
+    // Keep the other turn games in memory 
+
     const preventInfiniteLoop = 30
     let games = [currentGame]
     let otherTurnGame = []
@@ -503,7 +508,6 @@ function App() {
             for (let movingSquare of movingSquares) {
               const newPawns = movePawnTo(pawn, movingSquare.x, movingSquare.y, game.pawns)
               if (!aPawnCanMove(otherColor(pawn.color), newPawns)) {
-
                 otherTurnGame.push({ pawns: newPawns, turn: otherColor(pawn.color), winner: otherColor(pawn.color) })
               } else {
                 otherTurnGame.push({ pawns: newPawns, turn: otherColor(pawn.color) })
@@ -519,6 +523,7 @@ function App() {
 
       //clean every double game
       setIncomingMovements(otherTurnGame)
+
       otherTurnGame = []
     }
   }
@@ -528,8 +533,13 @@ function App() {
 
   useEffect(() => {
     seeTheGameInXMovements(futur)
+
   }, [futur, currentGame])
 
+  useEffect(() => {
+    getByteSize(incomingMovements, futur);
+
+  },[incomingMovements])
 
   const myColor = 'white'
 
@@ -562,6 +572,7 @@ function App() {
       </div>
       <h1>The quantity of movements : {incomingMovements.length}</h1>
       <input
+        min={1}
         type="number"
         style={{ width: '50px', fontSize: 30 }}
         value={futur}
