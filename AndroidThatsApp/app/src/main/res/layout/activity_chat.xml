@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Nom de l'autre utilisateur -->
+    <TextView
+        android:id="@+id/textViewOtherUserName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nom utilisateur"
+        android:textSize="20sp"
+        android:padding="16dp"
+        android:background="#EEEEEE" />
+
+    <!-- Liste des messages -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+    <!-- Barre d'envoi du message -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/editTextMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Tape un message"
+            android:minHeight="48dp"
+            android:background="@android:drawable/edit_text"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/buttonSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Envoyer"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+</LinearLayout>
