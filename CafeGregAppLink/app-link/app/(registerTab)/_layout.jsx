@@ -1,5 +1,5 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { Tabs } from "expo-router";
+import { Tabs, router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 
@@ -23,12 +23,6 @@ export default function TabLayout() {
     const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
     const [isVisible, setIsVisible] = useState(false);
 
-    useEffect(() => {
-        // This code runs only the first time the component mounts
-        // Place your one-time logic here
-        console.log("First time arriving at login screen");
-    }, []);
-
     const togglePanel = () => {
         Animated.timing(slideAnim, {
             toValue: isVisible ? -panelWidth : 0,
@@ -37,6 +31,9 @@ export default function TabLayout() {
         }).start(() => setIsVisible(!isVisible));
     };
 
+    const returnToMenu = () => {
+        router.push({ pathname: "(tabs)/main" })
+    }
 
     const [customers, setCustomers] = useState([
         { name: 'Nathan', id: '345538268' },
@@ -58,10 +55,33 @@ export default function TabLayout() {
         <View style={{ flex: 1 }}>
             <View style={{
                 position: 'absolute',
+                width: '100%',
+                height: '100%',
+                zIndex: 1,
+                pointerEvents: 'box-none'
+            }}>
+                <TouchableOpacity style={{
+                    position: 'absolute',
+                    top: 20,
+                    right: 20,
+                    backgroundColor: 'rgb(255, 0, 0)',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingInline: 20,
+                    paddingBlock: 10,
+                    borderRadius: 10
+                }}
+                    onPress={returnToMenu}>
+                    <Text style={{ color: 'white', fontSize: 30 }}>Return</Text>
+                </TouchableOpacity>
+
+            </View>
+            <View style={{
+                position: 'absolute',
                 flexDirection: 'row',
                 height: '90%',
                 width: '100%',
-                zIndex: 1,
+                zIndex: 2,
                 pointerEvents: 'box-none'
             }}>
 
