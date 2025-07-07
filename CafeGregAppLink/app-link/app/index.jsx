@@ -16,7 +16,7 @@ export default function Index() {
     useFocusEffect(
       React.useCallback(() => {
         setLinkApp({ tableId: 3 })
-        router.push({ pathname: "(registerTab)/login" })
+        router.push({ pathname: "(tabs)/menu" })
       }, [])
     );
   }

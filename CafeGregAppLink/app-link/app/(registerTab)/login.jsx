@@ -1,50 +1,33 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from "react";
-import { ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
 import React, { useRef } from 'react';
-import { Animated, Dimensions } from 'react-native';
+import { Animated, Dimensions, TextInput } from 'react-native';
 import { useEffect } from "react";
-
+import FCInput from '../FuncComps/FCInput';
 
 export default function login() {
+    const { width: widthScreen } = useWindowDimensions();
 
+    const [inputs, setInputs] = useState({})
 
-    const screenWidth = Dimensions.get('window').width;
-    const panelWidth = screenWidth * 0.8;
+    const msg = (text) => {
+        console.log(text);
+        
+    }
 
-    const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-        // This code runs only the first time the component mounts
-        // Place your one-time logic here
-        console.log("First time arriving at login screen");
-    }, []);
-
-    const togglePanel = () => {
-        Animated.timing(slideAnim, {
-            toValue: isVisible ? -panelWidth : 0,
-            duration: 300,
-            useNativeDriver: false, // ← ici !
-        }).start(() => setIsVisible(!isVisible));
-    };
-
-
-    const [customers, setCustomers] = useState([
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'John', id: '345532268' }
-    ])
-
+    const login = () => {
+        if(!inputs.id1 || !inputs.id2){
+            msg('An input is missing')
+            return
+        }
+        if(inputs.id1 != inputs.id2){
+            msg('Ids are not same')
+            return
+        }
+        //TODO: try to log with id1
+    }
 
     return (
         <ImageBackground source={{
@@ -53,35 +36,33 @@ export default function login() {
             style={styles.backgroundImage}
             blurRadius={3}>
 
-            {/* <View style={{
-                position: 'absolute',
-                flexDirection: 'row',
-                height: '100%', 
-                width: '100%', 
-            }}>
-
-                <Animated.View style={[styles.panel, { transform: [{ translateX: slideAnim }] }]}>
-                    <ScrollView style={{ height: '100%', overflow: 'scroll' }}>
-                        <Text style={{ textAlign: 'center', fontSize: 33 }}>Logged customers :</Text>
-                        {customers?.length > 0 ? customers.map((customer, index) => (
-                            <View key={index}>
-                                <Text style={{ textAlign: 'center', fontSize: 40 }}>{customer.name}</Text>
-                                <Text style={{ textAlign: 'center', fontSize: 20 }}>(Tz : {customer.id})</Text>
-                            </View>
-                        )) :
-                            <Text>No logged one</Text>}
-                    </ScrollView>
-
-                    <TouchableOpacity
-                        style={styles.toggleButtonFloating}
-                        onPress={togglePanel}
-                    >
-                        <Ionicons name="person-circle-outline" size={50} color="black" />
-                    </TouchableOpacity>
-                </Animated.View>
-            </View> */}
-
-        </ImageBackground>
+            <Text style={styles.title}>Login</Text>
+            <FCInput
+                title={'Tehoudat zehout'} type={'numeric'}
+                placeholder={'Your tehoudat zehout'}
+                setVariable={(id) => setInputs({ ...inputs, id1: id })}></FCInput>
+            <FCInput
+                title={'Confirm your id :'} type={'numeric'}
+                placeholder={'Your tehoudat zehout'}
+                setVariable={(id) => setInputs({ ...inputs, id2: id })}></FCInput>
+            <TouchableOpacity onPress={login}
+                style={{
+                    width: widthScreen * 0.8,
+                    padding: '20 40',
+                    backgroundColor: 'rgb(59, 146, 116)',
+                    borderRadius: 20,
+                    borderColor: 'rgb(0,0,0)',
+                    borderWidth: 2,
+                    margin: 'auto'
+                }}>
+                < Text style={{
+                    fontSize: 50,
+                    color: 'white',
+                    textAlign: 'center',
+                    fontWeight: 800
+                }}>Login</Text>
+            </TouchableOpacity >
+        </ImageBackground >
     )
 }
 
@@ -91,48 +72,14 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         height: '100%',
-        justifyContent: 'center'
-    },
-    container: {
-        flex: 1,
-        backgroundColor: '#ddd',
-        justifyContent: 'center',
+        display: 'flex',
         alignItems: 'center',
+        gap: 40
     },
-    toggleButton: {
-        backgroundColor: '#333',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 20,
-    },
-    toggleText: {
-        color: '#fff',
-        fontSize: 18,
-    },
-    panel: {
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        height: '100%',
-        width: '80%',
-        backgroundColor: '#fff',
-        padding: 20,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 2, height: 2 },
-    },
-    toggleButtonFloating: {
-        position: 'absolute',
-        right: -70,
-        top: '10%',
-        transform: [{ translateY: -25 }],
-        backgroundColor: 'white',
-        borderRadius: 30,
-        padding: 5,
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 10,
+    title: {
+        fontSize: 50,
+        color: 'white',
+        fontWeight: 700,
+        paddingTop: 100
     }
-
 });
