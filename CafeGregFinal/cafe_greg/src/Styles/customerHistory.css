@@ -3,6 +3,7 @@
     height: 100vh;
     display: flex;
     flex-direction: row;
+    overflow: hidden;
 
     .filterSide {
         flex: 1;
@@ -82,13 +83,14 @@
         }
 
         .orders {
+            overflow-y: scroll;
             display: flex;
             flex-direction: column;
             gap: 30px;
             padding-block: 30px;
             background-color: aliceblue;
-            overflow-y: auto;
             align-items: center;
+            flex: 1;
 
             .order {
                 display: flex;
@@ -99,10 +101,13 @@
                 border-radius: 20px;
                 overflow: hidden;
                 align-items: center;
+                flex-shrink: 0;
 
                 img {
-                    width: 100%;
-                    flex: 2
+                    width: auto;
+                    height: 100%;
+                    flex: 2;
+                    object-fit: cover;
                 }
 
                 h1 {

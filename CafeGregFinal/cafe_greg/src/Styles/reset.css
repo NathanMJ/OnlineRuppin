@@ -48,5 +48,6 @@ table {
 }
 
 
-
-/**/
+* {
+  user-select: none;
+}
