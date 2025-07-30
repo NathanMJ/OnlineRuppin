@@ -3,6 +3,7 @@
     height: 100vh;
     display: flex;
     flex-direction: row;
+    overflow: hidden;
 
     .filterSide {
         flex: 1;
@@ -82,6 +83,7 @@
         }
 
         .orders {
+            overflow-y: scroll;
             display: flex;
             flex-direction: column;
             gap: 30px;
@@ -89,7 +91,11 @@
             flex: 1;
             background-color: aliceblue;
             align-items: center;
+<<<<<<< HEAD
             overflow: hidden;
+=======
+            flex: 1;
+>>>>>>> c3de61a0dad7963d836c01c9fd7cc9b055058887
 
             .order {
                 display: flex;
@@ -100,10 +106,13 @@
                 border-radius: 20px;
                 overflow: hidden;
                 align-items: center;
+                flex-shrink: 0;
 
                 img {
-                    width: 100%;
-                    flex: 2
+                    width: auto;
+                    height: 100%;
+                    flex: 2;
+                    object-fit: cover;
                 }
 
                 h1 {
