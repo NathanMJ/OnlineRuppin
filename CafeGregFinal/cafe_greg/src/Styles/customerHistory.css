@@ -86,9 +86,10 @@
             flex-direction: column;
             gap: 30px;
             padding-block: 30px;
+            flex: 1;
             background-color: aliceblue;
-            overflow-y: auto;
             align-items: center;
+            overflow: hidden;
 
             .order {
                 display: flex;

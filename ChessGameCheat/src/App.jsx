@@ -1,16 +1,15 @@
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { contractGame, decontractGame } from './concatGame'
-import { compareGame, getByteSize } from './test';
+import { getByteSize } from './test';
+import FCGame from './FuncComps/FCGame';
 
 function App() {
+
+
 
   const heightGame = 8;
   const widthGame = 8;
   const sizeSquare = 60;
-
-  /*
-    a0Rw
-  */
 
   //Create white pawns first 
 
@@ -48,7 +47,12 @@ function App() {
   const [previewSquares, setPreviewSquares] = useState([])
   const [eatSquares, setEatSquares] = useState([])
   const [currentGame, setCurrentGame] = useState({
-    pawns: normalGame,
+    pawns: [
+      { name: 'pawn', x: 0, y: 3, color: 'white' },
+      { name: 'pawn', x: 0, y: 5, color: 'white' },
+      { name: 'pawn', x: 6, y: 5, color: 'black' },
+      { name: 'pawn', x: 1, y: 5, color: 'black' }
+    ],
     turn: 'white',
     winner: null
   })
@@ -57,61 +61,6 @@ function App() {
 
   const [incomingMovements, setIncomingMovements] = useState([])
 
-  const setTurn = (turn) => {
-    setCurrentGame(prevGame => ({ ...prevGame, turn }))
-  }
-
-  const setPawns = (pawns) => {
-    setCurrentGame(prevGame => ({ ...prevGame, pawns }))
-  }
-
-  useEffect(() => {
-    if (clickedSquare) {
-      const pawn = isAPawn(currentGame.pawns, clickedSquare.x, clickedSquare.y)
-      if (pawn)
-        console.log('pawn clicked:', pawn);
-    }
-  }, [clickedSquare])
-
-
-  const clickOnSquare = (x, y) => {
-    if (winner) {
-      alert(`The game is over, ${winner} won!`)
-    }
-
-    if (clickedSquare && clickedSquare.x == x && clickedSquare.y == y) {
-      setClickedSquare(null)
-      setPreviewSquares([])
-      setEatSquares([])
-      return
-    }
-    //if the square is selected move the pawn to the square
-    const isSelected = [...previewSquares, ...eatSquares].some(square => square.x == x && square.y == y)
-    let pawns = currentGame.pawns
-    if (isSelected) {
-
-      const pawn = isAPawn(pawns, clickedSquare.x, clickedSquare.y)
-      const newPawns = movePawnTo(pawn, x, y, pawns)
-      setClickedSquare()
-      setEatSquares([])
-      setPreviewSquares([])
-
-      setPawns(newPawns)
-      setTurn(currentGame.turn == 'white' ? 'black' : 'white')
-
-      //if the opponnent can not play anymore, he won
-      const pawnCanMove = aPawnCanMove(otherColor(currentGame.turn), newPawns)
-      if (!pawnCanMove) {
-        setWinner(otherColor(currentGame.turn))
-        return
-      }
-
-    }
-    else {
-      setClickedSquare({ x, y })
-      setEatSquares([])
-    }
-  }
 
   const movePawnTo = (ogPawn, x, y, pawns) => {
     const copyPawn = { ...ogPawn }
@@ -148,15 +97,10 @@ function App() {
   }
 
 
-  useEffect(() => {
-    if (clickedSquare) {
-      setEveryPreviewSquare(clickedSquare.x, clickedSquare.y)
-    }
-  }, [clickedSquare])
-
   const getFront = (color) => {
     return color == 'white' ? 1 : -1
   }
+
   const getMovementsOfPawn = (pawns, pawn) => {
     const front = getFront(pawn.color)
     const turn = pawn.color
@@ -430,42 +374,6 @@ function App() {
     return null
   }
 
-  const setHelpEmplacement = (x, y) => {
-    const help = true
-    if (!help)
-      return
-    let writeOnSide = x == 0
-    let writeOnLastLine = y == 0
-    if (writeOnSide || writeOnLastLine)
-      return <div className='helpSquare'>
-        {writeOnLastLine && <p className='letterPosition'>{String.fromCharCode(x + 97)}</p>}
-        {writeOnSide && <p className='numberPosition'>{y + 1}</p>}
-      </div>
-  }
-
-  const isSelected = (x, y) => {
-    return clickedSquare
-      && clickedSquare.y == y
-      && clickedSquare.x == x;
-  }
-
-  const isTrajectory = (x, y) => {
-    const isTrajectory = previewSquares.some(square => square.x == x && square.y == y)
-    return isTrajectory
-  }
-
-  const isAnEatenSquare = (x, y) => {
-    const isTrajectory = eatSquares.some(square => square.x == x && square.y == y)
-    return isTrajectory
-  }
-
-  const writePawns = (x, y, game) => {
-
-    const pawn = game.pawns.find(pawns => pawns.x == x && pawns.y == y)
-    if (pawn) {
-      return <div className={`pawn`}><img src={`/${pawn.color}_${pawn.name}.webp`}></img></div >
-    }
-  }
 
   const seeTheGameInXMovements = (x) => {
     // Keep the winning games in memory with the path 
@@ -521,7 +429,9 @@ function App() {
       //here we got every possible games in x movements
       games = otherTurnGame
 
-      //clean every double game
+      //TODO: clean every double game
+
+
       setIncomingMovements(otherTurnGame)
 
       otherTurnGame = []
@@ -533,41 +443,37 @@ function App() {
 
   useEffect(() => {
     seeTheGameInXMovements(futur)
-
+    console.log(currentGame);
+    
   }, [futur, currentGame])
 
-  useEffect(() => {
-    getByteSize(incomingMovements, futur);
-
-  },[incomingMovements])
+  // useEffect(() => {
+  //   getByteSize(incomingMovements, futur);
+  // }, [incomingMovements])
 
   const myColor = 'white'
 
+  useEffect(() => {
+    console.log(currentGame);
+  }, [currentGame])
 
-  const writeGame = (game) => {
-    return (<div className={`chessGame ${!game.winner ? '' : game.winner == myColor ? 'won' : 'loose'}`}>
-      {[...Array(heightGame)].map((_, indexRow) => {
-        const invertedIndexRow = heightGame - 1 - indexRow
-        return (
-          <div className='rows' key={indexRow}>
-            {[...Array(widthGame)].map((_, indexColumn) => (
-              <div className={`squares ${(invertedIndexRow + indexColumn) % 2 == 0 ? 'even' : 'odd'}`}
-                key={indexColumn}>
-                {writePawns(indexColumn, invertedIndexRow, game)}
-              </div>
-            ))}
-          </div>
-        )
-      })}
-    </div>
-    )
-  }
+  const arrows = [
+    {
+      start: { x: 0, y: 0 },
+      end: { x: 1, y: 0 }
+    }
+  ]
 
   return (
     <div className='mainPage'>
       <div className='incomingMovements'>
         {incomingMovements.map((game, index) => (
-          <div key={index}>{writeGame(game)}</div>
+          <div key={index}>{<FCGame
+            sizeSquare={sizeSquare}
+            heightGame={heightGame}
+            widthGame={widthGame}
+            game={game}
+            showCoordonnates={false} />}</div>
         ))}
       </div>
       <h1>The quantity of movements : {incomingMovements.length}</h1>
@@ -579,28 +485,14 @@ function App() {
         onChange={(e) => setFutur(e.target.value)}
       />
       <h1 className='turn'>{winner ? `${winner} won !` : `${currentGame.turn == 'white' ? 'White' : 'Black'} turn`}</h1>
-      <div className='chessGame'>
-        {[...Array(heightGame)].map((_, indexRow) => {
-          const invertedIndexRow = heightGame - 1 - indexRow
-          return (
-            <div className='rows' key={indexRow}>
-              {[...Array(widthGame)].map((_, indexColumn) => (
-                <div className={`squares ${(invertedIndexRow + indexColumn) % 2 == 0 ? 'even' : 'odd'} ${isSelected(indexColumn, invertedIndexRow) ? 'selected' : ''} 
-              ${isTrajectory(indexColumn, invertedIndexRow) && 'trajectory'}
-                ${isAnEatenSquare(indexColumn, invertedIndexRow) && 'canBeTaken'}
-              `}
-                  key={indexColumn}
-                  style={{ height: `${sizeSquare}px`, width: `${sizeSquare}px` }}
-                  onClick={() => { clickOnSquare(indexColumn, invertedIndexRow) }}>
-                  {setHelpEmplacement(indexColumn, invertedIndexRow)}
-                  {writePawns(indexColumn, invertedIndexRow, currentGame)}
-                </div>
-              ))}
-            </div>
-          )
-        })}
-      </div>
-    </div>
+      <FCGame
+        sizeSquare={sizeSquare}
+        heightGame={heightGame}
+        widthGame={widthGame}
+        game={currentGame}
+        showCoordonnates={true}
+        changePropGame={setCurrentGame} />
+    </div >
   )
 }
 

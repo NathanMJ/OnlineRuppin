@@ -32,8 +32,6 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
 
-
-
         //String email = "nathanmimoun2001@gmail.com";
         //String password = "Ruppin123!";
 
