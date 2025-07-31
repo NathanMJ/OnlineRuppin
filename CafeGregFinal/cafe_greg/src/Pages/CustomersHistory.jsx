@@ -15,35 +15,35 @@ export default function CustomersHistory(props) {
     const [orders, setOrders] = useState([{
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
-    },{
-        id: 10,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
-    },{
-        id: 10,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }
+            , { name: 'John', id: '123456789' },
+        { name: 'Mick:', id: '234234234' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
-    }, {
-        id: 10,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }])
 
     useEffect(() => {
@@ -96,7 +96,6 @@ export default function CustomersHistory(props) {
         }
         return false
     }
-
 
     return (
         <div className="customerHistory">
@@ -154,8 +153,19 @@ export default function CustomersHistory(props) {
             <div className="historySide">
                 <div className="header">
                     <h1>History</h1>
-                    <h1>In common of : </h1>
-                    <h1>At the date :</h1>
+                    <h2>In common of : </h2>
+                    {datesFilter.date1 && (
+                        datesFilter.date2 ?
+                            <h2>
+                                Between the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')} and {new Date(datesFilter.date2).toLocaleDateString('fr-FR')}
+                            </h2>
+                            : <h2>
+                                At the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')}
+                            </h2>
+                    )}
+
+
+
                 </div>
                 <div className="orders">
                     {orders.map((order, index) => (
