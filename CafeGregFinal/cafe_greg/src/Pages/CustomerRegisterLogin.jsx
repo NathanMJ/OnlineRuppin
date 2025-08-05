@@ -167,13 +167,12 @@ export default function CustomerRegisterLogin(props) {
   }, [customers])
 
   const clickOnReturnBtn = () => {
-
     props.goto('/menu', { tableId })
   }
   return (
     <>
       <div style={{ display: 'flex', flexDirection: 'row' }} className='customerRegisterLoginPage'>
-        <FCHeaderCustomers logOut={logOut} goto={props.goto} customers={customers} ></FCHeaderCustomers>
+        <FCHeaderCustomers logOut={logOut} goto={props.goto} customers={customers} tableId={tableId}></FCHeaderCustomers>
         <FCRegisterCustomerSide register={register} ></FCRegisterCustomerSide>
         <FCLoginCustomerSide login={login}></FCLoginCustomerSide>
         <ReturnButton returnButton={clickOnReturnBtn} bottom={'20px'} left={'20px'} ></ReturnButton>

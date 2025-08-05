@@ -5,6 +5,7 @@ export default function FCHistoryOrder(props) {
         //TODO : go to product page
         if (withChanges) {
             alert(`go to ${props.order.id} with changes`)
+            props.goto('/productPage', { productId:props.order.product_id, tableId:props.tableId});
         }
         else {
             alert(`go to ${props.order.id} without changes`)
@@ -25,8 +26,8 @@ export default function FCHistoryOrder(props) {
             </div>
             <div className="details">
                 <h1>Ordered the : {new Date(props.order.date).toLocaleDateString('fr-FR')} with {props.order.customers.map((customer, index) => (
-                        `${customer.name} (tz: ${customer.id})${index < props.order.customers.length - 1 ? ', ' : ''}`
-                    ))}
+                    `${customer.name} (tz: ${customer.id})${index < props.order.customers.length - 1 ? ', ' : ''}`
+                ))}
                 </h1>
             </div>
         </div>

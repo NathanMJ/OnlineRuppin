@@ -16,13 +16,10 @@ export default function ProductPage(props) {
     const [selectedSauces, setSelectedSauces] = useState([])
     const [addedIngredients, setAddedIngredients] = useState([])
 
-    /*  Template :
-
-        selectedSauce = {
-            id,
-            quantity        
-        } 
-    */
+    console.log(location.state);
+    
+    //TODO : if we are from history put another button to return to history
+    //TODO : if we are from menu return in the section of the product, if not section
 
     useEffect(() => {
         if (productId === null || productId === undefined)

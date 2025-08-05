@@ -11,8 +11,6 @@ export default function Menu(props) {
 
     const location = useLocation();
     const tableId = location.state?.tableId ?? null;
-    console.log(location.state);
-    console.log(tableId);
 
     const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
 
@@ -97,8 +95,7 @@ export default function Menu(props) {
 
 
     const askWaiter = () => {
-        //TO DO: 
-        //      add notification that the waiter is coming to help
+        //TODO : add notification that the waiter is coming to help
         alert('Asking the waiter for help...');
     }
 

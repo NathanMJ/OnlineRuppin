@@ -12,6 +12,16 @@
     padding: 20px;
     border: rgb(74, 16, 128) 7px solid;
 
+    .close{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 70px;
+        height: 70px;
+        z-index: 11;
+        transform: translate(50%, -50%);
+    }
+
     .background {
         background-color: rgba(0, 0, 0, 0);
         position: fixed;

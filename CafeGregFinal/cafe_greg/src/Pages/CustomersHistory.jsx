@@ -12,14 +12,18 @@ export default function CustomersHistory(props) {
     const navigate = useNavigate();
 
 
-    const { customers } = location.state
+    const { customers, tableId } = location.state
+    useEffect(() => {
+        console.log('location', location.state);
+    }, [tableId]);
+
 
     //Customers filter is the id of the customer for filter
     const [customersFilter, setCustomersFilter] = useState(['345538268'])
 
     const [datesFilter, setDatesFilter] = useState({})
     const [orders, setOrders] = useState([{
-        id: 10,
+        product_id: 0,
         img: './Pictures/Starters-section.jpg',
         name: "Meal's name",
         date: '2023-10-01',
@@ -27,25 +31,25 @@ export default function CustomersHistory(props) {
             , { name: 'John', id: '123456789' },
         { name: 'Mick:', id: '234234234' }]
     }, {
-        id: 10,
+        product_id: 1,
         img: './Pictures/Starters-section.jpg',
         name: "Meal's name",
         date: '2023-10-01',
         customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
-        id: 10,
+        product_id: 2,
         img: './Pictures/Starters-section.jpg',
         name: "Meal's name",
         date: '2023-10-01',
         customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
-        id: 10,
+        product_id: 3,
         img: './Pictures/Starters-section.jpg',
         name: "Meal's name",
         date: '2023-10-01',
         customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
-        id: 10,
+        product_id: 4,
         img: './Pictures/Starters-section.jpg',
         name: "Meal's name",
         date: '2023-10-01',
@@ -61,10 +65,12 @@ export default function CustomersHistory(props) {
     }, [customersFilter])
 
 
-    /*TODO :
-        SHOW HISTORY 
-        CAN FILTER ACCORDING TO CUSTOMERS
-            CAN SELECT MULTIPLY CUSTOMERS
+    /*
+        TODO : CAN FILTER ACCORDING TO CUSTOMERS
+        TODO : CAN FILTER ACCORDING TO MULTIPLY CUSTOMERS
+        TODO : CAN FILTER ACCORDING TO DATES
+        TODO : CAN FILTER ACCORDING TO TWO DATES
+        TODO : REPLACE THE CALENDAR LOGO
 
 */
 
@@ -84,6 +90,7 @@ export default function CustomersHistory(props) {
         }
 
     }
+
 
     const selectionnedDateClass = (div) => {
         if (div == 2 && datesFilter.date2) {
@@ -242,12 +249,12 @@ export default function CustomersHistory(props) {
                             </h2>
                     )}
 
-                    <ReturnButton top={'3vh'} right={'3vh'} returnButton={() =>  navigate(-1) }></ReturnButton>
+                    <ReturnButton top={'3vh'} right={'3vh'} returnButton={() => navigate(-1)}></ReturnButton>
 
                 </div>
                 <div className="orders">
                     {orders.map((order, index) => (
-                        <FCHistoryOrder key={index} order={order} />
+                        <FCHistoryOrder key={index} order={order} goto={props.goto} tableId={tableId} />
                     ))}
                 </div>
             </div>

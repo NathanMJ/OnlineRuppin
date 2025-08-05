@@ -1,30 +1,29 @@
 import { useEffect, useState } from "react";
-import AskIdMsg from "../FComponents/AskIdMsg";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { tempCafeTables } from "../tempDB";
 import { useNavigate } from "react-router-dom";
 import { fetchDB } from "../fetchDB";
+import { useIdContext } from "../Contexts/askIdContext";
 
 
 export default function CafeMain(props) {
-    const [showAskId, setShowAskId] = useState(false);
-    const [showSettings, setShowSettings] = useState(false)
-    const [isManager, setIsManager] = useState(true)
-    const navigate = useNavigate();
+    const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
+
+    const { getWorkerId } = useIdContext();
 
     const [tables, setTables] = useState([
         {
-            _id:1,
-            customers:[123,4]
+            _id: 1,
+            customers: [123, 4]
         }
     ])
 
-    const fetchUrl = 'http://localhost:5500/api'
 
 
     useEffect(() => {
         const fetchData = async () => {
+            return
             try {
                 const resFetch = await fetchDB(`${fetchUrl}/table`);
                 console.log(resFetch);
@@ -51,36 +50,27 @@ export default function CafeMain(props) {
         props.goto(`/menu`, { tableId: id })
     }
 
-    const openSetting = () => {
-        setShowAskId(true)
+    const openSetting = async () => {
+        const id = await getWorkerId("Enter your ID:");
+        if (id) {
+
+
+            //TODO : check that the worker exist in the db 
+            const exist = true
+
+            if (exist) {
+                //TODO : check that the worker is a waiter or a manager
+                const status = 'waiter'
+                setShowSettings({ show: true, isManager: status === 'manager' });
+            }
+        }
+
     }
 
     const addATable = () => {
         //Ask id, if id is waiter or manager continue
-
-
-    }
-
-    const receiveId = async (id) => {
-
-        //TO DO : check that the worker exist in the db 
-        const exist = true
-
-        if (exist) {
-            //TO DO : check that the worker is a waiter or a manager
-            const res = true
-            if (res == 'waiter') {
-                //if he is a waiter set half-autorization
-                setIsManager(false)
-            }
-            else if (res == 'manager') {
-                //if he is a manager set full autorization
-                setIsManager(true)
-            }
-            setShowSettings(true)
-            return true
-        }
-        return false
+        const id = getWorkerId("Enter your ID:");
+        alert('Open add table');
     }
 
 
@@ -109,8 +99,7 @@ export default function CafeMain(props) {
                 <img className="private" src="/Pictures/Settings-logo.png" onClick={openSetting} />
             </div>
             <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={() => { props.goto('/sideChoice') }}></ReturnButton>
-            <AskIdMsg exec={receiveId} showMsg={() => setShowAskId(true)} hideMsg={() => setShowAskId(false)} show={showAskId}></AskIdMsg>
-            <SettingsCafeMain isManager={isManager} showMsg={() => setShowSettings(true)} hideMsg={() => setShowSettings(false)} show={showSettings}></SettingsCafeMain>
+            <SettingsCafeMain isManager={showSettings.isManager} hideMsg={() => setShowSettings({ show: false, isManager: false })} show={showSettings.show}></SettingsCafeMain>
         </div>
     )
 }

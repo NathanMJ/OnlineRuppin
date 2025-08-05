@@ -4,7 +4,7 @@ export default function FCHeaderCustomers(props) {
 
     const [showCustomers, setShowCustomers] = useState(null)
 
-    //TODO: if customer is empty we cant open the header
+    //TODO if customer is empty we cant open the header
 
     if (props.customers.length == 0) {
         return (<h1>No customers</h1>)
@@ -38,7 +38,7 @@ export default function FCHeaderCustomers(props) {
                 )}
             </div>
 
-            <div className="historyContainer" onClick={() => props.goto('/customerHistory', { customers: props.customers })}>
+            <div className="historyContainer" onClick={() => props.goto('/customerHistory', { customers: props.customers, tableId: props.tableId })}>
                 <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/o_collection_png/green_dark_grey/512x512/plain/history2.png" />
                 <h1>See your order's history</h1>
             </div>
