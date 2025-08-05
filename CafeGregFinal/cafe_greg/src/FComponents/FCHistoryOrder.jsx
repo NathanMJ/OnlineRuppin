@@ -29,7 +29,7 @@ export default function FCHistoryOrder(props) {
             </div>
             <div className="details">
                 <h1>Ordered the : {new Date(props.order.date).toLocaleDateString('fr-FR')} with {props.order.customers.map((customer, index) => (
-                    `${customer.name} (tz: ${customer.id})${index < props.order.customers.length - 1 ? ', ' : ''}`
+                    `${customer.name}${index < props.order.customers.length - 1 ? ', ' : ''}`
                 ))}
                 </h1>
             </div>

@@ -29,7 +29,7 @@ export default function CustomersHistory(props) {
         date: '2023-10-01',
         customers: [{ name: 'Nathan', id: '345538268' }
             , { name: 'John', id: '123456789' },
-        { name: 'Mick:', id: '234234234' }],
+        { name: 'Mick', id: '234234234' }],
         changes: [
             {
                 ingredientId: 0,
