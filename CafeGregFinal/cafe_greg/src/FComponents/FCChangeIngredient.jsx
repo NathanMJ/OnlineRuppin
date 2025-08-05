@@ -22,12 +22,13 @@ export default function FCChangeIngredient(props) {
             <h1 className="ingredientName">{capitalFirstLetter(props.ingredient.name)}</h1>
             <div className="changesContainer">
                 {props.ingredient.changes.map((change, index) => {
+                    const isSelected = props.changeChosen !== undefined ? (change._id == props.changeChosen && 'selectedChange') : props.ingredient.change_selected == change._id && 'selectedChange'
                     return <div
                         className={`change 
                             ${index == 0 && 'firstChange'}
                             ${index == (props.ingredient.changes.length - 1) && 'lastChange'} 
-                            ${props.changeChosen !== undefined ? (change._id == props.changeChosen && 'selectedChange') : props.ingredient.change_selected == change._id && 'selectedChange'}`} key={change._id}
-                        onClick={() => changeSelected(props.ingredient._id, change._id)}>
+                            ${isSelected && 'selectedChange'}`} key={change._id}
+                        onClick={() => {!isSelected && changeSelected(props.ingredient._id, change._id)}}>
                         <h2 className="name">{capitalFirstLetter(change.change)}</h2>
                         {writePrice(change.price)}
                     </div>

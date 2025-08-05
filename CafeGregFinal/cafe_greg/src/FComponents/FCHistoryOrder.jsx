@@ -4,7 +4,11 @@ export default function FCHistoryOrder(props) {
     const goToOrderPage = (withChanges) => {
         //TODO : go to product page
         if (withChanges) {
-            props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId });
+            if(!props.order.changes){
+                alert('No changes detected')
+                return
+            }
+            props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId, sendedChanges: props.order.changes });
         }
         else {
             props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId });

@@ -694,7 +694,7 @@ async function get_changes_ingredient(id) {
         return
     }
 
-    var changes = ingredient.changes_detail
+    let changes = ingredient.changes_detail
 
 
     if (!changes) {
@@ -705,9 +705,11 @@ async function get_changes_ingredient(id) {
 
     changes.forEach(async (change) => {
         let price = !change.price ? 0 : change.price
-        var change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
+        let change_detail = ingredient_changes.find(sChange => sChange._id === change.change_code)
         full_changes.push({ price, ...change_detail })
     })
+
+
     return full_changes
 }
 

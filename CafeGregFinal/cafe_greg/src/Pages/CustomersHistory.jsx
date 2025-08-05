@@ -25,11 +25,17 @@ export default function CustomersHistory(props) {
     const [orders, setOrders] = useState([{
         product_id: 0,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name",
+        name: "Turkish Burikash",
         date: '2023-10-01',
         customers: [{ name: 'Nathan', id: '345538268' }
             , { name: 'John', id: '123456789' },
-        { name: 'Mick:', id: '234234234' }]
+        { name: 'Mick:', id: '234234234' }],
+        changes: [
+            {
+                ingredientId: 0,
+                change: 2
+            }
+        ]
     }, {
         product_id: 1,
         img: './Pictures/Starters-section.jpg',
@@ -71,14 +77,14 @@ export default function CustomersHistory(props) {
         TODO : CAN FILTER ACCORDING TO DATES
         TODO : CAN FILTER ACCORDING TO TWO DATES
         TODO : REPLACE THE CALENDAR LOGO
+        TODO : SEND THE CHANGES OF THE ORDERS
+        TODO : IF NO CHANGES WRITE NO CHANGE DETECTED
 
 */
 
     const clickOnCustomer = (id) => {
-        console.log(id);
 
         const exist = customersFilter.some(eachId => eachId == id)
-
         if (exist) {
             let newCustomerFilter = customersFilter.filter(eachId => eachId != id)
             setCustomersFilter(newCustomerFilter)
@@ -86,7 +92,6 @@ export default function CustomersHistory(props) {
         else {
             let newCustomerFilter = [...customersFilter, id]
             setCustomersFilter(newCustomerFilter)
-
         }
 
     }

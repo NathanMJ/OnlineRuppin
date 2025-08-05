@@ -12,7 +12,7 @@ export default function ProductPage(props) {
     //TODO : if we are from the history get the change if we got
 
     const location = useLocation();
-    const { productId, tableId, sectionId, receivedChanges } = location.state;
+    const { productId, tableId, sectionId, sendedChanges } = location.state;
 
     const [product, setProduct] = useState(null)
 
@@ -20,7 +20,7 @@ export default function ProductPage(props) {
     const [selectedSauces, setSelectedSauces] = useState([])
     const [addedIngredients, setAddedIngredients] = useState([])
 
-    const [changes, setChanges] = useState(receivedChanges ? receivedChanges : [])
+    const [changes, setChanges] = useState(sendedChanges ? sendedChanges : [])
 
     const navigate = useNavigate()
 
@@ -68,6 +68,7 @@ export default function ProductPage(props) {
 
     }
 
+    
 
     if (product === null) {
         return <div>Loading product...</div>; // Attente du fetch
