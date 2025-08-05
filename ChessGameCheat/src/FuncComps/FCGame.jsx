@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 
 export default function FCGame(props) {
 
@@ -11,7 +11,9 @@ export default function FCGame(props) {
           orange you can loose
           red you loose 100%
         swap the game according to your color
-        
+        the king can not be moved if he is in check
+        if the king is in check and can not be moved, the game is over
+
     */
 
     //According to the rule it will change the eat square 
@@ -20,19 +22,30 @@ export default function FCGame(props) {
     const [clickedSquare, setClickedSquare] = useState(null)
     const [previewSquares, setPreviewSquares] = useState([])
     const [eatSquares, setEatSquares] = useState([])
-    const [winner, setWinner] = useState(null)
     const [currentGame, setCurrentGame] = useState(props.game)
+
+
+    /*
+        Rules :
+            normal
+            giveaway
+    */
+
     const rule = props.rule;
 
     useEffect(() => {
-        if (props.changePropGame)
-            if (props.game != currentGame) {
-                props.changePropGame(currentGame)
-            }
-    }, [currentGame])
+        if (props.changePropGame && props.game !== currentGame) {
+            props.changePropGame(currentGame);
+        }
+    }, [currentGame, props.changePropGame, props.game]);
+
 
     const setTurn = (turn) => {
         setCurrentGame(prevGame => ({ ...prevGame, turn }))
+    }
+
+    const setWinner = (winner) => {
+        setCurrentGame(prevGame => ({ ...prevGame, winner }))
     }
 
     const setPawns = (pawns) => {
@@ -76,7 +89,6 @@ export default function FCGame(props) {
             </div>
     }
 
-
     const movePawnTo = (ogPawn, x, y, pawns) => {
         const copyPawn = { ...ogPawn }
         //cleaned everyEnPassant property
@@ -112,8 +124,19 @@ export default function FCGame(props) {
     }
 
     const clickOnSquare = (x, y) => {
-        if (winner) {
-            alert(`The game is over, ${winner} won!`)
+        if (!props.movable)
+            return
+
+        if (currentGame.winner) {
+            alert(`The game is over`)
+        }
+
+        //if the game is normal and there are 0 king cancel
+        if (rule == 'normal'
+            && (currentGame.pawns.filter(pawn => pawn.name == 'king' && pawn.color == 'white').length != 1
+                || currentGame.pawns.filter(pawn => pawn.name == 'king' && pawn.color == 'black').length != 1)) {
+            alert(`A king is missing, the game can not start`)
+            return
         }
 
         if (clickedSquare && clickedSquare.x == x && clickedSquare.y == y) {
@@ -136,12 +159,25 @@ export default function FCGame(props) {
             setPawns(newPawns)
             setTurn(currentGame.turn == 'white' ? 'black' : 'white')
 
+
             //if the opponnent can not play anymore, he won
             const pawnCanMove = aPawnCanMove(otherColor(currentGame.turn), newPawns)
             if (!pawnCanMove) {
-                setWinner(otherColor(currentGame.turn))
-                return
+                if (rule == 'giveaway') {
+                    setWinner(otherColor(currentGame.turn))
+                    return
+                }
+                else if (rule == 'normal') {
+                    const kingIsInCheck = isKingIsInCheck(newPawns, otherColor(currentGame.turn))
+                    if (kingIsInCheck) {
+                        setWinner(currentGame.turn)
+                    }
+                    else {
+                        setWinner(otherColor(currentGame.turn))
+                    }
+                }
             }
+
 
         }
         else {
@@ -149,7 +185,6 @@ export default function FCGame(props) {
             setEatSquares([])
         }
     }
-
 
     useEffect(() => {
         if (clickedSquare) {
@@ -160,6 +195,7 @@ export default function FCGame(props) {
     const getFront = (color) => {
         return color == 'white' ? 1 : -1
     }
+
     const getMovementsOfPawn = (pawns, pawn) => {
         const front = getFront(pawn.color)
         const turn = pawn.color
@@ -368,21 +404,70 @@ export default function FCGame(props) {
 
         tempEatSquares = [...tempEatSquares, ...tempPreviewSquares.filter(square => isAPawn(pawns, square.x, square.y))]
         tempPreviewSquares = tempPreviewSquares.filter(square => !isAPawn(pawns, square.x, square.y))
+
+        tempPreviewSquares = sortMovements(pawn, tempPreviewSquares)
+        tempEatSquares = sortMovements(pawn, tempEatSquares)
         return { tempPreviewSquares, tempEatSquares }
     }
 
+
+    const isKingIsInCheck = (pawns, colorOfTheKing) => {
+        const king = pawns.find(pawn => pawn.name == 'king' && pawn.color == colorOfTheKing)
+        if (!king) {
+            return false;
+        }
+        //get every other pawn of the other color
+        //find every eatSquare of the other color
+        const otherColorPawns = pawns.filter(pawn => pawn.color != colorOfTheKing)
+        let opponnentEatSquares = otherColorPawns.flatMap(pawn => {
+            const { tempEatSquares } = getMovementsOfPawn(pawns, pawn)
+            return tempEatSquares
+        });
+
+        opponnentEatSquares = opponnentEatSquares.filter((square, index) =>
+            opponnentEatSquares.findIndex(s => s.x === square.x && s.y === square.y) === index
+        ); // Remove duplicates
+
+
+        //check if the king is in check
+
+        const isInCheck = opponnentEatSquares.some(square => square.x == king.x && square.y == king.y);
+
+        return isInCheck;
+    }
+
+    //TODO WORK ON THIS FUNCTION
+    const sortMovements = (pawn, movements) => {
+        if (rule == 'normal') {
+            const filteredMovements = movements.filter(movement => {
+                const tempPawns = [...currentGame.pawns]; // Créer une copie
+                const newPawns = movePawnTo(pawn, movement.x, movement.y, tempPawns);
+                return !isKingIsInCheck(newPawns, pawn.color);
+            });
+            return filteredMovements;
+        }
+        return movements;
+    }
+
+
     const aPawnCanMove = (color, pawns) => {
-        const otherColorPawns = pawns.filter(pawn => pawn.color == color)
-        if (otherColorPawns.length == 0) {
+        //check if the pawns of the color can move
+        if (rule == 'giveaway' || rule == 'normal') {
+
+            const colorPawns = pawns.filter(pawn => pawn.color == color)
+            if (colorPawns.length == 0) {
+                return false
+            }
+
+            for (let pawn of colorPawns) {
+                const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(pawns, pawn)
+
+                if (tempEatSquares.length > 0 || tempPreviewSquares.length > 0)
+                    return true
+            }
             return false
         }
 
-        for (let pawn of otherColorPawns) {
-            const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(pawns, pawn)
-
-            if (tempEatSquares.length > 0 || tempPreviewSquares.length > 0)
-                return true
-        }
         return false
     }
 
@@ -393,12 +478,15 @@ export default function FCGame(props) {
             return
         }
 
-        const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(currentGame.pawns, pawn)
+        let { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(currentGame.pawns, pawn)
 
+
+        //for the giveaway rule :
         //if a pawn can be eaten by another pawn of the color's turn set tempPreviewSquares to empty
-        if (tempEatSquares.length > 0 || aPawnCanBeEat(currentGame.pawns, currentGame.turn)) {
-            tempPreviewSquares.length = 0
+        if (props.rule == 'giveaway' && (tempEatSquares.length > 0 || aPawnCanBeEat(currentGame.pawns, currentGame.turn))) {
+            tempPreviewSquares = []
         }
+
         setPreviewSquares(tempPreviewSquares)
         setEatSquares(tempEatSquares)
     }

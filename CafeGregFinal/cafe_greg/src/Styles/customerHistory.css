@@ -7,64 +7,286 @@
 
     .filterSide {
         flex: 1;
+        display: flex;
+        flex-direction: column;
         background-color: rgb(159, 214, 214);
 
-        .header {
-            display: flex;
-            flex-direction: row;
+        >h1 {
+            font-size: 80px;
+            text-align: center;
+            background-color: rgb(100, 15, 12);
+            color: white;
+        }
 
-            >div {
-                flex: 1;
+        .customersFilter {
+            height: 50%;
+            background-color: rgb(141, 74, 57);
+            display: flex;
+            flex-direction: column;
+
+            .header {
                 display: flex;
                 flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                gap: 3px;
-            }
+                font-size: 30px;
+                color: white;
 
-            .square {
-                border: black 1px solid;
-                width: 20%;
-                height: 100%;
-            }
+                >div {
+                    flex: 1 0 auto;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 10px;
+                    gap: 3px;
+                }
 
-            .notSelected {
                 .square {
+                    border: black 1px solid;
+                    width: 20%;
+                    height: 100%;
+                }
+
+                .notSelected {
+                    .square {
+                        background-color: gray;
+                    }
+                }
+
+                .selected {
+                    .square {
+                        background-color: green;
+                    }
+                }
+            }
+
+            .customers {
+                flex: 1;
+                overflow-y: auto;
+                background-color: gray;
+
+                .customer {
+                    font-size: 80px;
+                    text-align: center;
+                    cursor: pointer;
+                }
+
+
+                .customer.notSelected {
                     background-color: gray;
+                    color: rgb(201, 200, 200);
+                }
+
+                .customer.selected {
+                    color: green;
+                    background-color: rgb(8, 223, 25);
+                }
+            }
+        }
+
+        .datesFilter {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgb(150, 73, 73);
+
+            >div {
+                padding-block: 15px;
+            }
+
+            .noDate {
+                &.selectionedDate {
+
+                    h3{
+                        transform: translateY(0px) !important;
+                    }
+                }
+                
+                
+                .container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    
+                    h3:not(.illusion3D) {
+                        transition: transform 0.2s ease-in-out;
+                        background-color: white;
+                        padding: 20px;
+                        border-radius: 20px;
+                        width: fit-content;
+                        transform: translateY(-10px);
+                    }
+
+                    h3.illusion3D {
+                        position: absolute;
+                        background-color: rgb(211, 211, 211);
+                        padding: 20px;
+                        border-radius: 20px;
+                        width: fit-content;
+                    }
+
+                }
+
+            }
+
+            h2 {
+                font-size: 50px;
+                text-align: center;
+            }
+
+            h3 {
+                text-align: center;
+                font-size: 40px;
+            }
+
+            input {
+                font-size: 30px;
+                border-radius: 10px;
+                border: none;
+                text-align: center;
+            }
+
+
+            .react-datepicker__day-names {
+                display: flex;
+                justify-content: space-between;
+                margin-block: 8px;
+                font-size: 32px;
+                text-align: center;
+            }
+
+            .react-datepicker__day-name {
+                flex: 1;
+            }
+
+            .react-datepicker__day {
+                width: 50px !important;
+                height: 50px !important;
+                margin: 0 !important;
+                font-size: 32px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s;
+                flex-shrink: 0;
+
+            }
+
+            .react-datepicker__day--selected {
+                background-color: #3b82f6 !important;
+                color: white !important;
+            }
+
+            .datepicker-wrapper {
+                position: relative;
+                display: inline-block;
+                width: 250px;
+            }
+
+
+            .datepicker-input-with-icon:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            .react-datepicker__header {
+                background-color: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 20px 0 !important;
+                /* Augmentez le padding vertical */
+            }
+
+            /* Mois et année */
+            .react-datepicker__current-month {
+                font-size: 24px !important;
+                /* Augmentez la taille de police */
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 16px !important;
+                /* Augmentez l'espacement en bas */
+                line-height: 1.2;
+            }
+
+            .datepicker-input-with-icon {
+                width: 100% !important;
+                height: 50px !important;
+                padding: 8px 55px 8px 12px !important;
+                border: 1px solid #d1d5db;
+                border-radius: 6px;
+                outline: none;
+                transition: border-color 0.2s;
+                box-sizing: border-box;
+            }
+
+
+            .datepicker-icon {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #6b7280;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+            }
+
+            .datepicker-icon svg {
+                width: 30px;
+                height: 30px;
+                color: #6b7280;
+                transition: color 0.2s;
+            }
+
+            .datepicker-wrapper:focus-within .datepicker-icon svg {
+                color: #3b82f6;
+            }
+
+            .datepicker-icon.clickable:hover svg {
+                color: #3b82f6;
+            }
+
+            .datepicker-icon.clickable {
+                pointer-events: auto;
+                cursor: pointer;
+            }
+
+
+            .uniqueDate {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+
+            .twoDate {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+
+                >div {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding-inline: 20px;
+
+                    h3 {
+                        flex: 1;
+                    }
                 }
             }
 
-            .selected {
-                .square {
-                    background-color: green;
-                }
+            .selectionedDate {
+                background-color: rgb(21, 255, 0);
             }
-        }
 
-        .customer {
-            font-size: 5vh;
-            text-align: center;
-            cursor: pointer;
-        }
-
-
-        .customer.notSelected {
-            background-color: gray;
-            color: rgb(201, 200, 200);
-        }
-
-        .customer.selected {
-            color: green;
-            background-color: rgb(8, 223, 25);
-        }
-
-        .selectionedDate {
-            background-color: rgb(21, 255, 0);
-        }
-
-        .notSelectionedDate {
-            background-color: rgb(255, 38, 0);
+            .notSelectionedDate {
+                background-color: rgb(255, 38, 0);
+            }
         }
     }
 
@@ -76,7 +298,7 @@
         flex-direction: column;
 
         .header {
-            background-color: rgb(16, 64, 92);
+            background-color: rgb(18, 61, 40);
             color: rgb(215, 208, 240);
             text-align: center;
             padding-block: 20px;
@@ -178,15 +400,11 @@
                     padding-inline: 20px;
                     padding-block: 10px;
                     font-size: 30px;
-                    justify-content: space-between;
                     background-color: rgb(192, 252, 224);
+                    text-align: center;
 
-                    h1 {}
-
-                    h2 {
-                        display: flex;
-                        gap: 10px;
-                        text-align: right;
+                    h1 {
+                        margin: auto;
                     }
                 }
             }

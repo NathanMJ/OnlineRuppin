@@ -24,16 +24,10 @@ export default function FCHistoryOrder(props) {
                 </div>
             </div>
             <div className="details">
-                <h1>Ordered the : {new Date(props.order.date).toLocaleDateString('fr-FR')}</h1>
-                <h2>
-                    With
-                    {props.order.customers.map((customer, index) => (
-                        <span key={index} style={{ display: 'inline-block', marginRight: '8px' }}>
-                            {customer.name} (ID: {customer.id})
-                            {index < props.order.customers.length - 1 ? ',' : ''}
-                        </span>
+                <h1>Ordered the : {new Date(props.order.date).toLocaleDateString('fr-FR')} with {props.order.customers.map((customer, index) => (
+                        `${customer.name} (tz: ${customer.id})${index < props.order.customers.length - 1 ? ', ' : ''}`
                     ))}
-                </h2>
+                </h1>
             </div>
         </div>
     )
