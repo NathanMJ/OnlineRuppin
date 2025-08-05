@@ -1,21 +1,14 @@
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Tabs, router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
-
-
-import { useState } from "react";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { useContext, useState } from "react";
 import { ScrollView, StyleSheet } from 'react-native';
-
 import { useEffect, useRef } from 'react';
 import { Animated, Dimensions } from 'react-native';
-import { hide } from 'expo-splash-screen';
-
-
-
+import { LinkAppContext } from '../LinkAppContext.jsx';
+import { disconnectCustomer, getCustomersByTableId } from '../database.js'
 
 export default function TabLayout() {
-
-
 
     const screenWidth = Dimensions.get('window').width;
     const panelWidth = screenWidth * 0.8;
@@ -23,7 +16,12 @@ export default function TabLayout() {
     const slideAnim = useRef(new Animated.Value(-panelWidth)).current;
     const [isVisible, setIsVisible] = useState(false);
 
+    const { linkApp, setLinkApp } = useContext(LinkAppContext)
+
+
     const togglePanel = () => {
+        if (!isVisible)
+            fetchCustomers()
         Animated.timing(slideAnim, {
             toValue: isVisible ? -panelWidth : 0,
             duration: 300,
@@ -35,21 +33,29 @@ export default function TabLayout() {
         router.push({ pathname: "(tabs)/main" })
     }
 
-    const [customers, setCustomers] = useState([
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'Nathan', id: '345538268' },
-        { name: 'John', id: '345532268' }
-    ])
+    const [customers, setCustomers] = useState([])
 
+    const fetchCustomers = async () => {
+        const tempCustomers = await getCustomersByTableId(linkApp.tableId)
+        setCustomers(tempCustomers)
+    }
 
+    const disconnect = (customerId) => {
+        Alert.alert(
+            'Disconnect',
+            'Do you want to disconnect?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'OK', onPress: async () => {
+                        await disconnectCustomer(customerId)
+                        fetchCustomers()
+                    }
+                }
+            ]
+        );
+
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -90,7 +96,14 @@ export default function TabLayout() {
                         <Text style={{ textAlign: 'center', fontSize: 33 }}>Logged customers :</Text>
                         {customers?.length > 0 ? customers.map((customer, index) => (
                             <View key={index}>
-                                <Text style={{ textAlign: 'center', fontSize: 40 }}>{customer.name}</Text>
+                                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={{ textAlign: 'center', fontSize: 40, flex: 1 }}>{customer.firstName}</Text>
+                                    <TouchableOpacity onPress={() => disconnect(customer.id)}>
+                                        <Text style={{
+                                            textAlign: 'center', fontSize: 30, color: 'red'
+                                        }}>X</Text>
+                                    </TouchableOpacity>
+                                </View>
                                 <Text style={{ textAlign: 'center', fontSize: 20 }}>(Tz : {customer.id})</Text>
                             </View>
                         )) :
@@ -112,12 +125,15 @@ export default function TabLayout() {
                         <Ionicons name="person" size={size} color={color} />
                     )
                 }} />
-                <Tabs.Screen name="register" options={{
-                    title: "Register",
-                    tabBarIcon: ({ color, size }) => (
-                        <MaterialIcons name="person" size={size} color={color} />
-                    )
-                }} />
+                <Tabs.Screen
+                    name="register"
+                    options={{
+                        title: "Register",
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialIcons name="person" size={size} color={color} />
+                        )
+                    }}
+                />
             </Tabs>
         </View >
 

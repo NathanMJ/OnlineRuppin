@@ -2,8 +2,9 @@ import { Image } from 'expo-image';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Dimensions, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
-import { getProductById, getSections, orderProductById } from '../database.js';
+import { getProductById, getProductByName, getSections, orderProductById } from '../database.js';
 import { LinkAppContext } from '../LinkAppContext.jsx';
+import FCOrderProduct from '../FuncComps/FCOrderProduct.jsx';
 
 export default function Menu() {
   const [sections, setSections] = useState([]);
@@ -14,6 +15,7 @@ export default function Menu() {
   const [searchedProducts, setSearchedProducts] = useState([])
   const { linkApp, setLinkApp } = useContext(LinkAppContext);
 
+  //when he arrived here he get the section
   useEffect(() => {
     const fetchSections = async () => {
       const data = await getSections();
@@ -31,18 +33,12 @@ export default function Menu() {
   const windowHeight = Dimensions.get('window').height;
   const windowWidth = Dimensions.get('window').width;
 
-  const orderProduct = (productId) => {
-    orderProductById(productId, linkApp.tableId)
-    ToastAndroid.show('Ordered successfully !', ToastAndroid.SHORT);
-  }
-
   useEffect(() => {
     const fetchProducts = async () => {
       if (sectionId !== -1 && sections[sectionId]) {
-        const prods = await Promise.all(
-          sections[sectionId].products.map((productId) => getProductById(productId))
-        );
-        setProducts(prods);
+        console.log(sectionId);        
+        let sectionIndex = sections.findIndex(section => section.id == sectionId)
+        setProducts(sections[sectionIndex].products);
       } else {
         setProducts([]);
       }
@@ -50,16 +46,21 @@ export default function Menu() {
     fetchProducts();
   }, [sectionId, sections]);
 
+
   //research the product who contain the research every change
   useEffect(() => {
-    console.log(research);
-    //send to the database the research and it will do the research
+    const fetchResearch = async () => {
+      const tempProducts = await getProductByName(research)
+        setSearchedProducts(tempProducts)
+    }
+    if (research != '')
+      fetchResearch()
+    //TODO: send to the database the research and it will do the research
   }, [research])
 
 
-  const researchHeader = () => {
-    return <View></View>
-  }
+
+  //if we clicked on a section
 
   if (sectionId != -1) {
     return <ScrollView style={{ position: 'relative' }}>
@@ -68,33 +69,22 @@ export default function Menu() {
           style={{ width: 50, height: 50 }} />
       </TouchableOpacity>
       {products.map((product, index) =>
-        <TouchableOpacity key={index} style={{
-          height: windowHeight / 5,
-          backgroundColor: 'rgba(99, 98, 198, 0.75)',
-          margin: 10,
-          flexDirection: 'row',
-          alignItems: "center",
-          borderRadius: 30,
-          overflow: 'hidden'
-        }}
-          onPress={() => orderProduct(product.id)}>
-          <Image source={{ uri: product.img }} style={{ width: '33%', height: '100%' }} />
-          <View style={{ alignItems: 'center', flex: 1 }}>
-            <Text style={{
-              textAlign: 'center',
-              fontSize: 24,
-              color: 'white'
-            }}>{product.name}</Text>
-            <Text style={{ color: 'white', fontSize: 25 }}>{product.price} ₪</Text>
-          </View>
-        </TouchableOpacity>)}
+        <FCOrderProduct product={product} key={index}></FCOrderProduct>)}
     </ScrollView>
   }
 
 
+
   //basic page
+
+  /* if we are researching something
+      if we found
+      if we does not have found
+    if not we are just scrolling      
+  */
+
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           width: windowWidth, paddingBlock: 30, textAlign: 'center',
@@ -117,23 +107,45 @@ export default function Menu() {
             }}
           />
         </View>
-        <TextInput
+        <View
           style={{
             flex: 1,
             backgroundColor: 'rgb(255, 255, 255)',
-            fontSize: 30,
             borderRadius: 10,
-            textAlign: 'center'
-          }}
-          keyboardType={'text'}
-          placeholder={'Search a product...'}
-          onChangeText={(input) => setResearch(input)} />
+            textAlign: 'center',
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}>
+          <TextInput
+            style={{
+              fontSize: 25, 
+              flex:1,
+              textAlign:'center',
+                borderRightWidth :1
+            }}
+              value={research} 
+            keyboardType={'text'}
+            placeholder={'Search a product...'}
+            onChangeText={(input) => setResearch(input)} />
+          <TouchableOpacity onPress={() => {setResearch('')}}>
+            <Text
+              style={{
+                fontSize: 30,
+                padding:10
+              }}>X</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <ScrollView>
+      <ScrollView style={{ flex: 1 }}>
         {research.length > 0 ? searchedProducts.length > 0 ?
-          <View></View>
+          <View>
+            {searchedProducts.map((product, index) => (
+              <FCOrderProduct product={product} key={index}></FCOrderProduct>)
+            )}
+          </View>
           :
-          <View><Text style={{fontSize:35, margin:'auto',marginBlock:40}}>No product found</Text></View>
+          <View>
+            <Text style={{ fontSize: 35, alignSelf: 'center', marginBlock: 40 }}>No product found</Text></View>
           : sections.map((section, index) => (
             <TouchableOpacity key={index} style={{ position: 'relative' }}
               onPress={() => setSectionId(section.id)}>

@@ -6,32 +6,158 @@ namespace WebApplication1.Models
 {
     public static class DBServices
     {
-        //static string conStr = @"Data Source=DESKTOP-0IB6OU2\SQLEXPRESS;Initial Catalog=appLinkAppCafeGreg;Integrated Security=True;";
-        static string conStr = "workstation id=DBLinkApp.mssql.somee.com;packet size=4096;user id=Nathan_SQLLogin_1;pwd=94q8ria4x2;data source=DBLinkApp.mssql.somee.com;persist security info=False;initial catalog=DBLinkApp;TrustServerCertificate=True";
+        //static string conStr = @"Data Source=DESKTOP-AOOLDVU;Initial Catalog=appLinkAppCafeGreg;Integrated Security=True;";
 
-        public static Table GetTableById(int tableId)
+        //static string conStr = @"Data Source=DESKTOP-0IB6OU2\SQLEXPRESS;Initial Catalog=appLinkAppCafeGreg;Integrated Security=True;";
+        static string conStr = "workstation id=AppLinkDB.mssql.somee.com;packet size=4096;user id=Nathan_SQLLogin_1;pwd=94q8ria4x2;data source=AppLinkDB.mssql.somee.com;persist security info=False;initial catalog=AppLinkDB;TrustServerCertificate=True";
+
+        public static void DisconnectCustomer(string customerId)
         {
-            Table table = null;
-            string query = $"SELECT id, link_id FROM tables WHERE id = {tableId}";
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("DisconnectCustomer", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@customerId", customerId);
+
+                con.Open();
+                cmd.ExecuteNonQuery(); // Pas besoin de récupérer de résultat
+            }
+        }
+
+
+        public static List<Customer> GetAllCustomersByTableId(int tableId)
+        {
+            List<Customer> customers = new List<Customer>();
 
             using (SqlConnection con = new SqlConnection(conStr))
-            using (SqlCommand comm = new SqlCommand(query, con))
+            using (SqlCommand cmd = new SqlCommand("GetAllCustomersByTableId", con))
             {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@tableId", tableId);
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        customers.Add(new Customer
+                        {
+                            ID = reader["customer_id"].ToString(),
+                            Contact = reader["Contact"].ToString(),
+                            FirstName = reader["FirstName"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return customers;
+        }
+
+
+        public static void RegisterCustomer(string id, string contact, string firstName, int tableId)
+        {
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("RegisterCustomer", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@contact", contact);
+                cmd.Parameters.AddWithValue("@firstName", firstName);
+                cmd.Parameters.AddWithValue("@tableId", tableId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static Customer LoginCustomer(string id, int tableId)
+        {
+            Customer customer = null;
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("LoginCustomer", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@tableId", tableId);
+
                 con.Open();
 
-                using (SqlDataReader reader = comm.ExecuteReader())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
-                        table = new Table()
+                        customer = new Customer
                         {
-                            Id = (int)reader["id"],
-                            LinkId = (int)reader["link_id"]
+                            ID = reader["ID"].ToString(),
+                            Contact = reader["Contact"].ToString(),
+                            FirstName = reader["FirstName"].ToString()
                         };
                     }
                 }
             }
-            return table;
+
+            return customer ?? throw new Exception("Login failed.");
+        }
+
+        public static int ChangeOrderStatus(int orderId, int newStatus)
+        {
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("changeOrderStatus", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@orderId", orderId);
+                cmd.Parameters.AddWithValue("@newStatus", newStatus);
+
+                con.Open();
+                object result = cmd.ExecuteScalar();
+
+                if (result != null && int.TryParse(result.ToString(), out int updatedStatus))
+                {
+                    return updatedStatus;
+                }
+                else
+                {
+                    throw new Exception("Order not found or status not updated.");
+                }
+            }
+        }
+
+
+        public static void CancelOrder(int orderId)
+        {
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("cancelOrder", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@orderId", orderId);
+
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public static int OrderProductById(int productId, int tableId)
+        {
+            int newOrderId = 0;
+
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("orderProductById", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@productId", productId);
+                cmd.Parameters.AddWithValue("@tableId", tableId);
+
+                con.Open();
+                object result = cmd.ExecuteScalar(); // On récupère le SCOPE_IDENTITY()
+
+                if (result != null && int.TryParse(result.ToString(), out int orderId))
+                {
+                    newOrderId = orderId;
+                }
+            }
+
+            return newOrderId;
         }
 
         public static int? GetTableIdWithLinkId(int linkId)
@@ -54,7 +180,6 @@ namespace WebApplication1.Models
 
             return tableId;
         }
-
         public static List<OrderDTO> GetOrdersByTableId(int tableId)
         {
             var orders = new List<OrderDTO>();
@@ -63,7 +188,7 @@ namespace WebApplication1.Models
             using (SqlCommand cmd = new SqlCommand("getOrdersWithTableId", con))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@table_id", tableId);
+                cmd.Parameters.AddWithValue("@tableId", tableId);
 
                 con.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -73,8 +198,10 @@ namespace WebApplication1.Models
                         orders.Add(new OrderDTO
                         {
                             OrderId = (int)reader["order_id"],
+                            ProductId = (int)reader["product_id"],
                             ProductName = reader["product_name"].ToString(),
                             Price = (decimal)reader["price"],
+                            Img = reader["img"].ToString(),
                             StatusName = reader["status_name"].ToString(),
                             BackgroundColor = reader["backgroundColor"].ToString(),
                             Color = reader["color"].ToString()
@@ -143,19 +270,35 @@ namespace WebApplication1.Models
             return sections;
         }
 
+        public static List<Product> SearchProductsByName(string searchText)
+        {
+            var products = new List<Product>();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="userdto">userdto suppose to contain the pass and mail</param>
-        /// <returns>will return the user iwth all its props name ismadmin</returns>
+            using (SqlConnection con = new SqlConnection(conStr))
+            using (SqlCommand cmd = new SqlCommand("SearchProductsByName", con))
+            {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@searchText", searchText);
 
-        //internal static User Login(UserDTO userdto)
-        //{
-        //    return ExcQUser(
-        //        $" SELECT * " +
-        //        $" FROM TBUsers " +
-        //        $" WHERE mail='{userdto.Mail}' and password='{userdto.Password}'");
-        //}
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        products.Add(new Product
+                        {
+                            Id = (int)reader["id"],
+                            Name = reader["name"].ToString(),
+                            Price = (decimal)reader["price"],
+                            Img = reader["img"].ToString()
+                            // Ajoute d'autres propriétés si besoin
+                        });
+                    }
+                }
+            }
+
+            return products;
+        }
+
     }
 }

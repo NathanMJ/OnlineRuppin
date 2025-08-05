@@ -1,4 +1,4 @@
-create database appLinkAppCafeGreg
+﻿create database appLinkAppCafeGreg
 go
 /*
 USE master;
@@ -12,8 +12,17 @@ DROP DATABASE appLinkAppCafeGreg;
 GO
 
 */
+
+
 use appLinkAppCafeGreg
 go
+
+CREATE TABLE Customers (
+  ID NVARCHAR(9) PRIMARY KEY,         
+  Contact NVARCHAR(255) NOT NULL,      
+  FirstName NVARCHAR(100)             
+);
+
 
 CREATE TABLE tables (
   id INT PRIMARY KEY,
@@ -24,6 +33,14 @@ Create table tables_orders (
 	table_id int,
 	order_id int
 )
+
+
+CREATE TABLE table_customers (
+  table_id INT,
+  customer_id NVARCHAR(9), 
+  FOREIGN KEY (customer_id) REFERENCES Customers(ID)
+);
+
 
 CREATE TABLE orders (
   id INT PRIMARY KEY,
@@ -93,8 +110,20 @@ INSERT INTO section_products (section_id, product_id) VALUES
 (1, 3), (1, 4),
 (2, 5), (2, 6);
 
+INSERT INTO Customers (ID, Contact, FirstName)
+VALUES 
+  ('345538268', 'nathanmimoun2001@gmail.com', 'Nathan'),
+  ('345538269', '0584020406', 'Lea'),
+  ('345538270', 'david@gmail.com', N'דוד');
 
-CREATE or alter PROCEDURE getOrdersWithTableId
+  INSERT INTO table_customers (table_id, customer_id)
+VALUES
+  (3, '345538268'),  -- Nathan to table 3
+  (3, '345538269'),  -- Lea to table 3
+  (4, '345538270');  -- David to table 4
+
+
+CREATE PROC getOrdersWithTableId
   @table_id INT
 AS
 BEGIN
@@ -115,30 +144,30 @@ END
 exec getOrdersWithTableId 3
 
 
-CREATE PROCEDURE orderProductById
+CREATE PROC orderProductById
   @productId INT,
   @tableId INT
 AS
 BEGIN
   SET NOCOUNT ON;
 
-  -- Cr�er une nouvelle commande avec un nouvel ID auto-incr�ment�
+  -- Créer une nouvelle commande avec un nouvel ID auto-incrémenté
   DECLARE @newOrderId INT;
 
-  -- On r�cup�re le max id + 1 pour cr�er un nouvel id (si tu n'as pas d'auto-increment)
+  -- On récupère le max id + 1 pour créer un nouvel id (si tu n'as pas d'auto-increment)
   SELECT @newOrderId = ISNULL(MAX(id), -1) + 1 FROM orders;
 
-  -- Ins�rer la nouvelle commande dans la table orders (status 0 par d�faut)
+  -- Insérer la nouvelle commande dans la table orders (status 0 par défaut)
   INSERT INTO orders (id, product_id, status_id)
   VALUES (@newOrderId, @productId, 0);
 
-  -- Associer la commande � la table dans tables_orders
+  -- Associer la commande à la table dans tables_orders
   INSERT INTO tables_orders (table_id, order_id)
   VALUES (@tableId, @newOrderId);
 END;
 
 
-CREATE PROCEDURE getProductById
+CREATE PROC getProductById
   @productId INT
 AS
 BEGIN
@@ -150,7 +179,7 @@ BEGIN
 END;
 
 
-CREATE PROCEDURE getSections
+CREATE PROC getSections
 AS
 BEGIN
   SET NOCOUNT ON;
@@ -160,7 +189,7 @@ END;
 
 exec getSections
 
-CREATE OR ALTER PROCEDURE getProductsBySectionId
+CREATE OR ALTER PROC getProductsBySectionId
     @section_id INT
 AS
 BEGIN
@@ -180,7 +209,7 @@ go
 
 exec getProductsBySectionId 0
 
-CREATE PROCEDURE getTableIdWithLinkId
+CREATE PROC getTableIdWithLinkId
   @linkId INT
 AS
 BEGIN
@@ -189,7 +218,8 @@ BEGIN
   SELECT id FROM tables WHERE link_id = @linkId;
 END;
 
-CREATE or alter PROCEDURE getOrdersWithTableId
+
+alter PROC getOrdersWithTableId
   @tableId INT
 AS
 BEGIN
@@ -212,7 +242,7 @@ BEGIN
   WHERE t_o.table_id = @tableId;
 END;
 
-
+exec getOrdersWithTableId 3
 
 CREATE PROCEDURE changeOrderStatus
   @orderId INT,
@@ -230,18 +260,169 @@ BEGIN
 END;
 
 
-CREATE PROCEDURE cancelOrder
-  @orderId INT,
+CREATE OR ALTER PROCEDURE cancelOrder
+  @orderId INT
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  -- Vérifie si la commande existe
+  IF NOT EXISTS (SELECT 1 FROM orders WHERE id = @orderId)
+  BEGIN
+    RAISERROR('Order does not exist.', 16, 1);
+    RETURN;
+  END
+
+  -- Récupère le tableId lié à cette commande
+  DECLARE @tableId INT;
+  SELECT TOP 1 @tableId = table_id FROM tables_orders WHERE order_id = @orderId;
+
+  -- Supprime la commande
+  DELETE FROM orders WHERE id = @orderId;
+
+  -- Supprime la liaison
+  DELETE FROM tables_orders WHERE table_id = @tableId AND order_id = @orderId;
+END;
+
+
+
+CREATE OR ALTER PROCEDURE RegisterCustomer
+  @id NVARCHAR(50),
+  @contact NVARCHAR(255),
+  @firstName NVARCHAR(100),
   @tableId INT
 AS
 BEGIN
   SET NOCOUNT ON;
 
-  -- Supprimer la commande dans la table orders
-  DELETE FROM orders WHERE id = @orderId;
+  -- Vérifie si l'utilisateur existe déjà
+  IF EXISTS (SELECT 1 FROM Customers WHERE ID = @id)
+  BEGIN
+    RAISERROR('User already exists.', 16, 1);
+    RETURN;
+  END
 
-  -- Supprimer la liaison entre la table et la commande
-  DELETE FROM tables_orders 
-  WHERE table_id = @tableId AND order_id = @orderId;
+  -- Insère le nouvel utilisateur
+  INSERT INTO Customers (ID, Contact, FirstName)
+  VALUES (@id, @contact, @firstName);
+
+  -- Vérifie si le client est déjà assigné à une table (normalement non car nouveau)
+  IF EXISTS (
+    SELECT 1
+    FROM table_customers
+    WHERE customer_id = @id
+  )
+  BEGIN
+    RAISERROR('User is already assigned to a table.', 16, 1);
+    RETURN;
+  END
+
+  -- Insère le lien client → table
+  INSERT INTO table_customers (table_id, customer_id)
+  VALUES (@tableId, @id);
+END
+
+
+
+
+CREATE OR ALTER PROCEDURE LoginCustomer
+  @id NVARCHAR(50),
+  @tableId INT
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  -- Vérifie que le client existe dans Customers
+  IF NOT EXISTS (SELECT 1 FROM Customers WHERE ID = @id)
+  BEGIN
+    RAISERROR('User not found in Customers.', 16, 1);
+    RETURN;
+  END
+
+  -- Vérifie si le client est déjà assigné à une table différente
+  IF EXISTS (
+    SELECT 1 
+    FROM table_customers
+    WHERE customer_id = @id
+      AND table_id <> @tableId
+  )
+  BEGIN
+    RAISERROR('User is already assigned to another table.', 16, 1);
+    RETURN;
+  END
+
+  -- Vérifie si le client est déjà assigné à cette table (connecté)
+  IF EXISTS (
+    SELECT 1
+    FROM table_customers
+    WHERE customer_id = @id
+      AND table_id = @tableId
+  )
+  BEGIN
+    RAISERROR('User is already connected to this table.', 16, 1);
+    RETURN;
+  END
+
+  -- Ajoute le client à la table
+  INSERT INTO table_customers (table_id, customer_id)
+  VALUES (@tableId, @id);
+
+  -- Retourne les infos du client
+  SELECT ID, Contact, FirstName
+  FROM Customers
+  WHERE ID = @id;
+END
+
+
+CREATE OR ALTER PROC GetAllCustomersByTableId
+  @tableId INT
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  SELECT 
+    c.ID AS customer_id,
+    c.Contact,
+    c.FirstName
+  FROM table_customers tc
+  JOIN Customers c ON tc.customer_id = c.ID
+  WHERE tc.table_id = @tableId;
+END
+
+exec GetAllCustomersByTableId 4
+
+CREATE OR ALTER PROCEDURE SearchProductsByName
+  @searchText NVARCHAR(255)
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  SELECT id, name, price, img
+  FROM products
+  WHERE LOWER(name) LIKE '%' + LOWER(@searchText) + '%';
 END;
+
+
+CREATE OR ALTER PROCEDURE DisconnectCustomer
+  @customerId NVARCHAR(9)
+AS
+BEGIN
+  SET NOCOUNT ON;
+
+  -- Vérifie si l'utilisateur est connecté (présent dans table_customers)
+  IF EXISTS (SELECT 1 FROM table_customers WHERE customer_id = @customerId)
+  BEGIN
+    -- Supprime la ligne pour le déconnecter
+    DELETE FROM table_customers WHERE customer_id = @customerId;
+  END
+  ELSE
+  BEGIN
+    RAISERROR('Customer is not connected to any table.', 16, 1);
+  END
+END;
+
+select * from table_customers
+
+exec DisconnectCustomer 33
+
 

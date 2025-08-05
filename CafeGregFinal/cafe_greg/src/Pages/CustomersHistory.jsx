@@ -101,9 +101,9 @@ export default function CustomersHistory(props) {
     return (
         <div className="customerHistory">
             <div className="filterSide">
-                <h1>Filter</h1>
+                <h1>Filters</h1>
                 <div className="customers">
-                    <h1>by customer</h1>
+                    <h1 className="titleDetail">by customer</h1>
                     <div className="header">
                         <div className="notSelected">
                             <div className="square"></div>
@@ -122,7 +122,7 @@ export default function CustomersHistory(props) {
                 </div>
 
                 <div className="date">
-                    <h1>by date</h1>
+                    <h1 className="titleDetail">by date</h1>
                     <div className={selectionnedDateClass(0) ? 'selectionedDate' : 'notSelectionedDate'}
                         onClick={() => setDatesFilter({})}>
                         without date

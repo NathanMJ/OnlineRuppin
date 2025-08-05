@@ -1,8 +1,7 @@
 import { Image } from 'expo-image';
-import { View, Text, TouchableOpacity } from 'react-native'
-import { Dimensions } from 'react-native';
-import { cancelOrder, changeOrderStatus, getOrdersWithTableId } from '../database.js'
 import { useContext } from 'react';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { cancelOrder, sendOrder } from '../database.js';
 import { LinkAppContext } from '../LinkAppContext.jsx';
 
 export default function FCEveryOrdersMain(props) {
@@ -13,22 +12,28 @@ export default function FCEveryOrdersMain(props) {
   const windowWidth = Dimensions.get('window').width;
   const { linkApp, setLinkApp } = useContext(LinkAppContext);
 
+  console.log(orders);
+  
   const cancelOrderById = async (orderId) => {
-    await cancelOrder(orderId, linkApp.tableId)
-    props.refreshOrders()
+    console.log(orderId);
+    
+    const res = await cancelOrder(orderId)
+    if (res)
+      props.refreshOrders()
   }
 
   const validateOrderById = async (orderId) => {
-    const res = await changeOrderStatus(orderId, 1)
-    if (res == 1) {
+    const res = await sendOrder(orderId)
+    if (res) {
       props.refreshOrders()
     }
-
   }
 
+
   if (!orders || orders.length === 0) {
-    return <View style={{backgroundColor:'white'}}><Text style={{textAlign:'center',fontSize:30,
-      padding:30, fontWeight:600
+    return <View style={{ backgroundColor: 'white' }}><Text style={{
+      textAlign: 'center', fontSize: 30,
+      padding: 30, fontWeight: 600
     }}>No orders</Text></View>;
   }
   return <View style={{
@@ -56,18 +61,18 @@ export default function FCEveryOrdersMain(props) {
               style={{ width: '33%', height: '100%' }} />
 
             <Text style={{ flex: 1, textAlign: 'center', margin: 'auto', fontSize: 28, fontWeight: 500 }}>
-              {order.name}
+              {order.productName}
             </Text>
           </View>
 
-          {order.status.id != 0 ? "" :
+          {order.statusName != "Pending" ? "" :
             <TouchableOpacity style={{
               position: 'absolute',
               right: 0,
               bottom: 0,
               transform: 'translate(50%,50%)'
             }}
-              onPress={() => validateOrderById(order.id)}>
+              onPress={() => validateOrderById(order.orderId)}>
               <Image
                 source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c6/Sign-check-icon.png' }}
                 style={{
@@ -77,14 +82,14 @@ export default function FCEveryOrdersMain(props) {
             </TouchableOpacity>
           }
 
-          {order.status.id != 0 ? "" :
+          {order.statusName != "Pending" ? "" :
             <TouchableOpacity style={{
               position: 'absolute',
               right: 0,
               top: 0,
               transform: [{ translateX: 25 }, { translateY: -25 }]
             }}
-              onPress={() => cancelOrderById(order.id)}>
+              onPress={() => cancelOrderById(order.orderId)}>
               <Image
                 source={require('../../assets/images/Cross-red-circle.png')}
                 style={{
@@ -97,13 +102,13 @@ export default function FCEveryOrdersMain(props) {
         </View>
 
         <View style={{
-          backgroundColor: order.status.backgroundColor,
+          backgroundColor: order.backgroundColor,
           width: "80%",
           margin: 'auto',
           borderBottomLeftRadius: 15,
           borderBottomRightRadius: 15
         }}>
-          <Text style={{ textAlign: 'center', color: order.status.color, fontSize: 20, fontWeight: 600 }}>{order.status.status}</Text>
+          <Text style={{ textAlign: 'center', color: order.color, fontSize: 20, fontWeight: 600 }}>{order.statusName}</Text>
 
         </View>
 

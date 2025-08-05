@@ -8,26 +8,8 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class TablesController : ControllerBase
     {
-        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Get(int id)
-        {
-            try
-            {
-                Table table = DBServices.GetTableById(id);
-
-                if (table == null)
-                    return NotFound(); // 404 si pas trouvée
-
-                return Ok(table); // 200 avec la table en JSON
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [HttpGet("tableId/{linkId}")]
         public IActionResult GetTableId(int linkId)
         {
@@ -37,7 +19,7 @@ namespace WebApplication1.Controllers
                 if (tableId.HasValue)
                     return Ok(tableId);
                 else
-                    return NoContent(); // ou NotFound(), si tu veux
+                    return NoContent(); 
             }
             catch (Exception e)
             {

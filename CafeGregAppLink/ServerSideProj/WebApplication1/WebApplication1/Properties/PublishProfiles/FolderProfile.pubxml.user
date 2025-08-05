@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\Nathan\Desktop\OnlineRuppin\CafeGregAppLink\ServerSideProj\WebApplication1\WebApplication1\bin\Release\net8.0\publish\</_PublishTargetUrl>
-    <History>True|2025-05-25T11:52:27.3958352Z||;True|2025-05-25T14:16:41.7462744+03:00||;True|2025-05-25T14:14:06.0616024+03:00||;True|2025-05-08T14:58:29.8630628+03:00||;True|2025-05-08T14:54:56.1857837+03:00||;True|2025-05-08T14:19:18.3881228+03:00||;True|2025-05-06T12:10:50.9777940+03:00||;True|2025-05-06T11:56:21.0758475+03:00||;True|2025-05-06T10:52:20.6293849+03:00||;</History>
+    <_PublishTargetUrl>C:\Users\home\Desktop\OnlineRuppin\CafeGregAppLink\ServerSideProj\WebApplication1\WebApplication1\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2025-07-16T15:14:03.9136398Z||;True|2025-07-16T12:07:16.1227290+03:00||;True|2025-07-16T11:42:40.9778732+03:00||;True|2025-07-16T11:24:21.9120657+03:00||;True|2025-07-15T12:48:23.3674563+03:00||;False|2025-07-15T12:47:24.6630559+03:00||;False|2025-07-15T12:45:55.1609977+03:00||;True|2025-07-15T11:59:27.0477789+03:00||;True|2025-07-15T11:32:21.4624367+03:00||;True|2025-05-25T14:52:27.3958352+03:00||;True|2025-05-25T14:16:41.7462744+03:00||;True|2025-05-25T14:14:06.0616024+03:00||;True|2025-05-08T14:58:29.8630628+03:00||;True|2025-05-08T14:54:56.1857837+03:00||;True|2025-05-08T14:19:18.3881228+03:00||;True|2025-05-06T12:10:50.9777940+03:00||;True|2025-05-06T11:56:21.0758475+03:00||;True|2025-05-06T10:52:20.6293849+03:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

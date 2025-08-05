@@ -17,3 +17,7 @@ build_property.SupportLocalizedComponentNames =
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
 build_property.MSBuildProjectDirectory = C:\Users\home\Desktop\OnlineRuppin\CafeGregAppLink\ServerSideProj\WebApplication1\WebApplication1
 build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/home/AppData/Roaming/SonarLint for Visual Studio/.global/csharp/SonarLint.xml]
+build_metadata.AdditionalFiles.TargetPath = 
+build_metadata.AdditionalFiles.CssScope = 

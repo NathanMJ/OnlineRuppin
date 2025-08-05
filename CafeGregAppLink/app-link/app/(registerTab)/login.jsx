@@ -1,32 +1,35 @@
-import { Ionicons } from '@expo/vector-icons';
-import { useState } from "react";
-import { Button, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { useContext, useState } from "react";
+import { ImageBackground, StyleSheet, Text, ToastAndroid, TouchableOpacity, useWindowDimensions } from 'react-native';
 
-import React, { useRef } from 'react';
-import { Animated, Dimensions, TextInput } from 'react-native';
-import { useEffect } from "react";
 import FCInput from '../FuncComps/FCInput';
+import { loginCustomer } from "../database";
+import { LinkAppContext } from "../LinkAppContext";
 
 export default function login() {
     const { width: widthScreen } = useWindowDimensions();
+    const { linkApp, setLinkApp } = useContext(LinkAppContext)
 
     const [inputs, setInputs] = useState({})
 
+
     const msg = (text) => {
-        console.log(text);
-        
+        ToastAndroid.show(text, ToastAndroid.SHORT);
     }
 
-    const login = () => {
-        if(!inputs.id1 || !inputs.id2){
-            msg('An input is missing')
+    const login = async () => {
+        if (!inputs.id1 || !inputs.id2) {
+            alert('An input is missing')
             return
         }
-        if(inputs.id1 != inputs.id2){
-            msg('Ids are not same')
+        if (inputs.id1 != inputs.id2) {
+            alert('Ids are not same')
             return
         }
-        //TODO: try to log with id1
+        //TODO: try to log with id1        
+
+        const res = await loginCustomer(inputs.id1, linkApp.tableId)
+        if (res)
+            msg('Logged successfully !')
     }
 
     return (

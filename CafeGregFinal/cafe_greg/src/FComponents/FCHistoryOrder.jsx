@@ -4,6 +4,7 @@ export default function FCHistoryOrder(props) {
         <div className="order">
             <img src={props.order.img}/>                
             <h1>{props.order.name}</h1>
+            <h2>Add</h2>
         </div>
     )
 }

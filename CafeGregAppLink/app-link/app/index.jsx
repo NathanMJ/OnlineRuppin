@@ -16,14 +16,12 @@ export default function Index() {
     useFocusEffect(
       React.useCallback(() => {
         setLinkApp({ tableId: 3 })
-        router.push({ pathname: "(tabs)/menu" })
-      }, [])
+        router.push({ pathname: "(registerTab)/login" })
+      }, []) 
     );
   }
 
-  // QR code scan test
-
-  const [scanning, setScanning] = useState(false)
+  const [scanning, setScanning] = useState(false)  
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
@@ -100,11 +98,9 @@ export default function Index() {
 
 
   const pressOnBtn = () => {
-    //TO DO: set the scanning to true and open the camera and scan the qrcode for real
-
-    setLinkApp({ tableId: 0 })
-    router.push({ pathname: "(tabs)/main" })
-    // setScanning(true)
+    // setLinkApp({ tableId: 3 })
+    // router.push({ pathname: "(tabs)/main" })
+    setScanning(true)
   }
 
   const clickOnHelpMe = () => {

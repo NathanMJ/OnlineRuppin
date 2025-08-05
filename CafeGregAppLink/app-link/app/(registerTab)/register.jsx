@@ -1,39 +1,78 @@
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from "react";
-import { Button, ImageBackground, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { useContext, useState } from "react";
+import { ImageBackground, ScrollView, StyleSheet, Text, ToastAndroid, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
 import React, { useRef } from 'react';
 import { Animated, Dimensions, TextInput } from 'react-native';
 import { useEffect } from "react";
 import FCInput from '../FuncComps/FCInput';
+import { LinkAppContext } from '../LinkAppContext.jsx';
+import { registerCustomer } from '../database.js';
 
 export default function register() {
   const { width: widthScreen } = useWindowDimensions();
+  const { linkApp, setLinkApp } = useContext(LinkAppContext)
 
-  const [inputs, setInputs] = useState()
+  const [inputs, setInputs] = useState({})
   const [typeContact, setTypeContact] = useState(null)
 
   const msg = (text) => {
-    console.log(text);
+    ToastAndroid.show(text, ToastAndroid.SHORT);
   }
 
-  useEffect(() => {
-    console.log(inputs);
-      
-  }, [inputs])
-  
 
-  const register = () => {
-    if(!typeContact){
-      msg('Please choose email or phone')
+  const register = async () => {
+    if (!typeContact) {
+      alert('Please choose email or phone')
       return
     }
+
+
     if (!inputs.id || !inputs.name || !inputs.contact) {
-      msg('Inputs is missing')
+      alert('Inputs is missing')
       return
     }
+    console.log(typeContact);
+
+    //check the id, contact with regex
+    if (typeContact == 'phone' && !isValidPhone(inputs.contact)) {
+      alert('The phone number is not correct')
+      return
+    }
+    if (typeContact == 'email' && !isValidEmail(inputs.contact)) {
+      alert('The email is not correct')
+      return
+    }
+    if (!isValidId(inputs.id)) {
+      alert('The id is not correct')
+      return
+    }
+    if (inputs.name.length < 3) {
+      alert(inputs.name + ' is too short for a name')
+      return
+    }
+
+
+    const res = await registerCustomer(inputs, linkApp.tableId)
+    if (res)
+      msg('Registered successfully !')
   }
 
+
+  function isValidEmail(email) {
+    const emailRegex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  function isValidPhone(phone) {
+    const phoneRegex = /^0\d{9}$/;
+    return phoneRegex.test(phone);
+  }
+
+  function isValidId(id) {
+    const idRegex = /^\d{8,9}$/;
+    return idRegex.test(id);
+  }
   return (
     <ImageBackground source={{
       uri: "https://i.ytimg.com/vi/DyJTVkRP1vY/maxresdefault.jpg"
