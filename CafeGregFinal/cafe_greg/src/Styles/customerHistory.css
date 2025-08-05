@@ -6,83 +6,278 @@
     overflow: hidden;
 
     .filterSide {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        flex: 1;
         background-color: rgb(159, 214, 214);
 
-
         >h1 {
-            font-size: 60px;
+            font-size: 80px;
             text-align: center;
+            background-color: rgb(100, 15, 12);
+            color: white;
         }
 
-        .titleDetail {
-            font-size: 40px;
-            padding-left: 20px;
-            padding-block: 5px;
-        }
-
-        .header {
-            display: flex;
-            flex-direction: row;
-
-            >div {
-                flex: 1;
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                padding: 10px;
-                gap: 3px;
-            }
-
-            .square {
-                border: black 1px solid;
-                width: 20%;
-                height: 100%;
-            }
-
-            .notSelected {
-                .square {
-                    background-color: gray;
-                }
-            }
-
-            .selected {
-                .square {
-                    background-color: green;
-                }
-            }
-        }
-
-        .customer {
-            font-size: 5vh;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .customer.notSelected {
-            background-color: gray;
-            color: rgb(201, 200, 200);
-        }
-
-        .customer.selected {
-            color: green;
-            background-color: rgb(8, 223, 25);
-        }
-
-
-        .date {
-            font-size: 30px;
+        .customersFilter {
+            height: 50%;
+            background-color: rgb(141, 74, 57);
             display: flex;
             flex-direction: column;
-            background-color: aliceblue;
 
-            .selectionedDate,
-            .notSelectionedDate {
-                text-align: center;
+            .header {
+                display: flex;
+                flex-direction: row;
+                font-size: 30px;
+                color: white;
+
+                >div {
+                    flex: 1 0 auto;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 10px;
+                    gap: 3px;
+                }
+
+                .square {
+                    border: black 1px solid;
+                    width: 20%;
+                    height: 100%;
+                }
+
+                .notSelected {
+                    .square {
+                        background-color: gray;
+                    }
+                }
+
+                .selected {
+                    .square {
+                        background-color: green;
+                    }
+                }
+            }
+
+            .customers {
                 flex: 1;
+                overflow-y: auto;
+                background-color: gray;
+
+                .customer {
+                    font-size: 80px;
+                    text-align: center;
+                    cursor: pointer;
+                }
+
+
+                .customer.notSelected {
+                    background-color: gray;
+                    color: rgb(201, 200, 200);
+                }
+
+                .customer.selected {
+                    color: green;
+                    background-color: rgb(8, 223, 25);
+                }
+            }
+        }
+
+        .datesFilter {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgb(150, 73, 73);
+
+            >div {
+                padding-block: 15px;
+            }
+
+            .noDate {
+                &.selectionedDate {
+
+                    h3{
+                        transform: translateY(0px) !important;
+                    }
+                }
+                
+                
+                .container {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    
+                    h3:not(.illusion3D) {
+                        transition: transform 0.2s ease-in-out;
+                        background-color: white;
+                        padding: 20px;
+                        border-radius: 20px;
+                        width: fit-content;
+                        transform: translateY(-10px);
+                    }
+
+                    h3.illusion3D {
+                        position: absolute;
+                        background-color: rgb(211, 211, 211);
+                        padding: 20px;
+                        border-radius: 20px;
+                        width: fit-content;
+                    }
+
+                }
+
+            }
+
+            h2 {
+                font-size: 50px;
+                text-align: center;
+            }
+
+            h3 {
+                text-align: center;
+                font-size: 40px;
+            }
+
+            input {
+                font-size: 30px;
+                border-radius: 10px;
+                border: none;
+                text-align: center;
+            }
+
+
+            .react-datepicker__day-names {
+                display: flex;
+                justify-content: space-between;
+                margin-block: 8px;
+                font-size: 32px;
+                text-align: center;
+            }
+
+            .react-datepicker__day-name {
+                flex: 1;
+            }
+
+            .react-datepicker__day {
+                width: 50px !important;
+                height: 50px !important;
+                margin: 0 !important;
+                font-size: 32px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s;
+                flex-shrink: 0;
+
+            }
+
+            .react-datepicker__day--selected {
+                background-color: #3b82f6 !important;
+                color: white !important;
+            }
+
+            .datepicker-wrapper {
+                position: relative;
+                display: inline-block;
+                width: 250px;
+            }
+
+
+            .datepicker-input-with-icon:focus {
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            .react-datepicker__header {
+                background-color: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 20px 0 !important;
+                /* Augmentez le padding vertical */
+            }
+
+            /* Mois et année */
+            .react-datepicker__current-month {
+                font-size: 24px !important;
+                /* Augmentez la taille de police */
+                font-weight: 600;
+                color: #374151;
+                margin-bottom: 16px !important;
+                /* Augmentez l'espacement en bas */
+                line-height: 1.2;
+            }
+
+            .datepicker-input-with-icon {
+                width: 100% !important;
+                height: 50px !important;
+                padding: 8px 55px 8px 12px !important;
+                border: 1px solid #d1d5db;
+                border-radius: 6px;
+                outline: none;
+                transition: border-color 0.2s;
+                box-sizing: border-box;
+            }
+
+
+            .datepicker-icon {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #6b7280;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+            }
+
+            .datepicker-icon svg {
+                width: 30px;
+                height: 30px;
+                color: #6b7280;
+                transition: color 0.2s;
+            }
+
+            .datepicker-wrapper:focus-within .datepicker-icon svg {
+                color: #3b82f6;
+            }
+
+            .datepicker-icon.clickable:hover svg {
+                color: #3b82f6;
+            }
+
+            .datepicker-icon.clickable {
+                pointer-events: auto;
+                cursor: pointer;
+            }
+
+
+            .uniqueDate {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                align-items: center;
+            }
+
+
+            .twoDate {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+
+                >div {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    padding-inline: 20px;
+
+                    h3 {
+                        flex: 1;
+                    }
+                }
             }
 
             .selectionedDate {
@@ -91,10 +286,8 @@
 
             .notSelectionedDate {
                 background-color: rgb(255, 38, 0);
-                color: white;
             }
         }
-
     }
 
     .historySide {
@@ -105,10 +298,18 @@
         flex-direction: column;
 
         .header {
-            background-color: rgb(44, 147, 207);
-            font-size: 35px;
-            color: white;
+            background-color: rgb(18, 61, 40);
+            color: rgb(215, 208, 240);
             text-align: center;
+            padding-block: 20px;
+
+            h2 {
+                font-size: 35px;
+            }
+
+            h1 {
+                font-size: 50px;
+            }
         }
 
         .orders {
@@ -117,51 +318,95 @@
             flex-direction: column;
             gap: 30px;
             padding-block: 30px;
-            background-color: aliceblue;
-            align-items: center;
             flex: 1;
+            background-color: rgb(206, 255, 213);
+            align-items: center;
+            overflow-x: auto;
+            flex: 1;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
 
             .order {
                 display: flex;
-                flex-direction: row;
-                background-color: rgba(43, 224, 215, 0.397);
                 width: 90%;
-                height: 200px;
                 border-radius: 20px;
                 overflow: hidden;
-                align-items: center;
                 flex-shrink: 0;
-                cursor: pointer;
+                flex-direction: column;
+                box-shadow: 15px 20px 20px rgba(0, 0, 0, 0.466);
 
-                img {
-                    width: 100%;
-                    flex: 1;
-                    object-fit: cover;
-                }
-
-                h1 {
+                .head {
+                    flex-direction: row;
                     display: flex;
-                    flex: 3;
-                    font-size: 35px;
-                    justify-content: center;
-                }
-
-                h2 {
-                    background: linear-gradient(rgb(169, 82, 169), rgb(103, 38, 103));
-                    height: 100%;
-                    flex: 1;
-                    color: white;
-                    display: flex;
-                    justify-content: center;
                     align-items: center;
-                    text-align: center;
-                    font-size: 40px;
+                    background-color: rgb(111, 206, 162);
+                    height: 175px;
+
+                    img {
+                        flex: 2;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+
+
+                    h1 {
+                        display: flex;
+                        flex: 3;
+                        font-size: 35px;
+                        justify-content: center;
+                    }
+
+                    .buttons {
+                        cursor: pointer;
+                        flex: 2;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+
+                        h2,
+                        h3 {
+                            width: 100%;
+                            font-size: 30px;
+                            color: white;
+                            text-align: center;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            padding-inline: 5px;
+                            box-sizing: border-box;
+                            flex: 1;
+                        }
+
+                        h2 {
+                            background-color: rgb(14, 78, 48);
+                        }
+
+                        h3 {
+                            background-color: rgb(78, 14, 41);
+                        }
+
+                    }
                 }
 
-                /* 
-            &::-webkit-scrollbar {
-                display: none;
-            } */
+                .details {
+                    display: flex;
+                    flex-direction: row;
+                    padding-inline: 20px;
+                    padding-block: 10px;
+                    font-size: 30px;
+                    background-color: rgb(192, 252, 224);
+                    text-align: center;
+
+                    h1 {
+                        margin: auto;
+                    }
+                }
             }
         }
     }

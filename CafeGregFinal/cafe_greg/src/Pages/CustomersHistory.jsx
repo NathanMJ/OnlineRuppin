@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import FCHistoryOrder from "../FComponents/FCHistoryOrder";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import ReturnButton from "../FComponents/ReturnButton";
 
 export default function CustomersHistory(props) {
 
     const location = useLocation()
+    const navigate = useNavigate();
+
 
     const { customers } = location.state
 
@@ -15,35 +21,35 @@ export default function CustomersHistory(props) {
     const [orders, setOrders] = useState([{
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
-    },{
-        id: 10,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
-    },{
-        id: 10,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }
+            , { name: 'John', id: '123456789' },
+        { name: 'Mick:', id: '234234234' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }, {
         id: 10,
         img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
-    }, {
-        id: 10,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name"
+        name: "Meal's name",
+        date: '2023-10-01',
+        customers: [{ name: 'Nathan', id: '345538268' }]
     }])
 
     useEffect(() => {
@@ -97,13 +103,11 @@ export default function CustomersHistory(props) {
         return false
     }
 
-
     return (
         <div className="customerHistory">
             <div className="filterSide">
                 <h1>Filters</h1>
-                <div className="customers">
-                    <h1 className="titleDetail">by customer</h1>
+                <div className="customersFilter">
                     <div className="header">
                         <div className="notSelected">
                             <div className="square"></div>
@@ -114,39 +118,110 @@ export default function CustomersHistory(props) {
                             Not selected
                         </div>
                     </div>
-                    {customers.map((customer, index) => (
-                        <div className={`customer ${customersFilter.includes(customer.id) ? 'selected' : 'notSelected'}`} onClick={() => clickOnCustomer(customer.id)} key={index}>
-                            <h1>{customer.name}</h1>
-                        </div>
-                    ))}
+                    <div className="customers">
+
+                        {customers.map((customer, index) => (
+                            <div className={`customer ${customersFilter.includes(customer.id) ? 'selected' : 'notSelected'}`} onClick={() => clickOnCustomer(customer.id)} key={index}>
+                                <h1>{customer.name}</h1>
+                            </div>
+                        ))}
+                    </div>
                 </div>
 
-                <div className="date">
-                    <h1 className="titleDetail">by date</h1>
-                    <div className={selectionnedDateClass(0) ? 'selectionedDate' : 'notSelectionedDate'}
+                <div className="datesFilter">
+                    <div className={'noDate ' + (selectionnedDateClass(0) ? 'selectionedDate' : 'notSelectionedDate')}
                         onClick={() => setDatesFilter({})}>
-                        without date
+                        <div className="container">
+                            <h3 className="illusion3D">Without date</h3>
+                            <h3>Without date</h3>
+                        </div>
                     </div>
                     <h2>or</h2>
-                    <div className={selectionnedDateClass(1) ? `selectionedDate` : 'notSelectionedDate'}>
-                        On the day :
-                        <input type="date" onChange={(e) => { setDatesFilter({ date1: e.target.value }) }} />
+                    <div className={'uniqueDate ' + (selectionnedDateClass(1) ? `selectionedDate` : 'notSelectionedDate')}>
+                        <h3 >On the day :</h3>
+                        <div className="datepicker-wrapper">
+                            <DatePicker
+                                placeholderText="Select a date"
+                                selected={datesFilter.date1}
+                                dateFormat="dd/MM/yyyy"
+                                onChange={(date) => setDatesFilter({ date1: date })}
+                                className="datepicker-input-with-icon"
+                            />
+                            <div className="datepicker-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                     <h2>or</h2>
-                    <div className={selectionnedDateClass(2) ? `selectionedDate` : 'notSelectionedDate'}>
+                    <div className={'twoDate ' + (selectionnedDateClass(2) ? `selectionedDate` : 'notSelectionedDate')}>
                         <div >
-                            Between the days :
-                            <input type="date" onChange={(e) => setDatesFilter({
-                                date1: e.target.value,
-                                date2: datesFilter.date2 ? datesFilter.date2 : e.target.value
-                            })} />
+                            <h3>Between the days :</h3>
+                            <div className="datepicker-wrapper">
+                                <DatePicker
+                                    value={datesFilter.date1 || null}
+                                    maxDate={datesFilter.date2 || new Date().toISOString().split('T')[0]}
+                                    placeholderText="Select a date"
+                                    selected={datesFilter.date1}
+                                    dateFormat="dd/MM/yyyy"
+                                    onChange={(date) => {
+                                        const nextDay = new Date(date);
+                                        nextDay.setDate(nextDay.getDate() + 1);
+
+
+                                        setDatesFilter({
+                                            date1: date,
+                                            date2: datesFilter.date2 ? datesFilter.date2 : nextDay
+                                        });
+
+                                    }}
+                                    className="datepicker-input-with-icon"
+                                />
+                                <div className="datepicker-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </div>
+                            </div>
+
                         </div>
                         <div>
-                            and
-                            <input type="date" onChange={(e) => setDatesFilter({
-                                date2: e.target.value,
-                                date1: datesFilter.date1 ? datesFilter.date1 : e.target.value
-                            })} />
+                            <h3>and</h3>
+                            <div className="datepicker-wrapper">
+                                <DatePicker
+                                    value={datesFilter.date2 || null}
+                                    minDate={datesFilter.date1}
+                                    maxDate={new Date()}
+                                    placeholderText="Select a date"
+                                    selected={datesFilter.date2}
+                                    dateFormat="dd/MM/yyyy"
+                                    onChange={(date) => {
+                                        const beforeDay = new Date(date);
+                                        beforeDay.setDate(beforeDay.getDate() - 1);
+                                        setDatesFilter({
+                                            date1: datesFilter.date1 ? datesFilter.date1 : beforeDay,
+                                            date2: date
+                                        });
+
+                                    }}
+                                    className="datepicker-input-with-icon"
+                                />
+                                <div className="datepicker-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,8 +229,21 @@ export default function CustomersHistory(props) {
             <div className="historySide">
                 <div className="header">
                     <h1>History</h1>
-                    <h1>In common of : </h1>
-                    <h1>At the date :</h1>
+                    {customersFilter?.length > 0 && <h2>In common of : {customersFilter.map((customer, index) => {
+                        return (customers.find(c => c.id == customer).name + (index < customersFilter.length - 1 ? ', ' : ''))
+                    })}</h2>}
+                    {datesFilter.date1 && (
+                        datesFilter.date2 ?
+                            <h2>
+                                Between the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')} and {new Date(datesFilter.date2).toLocaleDateString('fr-FR')}
+                            </h2>
+                            : <h2>
+                                At the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')}
+                            </h2>
+                    )}
+
+                    <ReturnButton top={'3vh'} right={'3vh'} returnButton={() =>  navigate(-1) }></ReturnButton>
+
                 </div>
                 <div className="orders">
                     {orders.map((order, index) => (
