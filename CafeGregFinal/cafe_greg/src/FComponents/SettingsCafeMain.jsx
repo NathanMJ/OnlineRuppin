@@ -8,6 +8,7 @@ export default function SettingsCafeMain(props) {
 
     const clickOnSection = (section) => {
         console.log(section);
+        props.clickOnSectionOfSettings(section)
         props.hideMsg()
     }
 
@@ -21,9 +22,9 @@ export default function SettingsCafeMain(props) {
                     <p>Reduction</p>
                 </div>
 
-                <div className='emptyATable' onClick={() => clickOnSection('emptyATable')}>
+                <div className='removeATable' onClick={() => clickOnSection('removeATable')}>
                     <img src="https://png.pngtree.com/png-vector/20190927/ourmid/pngtree-trash-icon-png-image_1753315.jpg" />
-                    <p>Empty a table</p>
+                    <p>Remove a table</p>
                 </div>
 
                 <div className='removeAnOrder' onClick={() => clickOnSection('removeAnOrder')}>
@@ -38,15 +39,20 @@ export default function SettingsCafeMain(props) {
     return (
         <div className='settingsCafeMain'>
 
-            <img src="/Pictures/Cross.png" className='close' onClick={props.hideMsg}/>
+            <img src="/Pictures/Cross.png" className='close' onClick={props.hideMsg} />
 
+
+            <div className='checkTable' onClick={() => clickOnSection('checkTable')}>
+                <img src="/Pictures/Change-status-logo.png" />
+                <p>Check a table</p>
+            </div>
 
             <div className='payment' onClick={() => clickOnSection('payment')}>
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQN79yIhZH66SbM3eor1zCFG65S-LfSqFpoxoRR-336-pgUkINFCXZwEt8D2qYQ7uPM9cs&usqp=CAU" />
                 <p>Payement</p>
             </div>
 
-            <div className='switchTable' onClick={() => clickOnSection('switchTable')}>
+            <div className='switchTables' onClick={() => clickOnSection('switchTables')}>
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSi09vu7pWKVz3FpTlaljOcKknKDwEnruZsrA&s" />
                 <p>Switch tables</p>
             </div>

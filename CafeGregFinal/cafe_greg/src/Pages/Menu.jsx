@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
-import { get_from_section, get_previous_section, orders, products} from '../tempDB.js';
+import { get_from_section, get_previous_section, orders, products } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
+import { useIdContext } from '../Contexts/askIdContext.jsx';
 
 export default function Menu(props) {
 
     //TODO: when arrived here make a fetch of every section and every products (for research) for now its from tempDB
 
+    const { getWorkerId } = useIdContext();
     const location = useLocation();
     const tableId = location.state?.tableId ?? null;
 
@@ -134,8 +136,15 @@ export default function Menu(props) {
                 ))}
             </div>
         ));
+    }
 
-
+    const clickOnCafeGreg = async () => {
+        console.log(5);
+        
+        const id = await getWorkerId()
+        if (id) {
+            props.goto('/cafeMain')
+        }
     }
 
     const clickOnProduct = (productId) => {
@@ -183,7 +192,7 @@ export default function Menu(props) {
                         </div>
                     </div>
                     <div className='logo'>
-                        <img src="../Pictures/Cafe-greg-logo.png" onClick={() => props.goto('/cafeMain')} />
+                        <img src="../Pictures/Cafe-greg-logo.png" onDoubleClick={clickOnCafeGreg} />
                     </div>
                     <div className='rightLogo'>
                         <div className='research'>
