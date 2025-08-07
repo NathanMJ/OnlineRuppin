@@ -19,6 +19,7 @@ export default function FCInput(props) {
                 keyboardType={props.type}
                 placeholder={props.placeholder}
                 onChangeText={setVariable}
+                value={props.value}
             />
         </View>
     )

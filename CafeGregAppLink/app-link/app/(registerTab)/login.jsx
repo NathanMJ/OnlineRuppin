@@ -28,8 +28,10 @@ export default function login() {
         //TODO: try to log with id1        
 
         const res = await loginCustomer(inputs.id1, linkApp.tableId)
-        if (res)
+        if (res) {
             msg('Logged successfully !')
+            setInputs({ id1: '', id2: '' })
+        }
     }
 
     return (
@@ -43,10 +45,12 @@ export default function login() {
             <FCInput
                 title={'Tehoudat zehout'} type={'numeric'}
                 placeholder={'Your tehoudat zehout'}
+                value={inputs.id1}
                 setVariable={(id) => setInputs({ ...inputs, id1: id })}></FCInput>
             <FCInput
                 title={'Confirm your id :'} type={'numeric'}
                 placeholder={'Your tehoudat zehout'}
+                value={inputs.id2}
                 setVariable={(id) => setInputs({ ...inputs, id2: id })}></FCInput>
             <TouchableOpacity onPress={login}
                 style={{

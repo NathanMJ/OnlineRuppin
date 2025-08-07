@@ -54,8 +54,11 @@ export default function register() {
 
 
     const res = await registerCustomer(inputs, linkApp.tableId)
-    if (res)
+    if (res) {
+      setInputs({name:'', id:''})
+      setTypeContact('')
       msg('Registered successfully !')
+    }
   }
 
 
@@ -84,24 +87,27 @@ export default function register() {
       <FCInput
         title={'Name'} type={'text'}
         placeholder={'Your name'}
+        value={inputs.name}
         setVariable={(input) => setInputs({ ...inputs, name: input })}></FCInput>
       <FCInput
         title={'Tehoudat zehout'} type={'numeric'}
         placeholder={'Your id'}
+        value={inputs.id}
         setVariable={(input) => setInputs({ ...inputs, id: input })}></FCInput>
       <View style={styles.contactChoiceContainer}>
         <TouchableOpacity style={typeContact == 'phone' ? styles.selectionnedButtonContact : styles.buttonContact}
-          onPress={() => setTypeContact('phone')}>
+          onPress={() => { setTypeContact('phone'); setInputs({ ...inputs, contact: '' }) }}>
           <Text style={typeContact == 'phone' ? styles.selectionnedButtonTxtContact : styles.buttonTxtContact}>Phone</Text>
         </TouchableOpacity>
         <TouchableOpacity style={typeContact == 'email' ? styles.selectionnedButtonContact : styles.buttonContact}
-          onPress={() => setTypeContact('email')}>
+          onPress={() => { setTypeContact('email'); setInputs({ ...inputs, contact: '' }) }}>
           <Text style={typeContact == 'email' ? styles.selectionnedButtonTxtContact : styles.buttonTxtContact}>Email</Text>
         </TouchableOpacity>
       </View>
       {typeContact ?
         <View>
           <FCInput
+            value={inputs.contact}
             title={`Write your ${typeContact} :`} type={typeContact == 'phone' ? 'numeric' : 'text'}
             placeholder={`Your ${typeContact}`}
             setVariable={(input) => setInputs({ ...inputs, contact: input })}></FCInput>

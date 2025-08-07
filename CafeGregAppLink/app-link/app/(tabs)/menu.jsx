@@ -27,6 +27,7 @@ export default function Menu() {
   useFocusEffect(
     useCallback(() => {
       setSectionId(-1);
+      setResearch('')
     }, [])
   )
 
