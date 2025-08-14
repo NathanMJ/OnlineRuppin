@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllTables, getTable } from './controller.js';
+import { addTable, getAllTables, getTable, addOrder, getOrders} from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -11,7 +11,10 @@ function logger(req, res, next) {
 const tableRouter = Router();
 
 tableRouter
-    .get('/', logger, getAllTables) 
-    .get('/:id', logger, getTable) 
+    .get('/', logger, getAllTables)
+    .get('/:id', logger, getTable)
+    .get('/:id/getOrders', logger, getOrders)
+    .post('/:id/addTable', logger, addTable)
+    .post('/:id/order', logger, addOrder)
 
 export default tableRouter;

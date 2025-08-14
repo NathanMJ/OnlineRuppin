@@ -23,7 +23,7 @@ export default function CustomersHistory(props) {
 
     const [datesFilter, setDatesFilter] = useState({})
     const [orders, setOrders] = useState([{
-        product_id: 0,
+        product_id: 4,
         img: './Pictures/Starters-section.jpg',
         name: "Turkish Burikash",
         date: '2023-10-01',
@@ -32,10 +32,13 @@ export default function CustomersHistory(props) {
         { name: 'Mick', id: '234234234' }],
         changes: [
             {
-                ingredientId: 0,
+                ingredientId: 11,
                 change: 2
             }
-        ]
+        ],
+        adds: [20],
+        salad:3 ,
+        sauces: [{ id: 0, quantity: 10 }]
     }, {
         product_id: 1,
         img: './Pictures/Starters-section.jpg',
@@ -79,8 +82,8 @@ export default function CustomersHistory(props) {
         TODO : REPLACE THE CALENDAR LOGO
         TODO : SEND THE CHANGES OF THE ORDERS
         TODO : IF NO CHANGES WRITE NO CHANGE DETECTED
-
-*/
+    
+    */
 
     const clickOnCustomer = (id) => {
 

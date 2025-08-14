@@ -1,3 +1,4 @@
+import { log } from "node:console";
 import Customer from "./model.js";
 
 export async function getAllCustomers(req, res) {
@@ -14,7 +15,7 @@ export async function getAllCustomers(req, res) {
 export async function getCustomer(req, res) {
     //check permits     
 
-    
+
     let customer = await Customer.findCustomer(req.params.id);
 
     if (!customer) {
@@ -45,12 +46,6 @@ export async function addCustomer(req, res) {
 
     if (customer) {
         return res.status(200).json({ message: 'Customer already exist', customer });
-
-        return
-        if (updatedCustomer.changes.length > 0)
-            return res.status(200).json({ message: 'Customer successfully changed!', customer: updatedCustomer });
-        else
-            return res.status(200).json({ message: 'No changes were made to the customer.' });
     } else {
         const newCustomer = await Customer.addCustomer(ogCustomer);
         return res.status(200).json({ message: 'Customer successfully added!', customer: newCustomer });
@@ -58,7 +53,23 @@ export async function addCustomer(req, res) {
 
 }
 
-export async function cleanCustomers(req, res) {
-    const customers = await Customer.cleanCustomers()
-    return res.status(200).json({ message: "Customers have been cleaned", customers })
+
+export async function registerCustomer(req, res) {
+    try {
+        const { name, id, contact } = req.body;
+        console.log(req.body);
+
+        // Forcer l'ID en entier (si c'est le format attendu)
+        const customer = { 
+            name, 
+            _id: Number(id), 
+            contact 
+        };        
+        const tableId = Number(req.params.tableId); // Idem, si tableId est en int
+        const response = await Customer.register(tableId, customer);
+        return res.status(200).json(response);
+    } catch (error) {
+        console.error('Error registering customer:', error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
 }

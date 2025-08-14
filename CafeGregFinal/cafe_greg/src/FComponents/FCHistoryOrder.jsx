@@ -8,7 +8,7 @@ export default function FCHistoryOrder(props) {
                 alert('No changes detected')
                 return
             }
-            props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId, sendedChanges: props.order.changes });
+            props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId, sendedOrder: props.order });
         }
         else {
             props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId });

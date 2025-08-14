@@ -11,7 +11,7 @@ export default function Index() {
 
   //to test a page direcly without going through the pages
 
-  const goDirectly = true
+  const goDirectly = false
   if (goDirectly) {
     useFocusEffect(
       React.useCallback(() => {
@@ -91,8 +91,6 @@ export default function Index() {
         </TouchableOpacity>
       </View>
     );
-
-
   }
 
 

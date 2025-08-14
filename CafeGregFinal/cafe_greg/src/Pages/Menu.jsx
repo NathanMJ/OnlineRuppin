@@ -1,45 +1,48 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
-import { get_from_section, get_previous_section, orders, products } from '../tempDB.js';
+import { products } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
 import { useIdContext } from '../Contexts/askIdContext.jsx';
+import { getFromSection, getOrderOfTable, getPreviousSection, getProductByName} from '../connectToDB.js';
 
 export default function Menu(props) {
 
-    //TODO: when arrived here make a fetch of every section and every products (for research) for now its from tempDB
 
     const { getWorkerId } = useIdContext();
     const location = useLocation();
     const tableId = location.state?.tableId ?? null;
 
-    const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
+    const [orders, setOrders] = useState([])
 
-
-
-    if (tableId === null || tableId === undefined) {
-
-        return <div></div>
-        // props.goto('/cafeMain')
+    const fetchOrders = async () => {
+        const tempOrders = await getOrderOfTable(tableId)
+        setOrders([...tempOrders])
     }
 
+    useEffect(() => {
+        if (tableId != undefined && tableId != null)
+            fetchOrders()
+    }, [tableId])
+
+    const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
+
     const [showQRcode, setShowQRcode] = useState(false)
-
-    console.log(location.state);
-
 
     //For orders side :
 
     const [totalPrice, setTotalPrice] = useState(0);
 
-
-    useEffect(() => {
+    useEffect(() => {        
+        console.log(orders[0]);
+        
+        if (orders.length == 0)
+            return
         const tempTotalPrice = orders.reduce((acc, order) => {
             return acc + (order.price || 0);
         }, 0);
         setTotalPrice(tempTotalPrice);
-        console.log(`Total price calculated: ${tempTotalPrice} ₪`);
     }, [orders])
 
     //For menu side :
@@ -51,10 +54,12 @@ export default function Menu(props) {
     const [productsFound, setProductsFound] = useState([])
 
 
+    const fetchProductByName = async () => {
+        let tempProduct = await getProductByName(researchedProduct);
+        setProductsFound(tempProduct)
+    }
 
     useEffect(() => {
-        console.log(`Researched product: [${researchedProduct}]`);
-
         // If the researchedProduct is empty or only contains whitespace, set researchedsProducts to an empty array
         if (!researchedProduct || researchedProduct.trim() === "") {
             setProductsFound([]);
@@ -64,9 +69,7 @@ export default function Menu(props) {
         //research the top 4 products that match the most to the researchedProuct
 
         if (researchedProduct) {
-            setProductsFound(products.filter(product =>
-                product.name.toLowerCase().includes(researchedProduct.toLowerCase())
-            ).slice(0, 4));
+            fetchProductByName()
         }
 
     }, [researchedProduct])
@@ -78,19 +81,21 @@ export default function Menu(props) {
     const [sectionId, setSectionId] = useState(location.state?.sectionId ?? 0);
     const [mainContent, setMainContent] = useState([]);
 
-    useEffect(() => {
+
+    const fetchSection = async () => {
         if (sectionId != null && sectionId != undefined) {
-            // Fetch sections from the server 
-            let res = get_from_section(sectionId)
-            console.log(res);
-
+            let res = await getFromSection(sectionId)
             setMainContent(res);
-
+            console.log(res);            
         }
+    }
+
+    useEffect(() => {
+        fetchSection()
     }, [sectionId])
 
-    const backInTheMenu = () => {
-        const previousSectionId = get_previous_section(sectionId);
+    const backInTheMenu = async () => {
+        const previousSectionId = await getPreviousSection(sectionId);
         setSectionId(previousSectionId);
     }
 
@@ -127,7 +132,6 @@ export default function Menu(props) {
             result.push(row)
             //Close the row
         }
-        console.log(result);
 
         return result.map((row, rowIndex) => (
             <div className='row' key={rowIndex}>
@@ -139,8 +143,6 @@ export default function Menu(props) {
     }
 
     const clickOnCafeGreg = async () => {
-        console.log(5);
-        
         const id = await getWorkerId()
         if (id) {
             props.goto('/cafeMain')
@@ -166,7 +168,9 @@ export default function Menu(props) {
                     <h1>My orders</h1>
                     <div className='pipe'></div>
                 </div>
-                <FCOrders orders={orders}></FCOrders>
+                <FCOrders 
+                orders={orders || [] }
+                refreshOrders={fetchOrders}></FCOrders>
 
                 <div className='bottom'>
                     <div className='pipe'></div>

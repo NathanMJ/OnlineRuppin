@@ -400,8 +400,8 @@ export const products = [
         description: "Brioche, spinach, hollandaise, poached eggs, onion jam, green onion and black pepper. Served with a salad of your choice.",
         ingredients: [11, 15, { _id: 3, selected: 7 }, 16, 9, 17],
         adds: [
-            { name: "Mushrooms and onions", price: 10 },
-            { name: "Smoked salmon", price: 15 }
+            { id: 20, price: 10 },
+            { id: 10, price: 15 }
         ],
         salads: [0, 1, 2, { _id: 3, price: 15 }],
         sauces: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
@@ -517,7 +517,12 @@ const ingredients = [
     {
         _id: 19,
         name: "mozzarella cheese"
-    }
+    },
+    {
+        _id: 20,
+        name: "mushroom and onions"
+    },
+
 ]
 
 const ingredient_changes = [
@@ -578,23 +583,6 @@ function get_products_from_section(id) {
 }
 
 
-export function get_from_section(id) {
-
-
-    var sections = get_sections_from_section(id)
-    if (sections) {
-        return { type: "section", sections }
-    }
-
-
-    var products = get_products_from_section(id)
-    if (products) {
-        return { type: "product", products }
-    }
-
-
-}
-
 export function get_previous_section(id) {
     const previousSection = sections.find(section => section.child_sections.includes(id));
     return previousSection._id;
@@ -633,17 +621,56 @@ export async function get_product(productId) {
         sauces = await get_sauces(product.sauces)
     }
 
+    let addableIngredients = []
+    if (product.adds && product.adds.length > 0) {
+        addableIngredients = await get_addable_ingredients(product.adds)
+    }
 
-    const newProduct = {
-        ...product,
-        ingredients,
-        salads,
-        sauces
-    };
+    if (addableIngredients.length > 0) {
+        const newProduct = {
+            ...product,
+            ingredients,
+            salads,
+            sauces,
+            adds: addableIngredients
+        };
+        return newProduct;
+    }
+    else{        
+        const newProduct = {
+            ...product,
+            ingredients,
+            salads,
+            sauces
+        };
+        return newProduct;
+    }
 
-    return newProduct;
+
+
 }
 
+async function get_addable_ingredients(arr) {
+
+    if (!arr || arr.length === 0) {
+        console.error(`No addable ingredients`)
+        return
+    }
+
+    let everyIngredients = []
+
+    arr.forEach((ingredient) => {
+        let ingredientFound = ingredients.find(i => i._id == ingredient.id)
+        if (!ingredientFound) {
+            console.error(`The sauce with the id : ${id} was not found`)
+        }
+        else {
+            everyIngredients.push({ ...ingredientFound, price: ingredient.price })
+        }
+    })
+
+    return everyIngredients
+}
 
 async function get_sauces(sauceIds) {
 
@@ -751,5 +778,8 @@ async function get_ingredients_of_product(ingredientsList) {
     })
     return ingredients
 }
+
+
+
 
 

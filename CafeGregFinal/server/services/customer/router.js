@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllCustomers, getCustomer, addCustomer,cleanCustomers } from './controller.js';
+import { getAllCustomers, getCustomer, addCustomer, registerCustomer  } from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -12,7 +12,7 @@ const customerRouter = Router();
 customerRouter
     .get('/', logger, getAllCustomers) // Get all customers
     .get('/:id', logger, getCustomer) // Get a customer by ID
+    .post('/register/:tableId', logger, registerCustomer)
     .post('/add', logger, addCustomer) // Add a new customer
-    .delete('/clean',logger, cleanCustomers); // Clean customers 
 
 export default customerRouter;

@@ -1,3 +1,4 @@
+import { error } from "console";
 import Table from "./model.js";
 
 export async function getAllTables(req, res) {
@@ -15,4 +16,26 @@ export async function getTable(req, res) {
         return res.status(404).json({ message: "No table found" });
     }
     return res.status(200).json(table);
+}
+
+export async function addTable(req, res) {
+    let table = await Table.addTable(Number(req.params.id));
+
+    return res.status(200).json(table);
+}
+
+export async function addOrder(req, res) {
+    const tableId = req.params.id
+    const order = req.body.order
+    console.log('here ok');
+
+    const tableUpdated = await Table.order(tableId, order)
+
+    return res.status(200).json(tableUpdated);
+}
+
+export async function getOrders(req, res) {
+    const tableId = req.params.id
+    const orders = await Table.getOrders(tableId)
+    return res.status(200).json(orders)
 }

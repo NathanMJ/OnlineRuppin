@@ -1,11 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
-import { tempCafeTables } from "../tempDB";
-import { useNavigate } from "react-router-dom";
-import { fetchDB } from "../fetchDB";
 import { useIdContext } from "../Contexts/askIdContext";
-
+import { addTableById, getTables } from "../connectToDB.js"
 
 export default function CafeMain(props) {
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
@@ -14,28 +11,36 @@ export default function CafeMain(props) {
 
     const [clickOnTableMode, setClickOnTableMode] = useState('goto')
 
-    const [tables, setTables] = useState([
-        {
-            _id: 1,
-            customers: [123, 4]
+    const [tables, setTables] = useState([]);
+    const intervalRef = useRef(null);
+    const previousDataRef = useRef(null);
+
+    const fetchAndCompare = async () => {
+        try {
+            const newData = await getTables();
+            //Compare the data
+            if (JSON.stringify(newData) !== JSON.stringify(previousDataRef.current)) {
+                setTables(newData);
+                previousDataRef.current = newData;
+            }
+        } catch (error) {
+            console.error('Error:', error);
         }
-    ])
-
-
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            return
-            try {
-                const resFetch = await fetchDB(`${fetchUrl}/table`);
-                console.log(resFetch);
-                setTables(resFetch); // si tu veux les stocker
-            } catch (err) {
-                console.error("Erreur lors du fetch :", err);
+        // First fetch
+        fetchAndCompare();
+
+        // Then every 500ms
+        // intervalRef.current = setInterval(fetchAndCompare, 1000);
+
+        // Cleanup 
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
             }
         };
-
-        fetchData();
     }, []);
 
 
@@ -57,8 +62,7 @@ export default function CafeMain(props) {
         //TODO: make the real function of each one
         switch (clickOnTableMode) {
             case 'goto':
-                // props.goto(`/menu`, { tableId: id })
-                console.log('goto ', id);
+                props.goto(`/menu`, { tableId: id })
                 return
             case 'payment':
                 openTip(240, id)
@@ -109,13 +113,52 @@ export default function CafeMain(props) {
 
     }
 
-    const addATable = () => {
+
+    //Here concern the open a new table
+
+    const [addTablePannel, setAddTablePannel] = useState({
+        show: false,
+        value: 1
+    })
+
+    const startOpenTable = async () => {
         //Ask id, if id is waiter or manager continue
-        const id = getWorkerId("Enter your ID:");
+        const id = await getWorkerId("Enter your ID:");
+        //if id is correct set the value of the table to next value free
+        //TODO: take the value from the database
+        const nextValue = 4
+        setAddTablePannel({ show: true, value: nextValue })
     }
 
 
-    //Here concern the tip
+    const addTable = async () => {
+        //TODO: check if the table already exist
+        const exist = false
+        if (!exist) {
+            //create the table and go to the page with the id of the table
+
+            const result = await addTableById(Number(addTablePannel.value));
+            if (!result.success) {
+                alert(result.message);
+                return
+            }
+            else {
+                //go to the page
+                props.goto(`/menu`, { tableId: addTablePannel.value })
+                return
+            }
+        }
+        else {
+            //TODO: message of "table already exist"
+            console.log('table already exist');
+
+        }
+        setAddTablePannel({ show: false })
+
+    }
+
+
+    //Here concern the tip/payment
 
     const [tip, setTip] = useState({
         show: false,
@@ -125,8 +168,7 @@ export default function CafeMain(props) {
     })
 
     const [payment, setPayment] = useState({
-        show: true,
-        method: 'card'
+        show: false
     })
 
     const openTip = (tablePrice, tableId) => {
@@ -187,7 +229,7 @@ export default function CafeMain(props) {
         }, 2000)
 
         setTimeout(() => {
-            setPayment((prevS) => ({ ...prevS,loading: false, message: "Payment accepted !" }))
+            setPayment((prevS) => ({ ...prevS, loading: false, message: "Payment accepted !" }))
         }, 4000)
 
         setTimeout(() => {
@@ -217,7 +259,7 @@ export default function CafeMain(props) {
                 })}
             </div>
             <div className="options">
-                <img className="addTableLogo" src="/Pictures/Add-logo.png" onClick={addATable} />
+                <img className="addTableLogo" src="/Pictures/Add-logo.png" onClick={startOpenTable} />
                 <img className="private" src="/Pictures/Settings-logo.png" onClick={openSetting} />
             </div>
 
@@ -274,6 +316,22 @@ export default function CafeMain(props) {
                             </div>
                         : <p>Error</p>
                 }
+            </div>
+
+            <div className="addTable" style={{ display: addTablePannel.show ? 'flex' : 'none' }}>
+                <h1>Add a table</h1>
+                <div className="container">
+                    <div className="tableSide">
+                        <img src="/Pictures/Table.png" className="table" />
+                        <p className="tableId">{addTablePannel.value}</p>
+                    </div>
+                    <div className="inputSide">
+                        <p>The table's id :</p>
+                        <input type="number" min={0} value={addTablePannel.value ^ 0} onChange={(e) => setAddTablePannel((prevS) => ({ ...prevS, value: e.target.value }))} placeholder="The id" />
+                    </div>
+                </div>
+                <button onClick={addTable}>Add the table</button>
+                <img className="cross" src="/Pictures/Cross.png" onClick={() => setAddTablePannel({ show: false })} />
             </div>
 
             <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={() => { props.goto('/sideChoice') }}></ReturnButton>

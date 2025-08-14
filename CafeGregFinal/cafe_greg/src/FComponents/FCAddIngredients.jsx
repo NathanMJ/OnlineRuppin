@@ -17,10 +17,20 @@ export default function FCAddIngredients(props) {
         return <h2 className="price addPay">+ {price} ₪</h2>
     }
 
+
+    const capitalFirstLetter = (word) => {
+        if (!word)
+            return ''
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+
+
     const clickOnAddAnIngredient = () => {
         setShowIngredients(!showIngredients)
-        sectionRef.current?.scrollIntoView({ behavior: 'smooth', 
-            block: 'center' });
+        sectionRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
 
     }
 
@@ -29,8 +39,9 @@ export default function FCAddIngredients(props) {
         props.addAnIngredient(index)
     }
 
-    const clickOnRemoveAnAddedIngredient = (name) => {
-        props.removeAnAddedIngredient(name)
+    const clickOnRemoveAnAddedIngredient = (id) => {
+        console.log('id:', id);
+        props.removeAnAddedIngredient(id)
     }
 
     if (!props.adds) {
@@ -51,7 +62,7 @@ export default function FCAddIngredients(props) {
                 {props.adds.map((add, index) => (
                     <div className="ingredientContainer" key={index} onClick={() => clickOnAnIngredient(index)}>
                         <img src={add.img || tempImage} />
-                        <h1>{add.name}</h1>
+                        <h1>{capitalFirstLetter(add.name)}</h1>
                         {writePrice(add.price)}
                     </div>
                 ))}
@@ -60,16 +71,21 @@ export default function FCAddIngredients(props) {
 
             {props.addedIngredients?.length > 0 &&
                 <div className="addedIngredients">
-                    {props.addedIngredients.map((eachIng, index) => (
-                        <div className="wrapEachAddedIngredient" key={index}>
-                            <div className="eachAddedIngredient">
-                                <img src={eachIng.img || tempImage} />
-                                <h1>{eachIng.name}</h1>
-                                {writePrice(eachIng.price)}
+                    {props.addedIngredients.map((eachIng, index) => {
+                        const currentIngredient = props.adds.find((i) => i._id == eachIng)
+                        console.log(currentIngredient);
+
+                        return (
+                            <div className="wrapEachAddedIngredient" key={index}>
+                                <div className="eachAddedIngredient">
+                                    <img src={currentIngredient.img || tempImage} />
+                                    <h1>{capitalFirstLetter(currentIngredient.name)}</h1>
+                                    {writePrice(currentIngredient.price)}
+                                </div>
+                                <h3 onClick={() => clickOnRemoveAnAddedIngredient(currentIngredient._id)} >Remove item</h3>
                             </div>
-                            <h3 onClick={() => clickOnRemoveAnAddedIngredient(eachIng.name)} >Remove item</h3>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             }
         </div>

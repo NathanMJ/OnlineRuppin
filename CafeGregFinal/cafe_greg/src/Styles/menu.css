@@ -147,7 +147,7 @@
                 .statusContainer {
                     width: 90%;
                     display: flex;
-                    font-size: 2.6vh;
+                    font-size: 28px;
                     text-align: center;
                     border-radius: 10px;
                     overflow: hidden;
@@ -175,7 +175,7 @@
                         text-align: center;
 
                         .header {
-                            font-size: 1.5vh;
+                            font-size: 15px;
                             margin: 0;
                             padding: 0;
                         }
@@ -224,6 +224,7 @@
                     .validate {
                         position: absolute;
                         cursor: pointer;
+                        z-index: 3;
 
 
                     }
@@ -438,7 +439,7 @@
 
                     .researchedsProducts {
                         position: absolute;
-                        width: 66%;
+                        width: 80%;
                         top: 100%;
                         background-color: beige;
                         display: flex;

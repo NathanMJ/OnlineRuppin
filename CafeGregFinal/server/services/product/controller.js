@@ -13,7 +13,17 @@ export async function getAllProducts(req, res) {
 export async function getProduct(req, res) {
     let product = await Product.productById(Number(req.params.id));
     if (!product) {
+        return res.status(404).json({ message: "No product found" });
+    }
+    return res.status(200).json(product);
+}
+
+export async function getProductsByName(req, res) {
+    const research = req.params.research
+    let product = await Product.productsByName(research);
+    if (!product) {
         return res.status(404).json({ message: "No products found" });
     }
     return res.status(200).json(product);
 }
+

@@ -270,6 +270,90 @@
             animation: rotatingLogo 1.5s infinite;
         }
     }
+
+    .addTable {
+        position: fixed;
+        top: 50vh;
+        left: 50vw;
+        transform: translate(-50%, -50%);
+        background-color: aliceblue;
+        border-radius: 30px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        h1 {
+            font-size: 50px;
+            text-align: center;
+            border-bottom: black solid 1px;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+
+            .tableSide {
+                position: relative;
+
+                .tableId {
+                    font-size: 50px;
+                    background-color: yellow;
+                    border: black solid 3px;
+                    border-radius: 10px;
+                    width: max-content;
+                    padding: 10px;
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -100%);
+
+                }
+
+                .table {
+                    height: 250px;
+                }
+            }
+
+            .inputSide {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-size: 30px;
+
+                input {
+                    font-size: 30px;
+                    width: 250px;
+                    text-align: center;
+
+                }
+            }
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border-radius: 10px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .cross {
+            cursor: pointer;
+            width: 100px;
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(50%, -50%);
+        }
+    }
 }
 
 

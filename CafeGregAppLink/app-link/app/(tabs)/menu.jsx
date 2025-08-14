@@ -7,6 +7,7 @@ import { LinkAppContext } from '../LinkAppContext.jsx';
 import FCOrderProduct from '../FuncComps/FCOrderProduct.jsx';
 
 export default function Menu() {
+
   const [sections, setSections] = useState([]);
   const [sectionId, setSectionId] = useState(-1)
   const [products, setProducts] = useState([]);
@@ -60,7 +61,6 @@ export default function Menu() {
   }, [research])
 
 
-
   //if we clicked on a section
 
   if (sectionId != -1) {
@@ -79,7 +79,7 @@ export default function Menu() {
   //basic page
 
   /* if we are researching something
-      if we found
+      if we found        
       if we does not have found
     if not we are just scrolling      
   */

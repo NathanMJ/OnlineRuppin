@@ -1,11 +1,15 @@
-import { findAllProducts, findProductById} from './db.js';
+import { findAllProducts, findProductById, findProductByName} from './db.js';
 
-export default class Customer{
+export default class Product{
     static async allProducts(){
         return await findAllProducts();
     }
 
     static async productById(id){
         return await findProductById(id)
+    }
+
+    static async productsByName(name){
+        return await findProductByName(name)
     }
 }

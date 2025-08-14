@@ -23,7 +23,6 @@ X	switch_tables(table_1,table_2)
 //Get the sauces of the product (if he has)
 X	get_ingredients_of_product(ingredientsList)
 X	get_product(id)
-//Not really finished, miss the bread, sauce, salad to add
 
 --- Ingredient change
 
@@ -51,12 +50,7 @@ X	get_from_section(id)
 
 --- Order 
 
-	add_order_product(product_id, table_id,changeList)
 X	add_order_to_table(order_id, table_id)
-	get_orders_for_bar
-	get_orders_for_kitchen
-	Get an order history according to an id
-	Change the status of an order 
 	
 	
 

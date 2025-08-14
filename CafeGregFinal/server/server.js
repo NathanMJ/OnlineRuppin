@@ -5,6 +5,10 @@ import 'dotenv/config';
 import customerRouter from './services/customer/router.js';
 import productRouter from './services/product/router.js';
 import tableRouter from './services/table/router.js';
+import ingredientRouter from './services/ingredient/router.js';
+import orderRouter from './services/order/router.js';
+import sectionRouter from './services/section/router.js';
+import statusRouter from './services/status/router.js';
 
 //set server port
 const PORT = process.env.PORT || 5500
@@ -25,6 +29,11 @@ server.use(express.urlencoded({ extended: true }))
 server.use('/api/customer', customerRouter)
 server.use('/api/product', productRouter)
 server.use('/api/table', tableRouter)
+server.use('/api/ingredient', ingredientRouter)
+server.use('/api/order', orderRouter)
+server.use('/api/section', sectionRouter)
+server.use('/api/status', statusRouter)
+
 
 
 //start server

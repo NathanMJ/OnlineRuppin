@@ -1,4 +1,4 @@
-import { findAllCustomers, findCustomer, addCustomer, cleanCustomers, modifyCustomer} from './db.js';
+import { findAllCustomers, findCustomer, addCustomer,  modifyCustomer, registerInDB} from './db.js';
 
 export default class Customer{
     constructor(id, contact, name) {
@@ -19,11 +19,12 @@ export default class Customer{
         return await addCustomer(customer);
     }
 
-    static async cleanCustomers(){
-        return await cleanCustomers()
-    }
 
     static async modifyCustomer(customer){
         return await modifyCustomer(customer)
+    }
+
+    static async register(tableId, customer){
+        return await registerInDB(tableId, customer)
     }
 }

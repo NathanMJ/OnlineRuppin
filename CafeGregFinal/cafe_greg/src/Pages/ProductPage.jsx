@@ -5,6 +5,7 @@ import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
 import FCSaladsProduct from "../FComponents/FCSaladsProduct.jsx";
 import FCSaucesProduct from "../FComponents/FCSaucesProduct.jsx";
 import FCAddIngredients from "../FComponents/FCAddIngredients.jsx";
+import { getProduct, sendOrder } from "../connectToDB.js"
 
 export default function ProductPage(props) {
 
@@ -12,21 +13,26 @@ export default function ProductPage(props) {
     //TODO : if we are from the history get the change if we got
 
     const location = useLocation();
-    const { productId, tableId, sectionId, sendedChanges } = location.state;
+    const { productId, tableId, sectionId, sendedOrder } = location.state;
 
     const [product, setProduct] = useState(null)
 
-    const [selectedSalad, setSelectedSalad] = useState(1);
-    const [selectedSauces, setSelectedSauces] = useState([])
-    const [addedIngredients, setAddedIngredients] = useState([])
+    //is the id of the salads added
+    const [selectedSalad, setSelectedSalad] = useState(sendedOrder?.salad || 1)
+    //is the ids of the sauces addeds
+    const [selectedSauces, setSelectedSauces] = useState(sendedOrder?.sauces || [])
 
-    const [changes, setChanges] = useState(sendedChanges ? sendedChanges : [])
+    //is the ids of the ingredients added
+    const [addedIngredients, setAddedIngredients] = useState(sendedOrder?.adds || [])
+
+    const [changes, setChanges] = useState(sendedOrder?.changes || [])
 
     const navigate = useNavigate()
 
     const changeIngredient = (ingredientId, newChange) => {
-        const ingredient = product.ingredients.find(i => ingredientId == i._id && i.change_selected == newChange)
 
+        const ingredient = product.ingredients.find(i => ingredientId == i._id && i.selected == newChange)
+        
         //if the change is not already the basic product just filter the product 
 
         const index = changes.findIndex(change => change.ingredientId == ingredientId)
@@ -40,6 +46,7 @@ export default function ProductPage(props) {
         }
     };
 
+
     useEffect(() => {
         console.log(changes);
     }, [changes])
@@ -50,9 +57,8 @@ export default function ProductPage(props) {
             return;
 
         const fetchProduct = async () => {
-            const tempProduct = await get_product(productId);
+            const tempProduct = await getProduct(productId);
             setProduct(tempProduct);
-
         };
         fetchProduct();
     }, [productId]);
@@ -68,14 +74,27 @@ export default function ProductPage(props) {
 
     }
 
-    
+
 
     if (product === null) {
         return <div>Loading product...</div>; // Attente du fetch
     }
 
-    const addTheCurrentOrder = () => {
-        //TO DO: add the current order to the list (in props)
+    const addTheCurrentOrder = async () => {
+        //TODO: add the current order to the list (in db)
+        const tempOrder = {
+            productId,
+            ...(changes && { changes }),
+            ...(addedIngredients.length > 0 && { adds: addedIngredients }),
+            ...(product.salads && { salad: selectedSalad }),
+            ...(selectedSauces.length > 0 && { sauces: selectedSauces })
+        };
+
+        const result = await sendOrder(tableId, tempOrder);
+
+        if (!result.success) {
+            alert(`Erreur: ${result.message}`);
+        } 
         props.goto('/menu', { tableId })
     }
 
@@ -86,7 +105,6 @@ export default function ProductPage(props) {
 
     const addSauce = (sauceId) => {
         const exist = selectedSauces.find(sauce => sauce.id === sauceId)
-        console.log('exist', exist);
 
         //if the sauce is already in selectedSauces use changeQuantitySauce(sauceId, '+')
         if (exist) {
@@ -133,16 +151,17 @@ export default function ProductPage(props) {
     const addAnIngredient = (indexAddIngredient) => {
         const addedIngredient = product.adds[indexAddIngredient]
         //check if the ingredient is already added
-        if (addedIngredients.some(ingredient => ingredient.name === addedIngredient.name)) {
-            console.log('Already exist');
+        console.log('added', addedIngredient);
+
+        if (addedIngredients.some(ingredientId => ingredientId === addedIngredient._id)) {
             return
         }
-        const tempAddedIngredients = [...addedIngredients, addedIngredient];
+        const tempAddedIngredients = [...addedIngredients, addedIngredient._id];
         setAddedIngredients(tempAddedIngredients)
     }
 
-    const removeAnAddedIngredient = (name) => {
-        const newAddedIngredients = addedIngredients.filter(ing => ing.name != name)
+    const removeAnAddedIngredient = (id) => {
+        const newAddedIngredients = addedIngredients.filter(ing => ing != id)
         setAddedIngredients(newAddedIngredients)
     }
 
@@ -169,7 +188,7 @@ export default function ProductPage(props) {
                     {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} changeChosen={changes.find(c => c.ingredientId == ingredient._id)?.change} key={ingredient._id} />
                     ))}
-                    <FCAddIngredients addedIngredients={addedIngredients} addAnIngredient={addAnIngredient} removeAnAddedIngredient={removeAnAddedIngredient} adds={product.adds} />
+                    {product.adds && <FCAddIngredients addedIngredients={addedIngredients} addAnIngredient={addAnIngredient} removeAnAddedIngredient={removeAnAddedIngredient} adds={product.adds} />}
                     <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />
                     {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad} /> : ''}
 
