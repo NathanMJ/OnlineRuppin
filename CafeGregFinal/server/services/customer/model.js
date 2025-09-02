@@ -1,4 +1,4 @@
-import { findAllCustomers, findCustomer, addCustomer,  modifyCustomer, registerInDB} from './db.js';
+import { findAllCustomers, findCustomer, addCustomer,  modifyCustomer, registerInDB, loginInDB, disconnectInDB} from './db.js';
 
 export default class Customer{
     constructor(id, contact, name) {
@@ -26,5 +26,13 @@ export default class Customer{
 
     static async register(tableId, customer){
         return await registerInDB(tableId, customer)
+    }
+
+    static async login(tableId, customerId){
+        return await loginInDB(tableId,customerId)
+    }
+
+    static async disconnect(customerId){
+        return await disconnectInDB(customerId);
     }
 }

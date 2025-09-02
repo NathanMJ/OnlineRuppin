@@ -44,11 +44,11 @@ export default function CafeMain(props) {
     }, []);
 
 
-    const getAskLogo = (askCode) => {
-        switch (askCode) {
-            case 0:
-                return <img className="askLogo" src="/Pictures/Hand-up.png" />
+    const getAskLogo = (statusCode) => {        
+        switch (statusCode) {
             case 1:
+                return <img className="askLogo" src="/Pictures/Hand-up.png" />
+            case 2:
                 return <img className="askLogo" src="/Pictures/Pay-logo.png" />
         }
     }
@@ -253,7 +253,7 @@ export default function CafeMain(props) {
 
                             <div className="shadow"></div>
                             <p className="tableId">{table._id}</p>
-                            {table.ask !== undefined ? getAskLogo(table.ask) : ''}
+                            {table.status ? getAskLogo(table.status) : ''}
                         </div>
                     )
                 })}

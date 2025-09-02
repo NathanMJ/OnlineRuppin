@@ -16,13 +16,7 @@ export default function CustomerRegisterLogin(props) {
 
 
   const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' },
-  { name: 'John', id: '345538267', contact: '0584020406' },
-  { name: 'Mick', id: '345538269', contact: '0584020406' },
-  { name: 'Jordan', id: '345538270', contact: '0584020406' },
-  { name: 'Sarah', id: '345538271', contact: '0584020406' },
-  { name: 'Johnathan', id: '345538272', contact: '0584020406' },
-  { name: 'Jojo', id: '345538273', contact: '0584020406' },
-  { name: 'Frank', id: '345538274', contact: '0584020406' }
+  { name: 'John', id: '345538267', contact: '0584020406' }
   ])
 
   const correctID = (id) => {
@@ -43,6 +37,7 @@ export default function CustomerRegisterLogin(props) {
   const login = async (id) => {
     if (!id) {
       alert('ID is missing')
+      return
     }
     //check id
     if (!correctID(id)) {
@@ -90,6 +85,7 @@ export default function CustomerRegisterLogin(props) {
   const register = async (name, id, contact) => {
     if (!name || !id || !contact) {
       alert('One field is missing')
+      return
     }
 
     //check id

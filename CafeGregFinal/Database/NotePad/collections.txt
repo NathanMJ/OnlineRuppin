@@ -1,0 +1,31 @@
+X	Template
+XX	In MongoDB
+
+
+//cafe side		06/14
+
+XX	orders
+XX	order_status_history
+XX	ingredients
+XX	products
+XX	customers
+XX	customers_order_history
+X	autorizations_sendeds
+XX	tables
+XX	section
+XX	order_status
+XX	ingredient_changes
+XX	product_destination
+XX	website
+X	delays_details
+XX	sauces
+XX	salads
+
+//add ranks and optional comment
+
+//worker side
+		
+
+//add workers with start and end service 
+	with the id of who start or end the service
+

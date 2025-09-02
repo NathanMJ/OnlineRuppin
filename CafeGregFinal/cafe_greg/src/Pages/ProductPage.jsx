@@ -32,7 +32,7 @@ export default function ProductPage(props) {
     const changeIngredient = (ingredientId, newChange) => {
 
         const ingredient = product.ingredients.find(i => ingredientId == i._id && i.selected == newChange)
-        
+
         //if the change is not already the basic product just filter the product 
 
         const index = changes.findIndex(change => change.ingredientId == ingredientId)
@@ -94,7 +94,7 @@ export default function ProductPage(props) {
 
         if (!result.success) {
             alert(`Erreur: ${result.message}`);
-        } 
+        }
         props.goto('/menu', { tableId })
     }
 
@@ -165,6 +165,7 @@ export default function ProductPage(props) {
         setAddedIngredients(newAddedIngredients)
     }
 
+    console.log(product);
 
 
     return (

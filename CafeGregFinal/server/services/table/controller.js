@@ -39,3 +39,37 @@ export async function getOrders(req, res) {
     const orders = await Table.getOrders(tableId)
     return res.status(200).json(orders)
 }
+
+
+export async function getCustomersOfTable(req, res) {
+    const tableId = Number(req.params.id)
+    const customers = await Table.getCustomers(tableId)
+    return res.status(200).json(customers)
+}
+
+export async function removeTable(req, res) {
+    const tableId = Number(req.params.id)
+    const response = await Table.delete(tableId)
+    return res.status(200).json(response)
+}
+
+export async function changeStatus(req, res) {
+    const tableId = Number(req.params.id)
+    const statusId = Number(req.params.statusId)    
+    const response = await Table.changeStatus(tableId,statusId)
+    return res.status(200).json(response)
+}
+export async function getPriceOfTable(req, res) {
+    const tableId = Number(req.params.id)   
+    const response = await Table.getTotal(tableId)
+    return res.status(200).json(response)
+}
+
+export async function payTable(req, res) {
+    const tableId = Number(req.params.id)   
+    const response = await Table.pay(tableId)
+    return res.status(200).json(response)
+}
+
+
+

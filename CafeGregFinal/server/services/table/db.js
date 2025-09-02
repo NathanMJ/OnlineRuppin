@@ -1,7 +1,7 @@
 import { __dirname } from '../../globals.js';
 import { MongoClient, ObjectId } from 'mongodb';
 import { findProductById } from '../product/db.js';
-import { getOrderById } from '../order/db.js';
+import { getOrderById, getPriceByOrderId } from '../order/db.js';
 
 export async function findAllTables() {
     let client = null
@@ -106,14 +106,14 @@ export async function addOrderToTable(tableId, order) {
         );
 
         //set the status 0 to the order in order_status_history with the time
-        
+
         const now = new Date();
         const hh = String(now.getHours()).padStart(2, '0');
         const mm = String(now.getMinutes()).padStart(2, '0');
         const ss = String(now.getSeconds()).padStart(2, '0');
         const time = `${hh}:${mm}:${ss}`;
 
-        const statusToAdd = {time, code: 0, orderId : idOrder}
+        const statusToAdd = { time, code: 0, orderId: idOrder }
 
         await db.collection('order_status_history').insertOne(statusToAdd)
 
@@ -160,3 +160,165 @@ export async function getOrdersOfTable(tableId) {
         }
     }
 }
+
+
+export async function getCustomersOfTableInDB(id) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+        const customers = await db.collection("tables").aggregate([
+            { $match: { _id: id } },
+            {
+                $lookup: {
+                    localField: "customers",
+                    from: "customers",
+                    foreignField: "_id",
+                    as: "customers"
+                }
+            }
+        ]).toArray()
+        if (customers.length === 0) {
+            return null;
+        }
+        return customers[0].customers;
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+export async function deleteInDB(id) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+        const table = await db.collection("tables").findOne({ _id: Number(id) })
+        if (!table) {
+            return { success: false, message: `Table ${id} doesnt exist` };
+        }
+        //delete every status of the orders of the table from order_status_history collection
+        //delete every order of the table from orders collection
+        if (table.orders && table.orders.length > 0) {
+            await db.collection("order_status_history").deleteMany({ orderId: { $in: table.orders } });
+            await db.collection("orders").deleteMany({ _id: { $in: table.orders } });
+        }
+        await db.collection("tables").deleteOne({ _id: Number(id) })
+        return { message: `Table ${id} deleted`, success: true };
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+export async function changeStatusInDB(id, statusId) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+        const table = await db.collection("tables").findOne({ _id: Number(id) })
+        if (!table) {
+            return { success: false, message: `Table ${id} doesnt exist` };
+        }
+
+        await db.collection("tables").updateOne({ _id: Number(id) }, { $set: { status: statusId } })
+
+        return { message: `Table ${id} was changed to status ${statusId}`, success: true };
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+export async function getPriceOfTableInDB(id) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+        const table = await db.collection("tables").findOne({ _id: Number(id) })
+        if (!table) {
+            return { success: false, message: `Table ${id} doesnt exist` };
+        }
+        if (!table.orders || table.orders.length === 0) {
+            return { price: 0 };
+        }
+
+        let prices = await Promise.all(
+            table.orders?.map(async (o) => {
+                return (await getPriceByOrderId(o)).price
+            })
+        )
+        const price = prices.reduce((acc, curr) => acc + curr, 0)
+
+        console.log(price);
+
+        return { price };
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+
+
+export async function payInDB(id) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+        //check if table exists
+        const table = await db.collection("tables").findOne({ _id: Number(id) })
+        if (!table) {
+            return { success: false, message: `Table ${id} doesnt exist` };
+        }
+        //if there are customers set them in customer history
+        if(table.customers && table.customers.length>0){
+            const now = new Date();
+            const historyEntry = {
+                date: now,
+                customers: table.customers,
+                orders: table.orders || []}
+            await db.collection("customers_order_history").insertOne(historyEntry)
+        }
+        //delete the table
+        await db.collection("tables").deleteOne({ _id: Number(id) })
+
+
+        return { success: true, message: `Table ${id} was payed` };
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+

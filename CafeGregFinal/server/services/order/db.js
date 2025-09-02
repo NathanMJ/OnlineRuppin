@@ -5,6 +5,7 @@ import { MongoClient } from 'mongodb';
 import { findProductById } from '../product/db.js';
 import { getIngredientById } from '../ingredient/db.js';
 import { getStatusByOrderId } from '../status/db.js';
+import { get } from 'http';
 
 
 
@@ -51,7 +52,6 @@ export async function getOrderById(id) {
 
     //get changes
     if (order.changes) {
-      //TODO: add the price of the changes
       const tempChanges = []
       for (const c of order.changes) {
         const { ingredientId, change } = c;
@@ -69,7 +69,7 @@ export async function getOrderById(id) {
     let tempIngredients = []
     if (order.changes) {
       tempIngredients = product.ingredients.filter(i => !order.changes.some(c => {
-        const ingredientId = i._id ?? i
+        const ingredientId = i._id || i
         return ingredientId == c._id
       }))
     }
@@ -93,7 +93,6 @@ export async function getOrderById(id) {
       order.adds = tempAdds
     }
 
-    //TODO: get the status of the order
 
     const status = await getStatusByOrderId(id)
 
@@ -117,8 +116,8 @@ export async function removeOrderById(orderId) {
     const db = client.db(process.env.DB_NAME);
 
     await db.collection("tables").updateMany(
-      { orders: orderId },        
-      { $pull: { orders: orderId } } 
+      { orders: orderId },
+      { $pull: { orders: orderId } }
     );
 
 
@@ -135,7 +134,6 @@ export async function removeOrderById(orderId) {
     if (client) await client.close();
   }
 }
-
 
 export async function changeOrderStatusById(orderId, statusId) {
   let client = null
@@ -200,3 +198,33 @@ export async function changeOrderStatusById(orderId, statusId) {
     }
   }
 }
+
+export async function getPriceByOrderId(id) {
+  let client = null
+  try {
+    client = await MongoClient.connect(process.env.CONNECTION_STRING);
+
+    const db = client.db(process.env.DB_NAME);
+    console.log(id);
+
+    let order = await getOrderById(id)
+    console.log(order, 'hey');
+
+    //add the add price of add ingredients
+    const addPrice = order.adds?.reduce((sum, add) => sum + (add.price || 0), 0) || 0
+    //add the price of the salad
+    const saladPrice = order.salad?.price || 0
+    //add the price of ingredients that have change for changes
+
+    return { price: order.price + addPrice + saladPrice }
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  }
+  finally {
+    if (client) {
+      client.close();
+    }
+  }
+}
+

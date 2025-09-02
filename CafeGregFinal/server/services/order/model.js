@@ -1,4 +1,4 @@
-import { changeOrderStatusById, getOrderById, removeOrderById } from './db.js';
+import { changeOrderStatusById, getOrderById, removeOrderById,getPriceByOrderId} from './db.js';
 
 export default class Order {
     static async get(id) {
@@ -10,6 +10,11 @@ export default class Order {
     static async changeStatus(id, status) {
         return await changeOrderStatusById(id,status);
     }
+    static async getPrice(id) {
+        return await getPriceByOrderId(id);
+    }
+
+    
 
     
 }

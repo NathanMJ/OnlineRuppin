@@ -58,18 +58,39 @@ export async function registerCustomer(req, res) {
     try {
         const { name, id, contact } = req.body;
         console.log(req.body);
-
-        // Forcer l'ID en entier (si c'est le format attendu)
         const customer = { 
             name, 
-            _id: Number(id), 
+            _id: id, 
             contact 
         };        
-        const tableId = Number(req.params.tableId); // Idem, si tableId est en int
+        const tableId = Number(req.params.tableId); 
         const response = await Customer.register(tableId, customer);
         return res.status(200).json(response);
     } catch (error) {
-        console.error('Error registering customer:', error);
         return res.status(500).json({ success: false, message: error.message });
     }
 }
+
+export async function loginCustomer(req, res) {
+    try {
+        const { id } = req.body;   
+        const tableId = Number(req.params.tableId); 
+        const response = await Customer.login(tableId, id);
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+export async function disconnectCustomer(req, res) {
+    try {
+        const { id } = req.body;   
+        const response = await Customer.disconnect(id);
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+
+
