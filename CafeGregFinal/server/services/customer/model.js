@@ -1,4 +1,5 @@
-import { findAllCustomers, findCustomer, addCustomer,  modifyCustomer, registerInDB, loginInDB, disconnectInDB} from './db.js';
+import { findAllCustomers, findCustomer, addCustomer,  modifyCustomer, registerInDB, loginInDB, disconnectInDB, 
+    getHistoryFromDB} from './db.js';
 
 export default class Customer{
     constructor(id, contact, name) {
@@ -35,4 +36,10 @@ export default class Customer{
     static async disconnect(customerId){
         return await disconnectInDB(customerId);
     }
+
+    static async getHistory(customers, date1, date2){
+        return await getHistoryFromDB(customers, date1, date2);
+    }
+
+    
 }

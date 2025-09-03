@@ -57,7 +57,6 @@ export async function addCustomer(req, res) {
 export async function registerCustomer(req, res) {
     try {
         const { name, id, contact } = req.body;
-        console.log(req.body);
         const customer = { 
             name, 
             _id: id, 
@@ -86,6 +85,17 @@ export async function disconnectCustomer(req, res) {
     try {
         const { id } = req.body;   
         const response = await Customer.disconnect(id);
+        return res.status(200).json(response);
+    } catch (error) {
+        return res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+export async function getHistory(req, res) {
+    try {
+        
+        const { customers, date1, date2 } = req.body;   
+        const response = await Customer.getHistory(customers, date1, date2);
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllCustomers, getCustomer, addCustomer, registerCustomer,loginCustomer, disconnectCustomer  } from './controller.js';
+import { getAllCustomers, getCustomer, addCustomer, registerCustomer,loginCustomer, disconnectCustomer,getHistory} from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -11,6 +11,7 @@ const customerRouter = Router();
 
 customerRouter
     .get('/', logger, getAllCustomers) 
+    .get('/history', logger, getHistory)
     .get('/:id', logger, getCustomer) 
     .post('/register/:tableId', logger, registerCustomer)
     .post('/login/:tableId', logger, loginCustomer)
