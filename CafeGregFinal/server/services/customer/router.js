@@ -11,8 +11,8 @@ const customerRouter = Router();
 
 customerRouter
     .get('/', logger, getAllCustomers) 
-    .get('/history', logger, getHistory)
     .get('/:id', logger, getCustomer) 
+    .post('/history', logger, getHistory)
     .post('/register/:tableId', logger, registerCustomer)
     .post('/login/:tableId', logger, loginCustomer)
     .post('/disconnect', logger, disconnectCustomer)

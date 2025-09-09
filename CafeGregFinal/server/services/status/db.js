@@ -1,4 +1,3 @@
-import { log } from 'node:console';
 import { __dirname } from '../../globals.js';
 import { MongoClient } from 'mongodb';
 
@@ -13,7 +12,6 @@ export async function getStatusByOrderId(id) {
             { $limit: 1 }
         ]).toArray();
         lastStatus = lastStatus[0]
-        console.log('lastStatus', lastStatus);
 
         const fullStatus = await db.collection('order_status').findOne({ _id: Number(lastStatus.code) })
 

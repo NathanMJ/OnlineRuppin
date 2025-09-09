@@ -144,7 +144,7 @@ export async function removeOrderById(orderId) {
         const response = await fetch(`${serverUrl}/order/remove/${orderId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
-        }); 
+        });
         return response
     } catch (error) {
         console.error("Erreur réseau :", error);
@@ -152,17 +152,132 @@ export async function removeOrderById(orderId) {
 }
 
 export async function changeStatusOfOrder(orderId, statusId) {
-
     try {
         const response = await fetch(`${serverUrl}/order/changeOrderStatus/${orderId}/${statusId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
-        }); 
+        });
         return response
     } catch (error) {
         console.error("Erreur réseau :", error);
     }
 }
+
+export async function getCustomersFromTable(tableId) {
+    try {
+        const response = await fetch(`${serverUrl}/table/${tableId}/customers`);
+        const data = await response.json();
+        console.log(data);
+        return data
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
+
+export async function registerCustomerToTable(tableId, name, id, contact) {
+    try {
+        const response = await fetch(`${serverUrl}/customer/register/${tableId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name, contact, id
+            })
+        });
+        return response
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+export async function loginCustomerToTable(tableId, id) {
+    try {
+        const response = await fetch(`${serverUrl}/customer/login/${tableId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id
+            })
+        });
+        return response
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
+export async function logOutCustomerFromATable(customerId) {
+    try {
+        const response = await fetch(`${serverUrl}/customer/disconnect`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                id: customerId
+            })
+        });
+        return response
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
+export async function deleteTableDB(tableId) {
+    try {
+        const response = await fetch(`${serverUrl}/table/${tableId}/delete`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+        });
+        return response
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
+
+
+export async function changeStatusOfTable(tableId, statusId) {
+    try {
+        const response = await fetch(`${serverUrl}/table/${tableId}/status/${statusId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+        return response
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
+export async function payTableInDB(tableId) {
+    try {
+        const response = await fetch(`${serverUrl}/table/${tableId}/payTable`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" }
+        });
+        return response
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
+
+export async function getHistoryOfCustomers(customers, date1, date2) {
+
+    try {
+        const response = await fetch(`${serverUrl}/customer/history`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                customers, date1, date2
+            })
+        });
+
+        // Transformer la réponse en JSON
+        const data = await response.json();
+
+        return data.orders
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
+
 
 
 

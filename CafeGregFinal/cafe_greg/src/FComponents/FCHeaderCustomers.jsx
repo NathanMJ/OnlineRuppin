@@ -7,7 +7,7 @@ export default function FCHeaderCustomers(props) {
     //TODO if customer is empty we cant open the header
 
     if (props.customers.length == 0) {
-        return (<h1>No customers</h1>)
+        return <></>
     }
 
     const getRandomColor = () => {
@@ -32,8 +32,8 @@ export default function FCHeaderCustomers(props) {
                         position: 'relative', backgroundColor: getRandomColor()
                     }} className="customerContainer">
                         <h1 className="name" >{customer.name}</h1>
-                        <h2 className="id">({customer.id})</h2>
-                        <img src='./Pictures/Cross.png' onClick={() => props.logOut(customer.id)} />
+                        <h2 className="id">({customer._id})</h2>
+                        <img src='./Pictures/Cross.png' onClick={() => props.logOut(customer._id)} />
                     </div>
                 )}
             </div>

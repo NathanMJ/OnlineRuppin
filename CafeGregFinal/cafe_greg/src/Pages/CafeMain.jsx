@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
-import { addTableById, getTables } from "../connectToDB.js"
+import { addTableById, changeStatusOfTable, deleteTableDB, getTables, payTableInDB } from "../connectToDB.js"
 
 export default function CafeMain(props) {
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
@@ -44,7 +44,8 @@ export default function CafeMain(props) {
     }, []);
 
 
-    const getAskLogo = (statusCode) => {        
+    const getAskLogo = (statusCode) => {
+        //TODO: if no status code is here maybe think the status like thinking, waiting for order, etc...     
         switch (statusCode) {
             case 1:
                 return <img className="askLogo" src="/Pictures/Hand-up.png" />
@@ -53,12 +54,8 @@ export default function CafeMain(props) {
         }
     }
 
-    const changeTheStatusOfTheTable = (id) => {
-        console.log('check table ', id);
 
-    }
-
-    const clickOnTable = (id) => {
+    const clickOnTable = async (id) => {
         //TODO: make the real function of each one
         switch (clickOnTableMode) {
             case 'goto':
@@ -72,15 +69,18 @@ export default function CafeMain(props) {
                 console.log('switch the table ', id);
                 break
             case 'removeATable':
-                console.log('remove the table ', id);
+                await deleteTableDB(id)
+                fetchAndCompare()
                 break
             case 'removeAnOrder':
                 console.log('open the orders of table ', id);
                 break
             case 'checkTable':
-                changeTheStatusOfTheTable(id)
+                await changeStatusOfTable(id, 0)
+                fetchAndCompare()
                 break
             case 'reduction':
+                //TODO: make a reduction on the total price of the table
                 console.log('reduct the table ', id);
                 break
         }
@@ -210,16 +210,22 @@ export default function CafeMain(props) {
 
     const openTheCashRegister = () => {
         setPayment({ show: false })
+        setTableToPaid()
     }
 
     //Simulate a payment by card
 
     useEffect(() => {
-
         if (payment && payment.method == 'card' && !payment.inUsed) {
             simulateCardPayment()
         }
     }, [payment])
+
+
+    const setTableToPaid = async () => {
+        await payTableInDB(tip.tableId)
+        fetchAndCompare()
+    }
 
     const simulateCardPayment = () => {
         setPayment((prevS) => ({ ...prevS, inUsed: true, message: "Hold your card near the reader." }))
@@ -235,6 +241,9 @@ export default function CafeMain(props) {
         setTimeout(() => {
             setPayment({ show: false })
         }, 6000)
+
+        //TODO: set the table to paid in the db
+        setTableToPaid()
     }
 
 

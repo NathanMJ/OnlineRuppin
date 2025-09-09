@@ -57,12 +57,12 @@ export async function addCustomer(req, res) {
 export async function registerCustomer(req, res) {
     try {
         const { name, id, contact } = req.body;
-        const customer = { 
-            name, 
-            _id: id, 
-            contact 
-        };        
-        const tableId = Number(req.params.tableId); 
+        const customer = {
+            name,
+            _id: id,
+            contact
+        };
+        const tableId = Number(req.params.tableId);
         const response = await Customer.register(tableId, customer);
         return res.status(200).json(response);
     } catch (error) {
@@ -72,8 +72,8 @@ export async function registerCustomer(req, res) {
 
 export async function loginCustomer(req, res) {
     try {
-        const { id } = req.body;   
-        const tableId = Number(req.params.tableId); 
+        const { id } = req.body;
+        const tableId = Number(req.params.tableId);
         const response = await Customer.login(tableId, id);
         return res.status(200).json(response);
     } catch (error) {
@@ -83,7 +83,7 @@ export async function loginCustomer(req, res) {
 
 export async function disconnectCustomer(req, res) {
     try {
-        const { id } = req.body;   
+        const { id } = req.body;
         const response = await Customer.disconnect(id);
         return res.status(200).json(response);
     } catch (error) {
@@ -93,9 +93,10 @@ export async function disconnectCustomer(req, res) {
 
 export async function getHistory(req, res) {
     try {
-        
-        const { customers, date1, date2 } = req.body;   
+        const { customers, date1, date2 } = req.body;
+
         const response = await Customer.getHistory(customers, date1, date2);
+        
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });

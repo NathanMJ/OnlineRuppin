@@ -189,6 +189,7 @@ export async function disconnectInDB(id) {
 }
 
 export async function getHistoryFromDB(customers, date1, date2) {
+    
     let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -245,6 +246,7 @@ export async function getHistoryFromDB(customers, date1, date2) {
             return { orders: [] };
         }
 
+        
         // Récupérer toutes les commandes détaillées
         let allOrders = [];
         

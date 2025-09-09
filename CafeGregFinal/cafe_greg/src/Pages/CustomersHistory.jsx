@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import ReturnButton from "../FComponents/ReturnButton";
+import { getHistoryOfCustomers } from "../connectToDB";
 
 export default function CustomersHistory(props) {
 
@@ -13,65 +14,33 @@ export default function CustomersHistory(props) {
 
 
     const { customers, tableId } = location.state
-    useEffect(() => {
-        console.log('location', location.state);
-    }, [tableId]);
-
 
     //Customers filter is the id of the customer for filter
-    const [customersFilter, setCustomersFilter] = useState(['345538268'])
+    const [customersFilter, setCustomersFilter] = useState([])
 
     const [datesFilter, setDatesFilter] = useState({})
-    const [orders, setOrders] = useState([{
-        product_id: 4,
-        img: './Pictures/Starters-section.jpg',
-        name: "Turkish Burikash",
-        date: '2023-10-01',
-        customers: [{ name: 'Nathan', id: '345538268' }
-            , { name: 'John', id: '123456789' },
-        { name: 'Mick', id: '234234234' }],
-        changes: [
-            {
-                ingredientId: 11,
-                change: 2
+    const [orders, setOrders] = useState([])
+
+    const fetchOrders = async () => {
+        //fetch the orders from the server
+
+        getHistoryOfCustomers(customersFilter, datesFilter.date1, datesFilter.date2).then(data => {
+            if (data && Array.isArray(data)) {               
+                setOrders(data)
+                
             }
-        ],
-        adds: [20],
-        salad:3 ,
-        sauces: [{ id: 0, quantity: 10 }]
-    }, {
-        product_id: 1,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name",
-        date: '2023-10-01',
-        customers: [{ name: 'Nathan', id: '345538268' }]
-    }, {
-        product_id: 2,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name",
-        date: '2023-10-01',
-        customers: [{ name: 'Nathan', id: '345538268' }]
-    }, {
-        product_id: 3,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name",
-        date: '2023-10-01',
-        customers: [{ name: 'Nathan', id: '345538268' }]
-    }, {
-        product_id: 4,
-        img: './Pictures/Starters-section.jpg',
-        name: "Meal's name",
-        date: '2023-10-01',
-        customers: [{ name: 'Nathan', id: '345538268' }]
-    }])
+        })
+    }
 
     useEffect(() => {
-        console.log(datesFilter);
-    }, [datesFilter])
+        fetchOrders()
+    }, [datesFilter, customersFilter]);
+
 
     useEffect(() => {
-        console.log(customersFilter);
-    }, [customersFilter])
+        console.log('orders', orders);
+    }, [orders])
+
 
 
     /*
@@ -81,12 +50,10 @@ export default function CustomersHistory(props) {
         TODO : CAN FILTER ACCORDING TO TWO DATES
         TODO : REPLACE THE CALENDAR LOGO
         TODO : SEND THE CHANGES OF THE ORDERS
-        TODO : IF NO CHANGES WRITE NO CHANGE DETECTED
-    
+        TODO : IF NO CHANGES WRITE NO CHANGE DETECTED    
     */
 
     const clickOnCustomer = (id) => {
-
         const exist = customersFilter.some(eachId => eachId == id)
         if (exist) {
             let newCustomerFilter = customersFilter.filter(eachId => eachId != id)
@@ -96,7 +63,6 @@ export default function CustomersHistory(props) {
             let newCustomerFilter = [...customersFilter, id]
             setCustomersFilter(newCustomerFilter)
         }
-
     }
 
 
@@ -136,7 +102,7 @@ export default function CustomersHistory(props) {
                     <div className="customers">
 
                         {customers.map((customer, index) => (
-                            <div className={`customer ${customersFilter.includes(customer.id) ? 'selected' : 'notSelected'}`} onClick={() => clickOnCustomer(customer.id)} key={index}>
+                            <div className={`customer ${customersFilter.includes(customer._id) ? 'selected' : 'notSelected'}`} onClick={() => clickOnCustomer(customer._id)} key={index}>
                                 <h1>{customer.name}</h1>
                             </div>
                         ))}
@@ -245,7 +211,7 @@ export default function CustomersHistory(props) {
                 <div className="header">
                     <h1>History</h1>
                     {customersFilter?.length > 0 && <h2>In common of : {customersFilter.map((customer, index) => {
-                        return (customers.find(c => c.id == customer).name + (index < customersFilter.length - 1 ? ', ' : ''))
+                        return (customers.find(c => c._id == customer).name + (index < customersFilter.length - 1 ? ', ' : ''))
                     })}</h2>}
                     {datesFilter.date1 && (
                         datesFilter.date2 ?

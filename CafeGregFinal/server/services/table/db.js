@@ -269,7 +269,6 @@ export async function getPriceOfTableInDB(id) {
         )
         const price = prices.reduce((acc, curr) => acc + curr, 0)
 
-        console.log(price);
 
         return { price };
     } catch (error) {

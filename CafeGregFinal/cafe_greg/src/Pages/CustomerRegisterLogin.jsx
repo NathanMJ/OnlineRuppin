@@ -4,20 +4,34 @@ import FCRegisterCustomerSide from '../FComponents/FCRegisterCustomerSide.jsx';
 import FCHeaderCustomers from '../FComponents/FCHeaderCustomers.jsx';
 import ReturnButton from '../FComponents/ReturnButton.jsx';
 import { useLocation } from 'react-router-dom';
+import { getCustomersFromTable, loginCustomerToTable, logOutCustomerFromATable, registerCustomerToTable } from '../connectToDB.js';
 
 export default function CustomerRegisterLogin(props) {
 
   const location = useLocation()
   const { tableId } = location.state
 
-  const [customersDB, setCustomersDB] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
 
-  // const [customers, setCustomers] = useState(location.state?.customers ?? [])
+  const [customers, setCustomers] = useState([])
 
+  useEffect(() => {
+    console.log(customers);
+  }, [customers])
+    
+  const fetchCustomers = async () => {
+    //fetch the customers from the server
+    getCustomersFromTable(tableId).then(data => {
+      if (data && Array.isArray(data)) {
+        setCustomers(data)
+      } else {
+        setCustomers([])
+      }
+    })
+  }
 
-  const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' },
-  { name: 'John', id: '345538267', contact: '0584020406' }
-  ])
+  useEffect(() => {
+    fetchCustomers()
+  }, [tableId])
 
   const correctID = (id) => {
     let regexIsID = /^[0-9]{8,9}$/;
@@ -52,34 +66,11 @@ export default function CustomerRegisterLogin(props) {
       return
     }
 
-    //check if id is in the database
-    let customer = customersDB.find(customer => customer.id === id)
-    if (!customer) {
-      alert('ID not found')
-      return
-    }
-
-    //send a message to the customer to confirm it's him
-
-    //temp message
-    if (isPhone(customer.contact)) {
-      alert('A message will be sent to your phone number to confirm')
-    }
-    else if (isEmail(customer.contact)) {
-      alert('A message will be sent to your email to confirm')
-    }
-    else {
-      alert('Contact is not valid')
-      return
-    }
-    if (confirm('Is it you ?')) {
-      alert('You have been logged in')
-      //add the customer to the customers list
-      let newCustomers = [...customers, customer]
-      setCustomers(newCustomers)
-    } else {
-      alert('Timeout')
-    }
+    const res = await loginCustomerToTable(tableId, id).then(response => {
+      if (response.status === 200) {
+        fetchCustomers()
+      }
+    })
   }
 
   const register = async (name, id, contact) => {
@@ -105,56 +96,22 @@ export default function CustomerRegisterLogin(props) {
       return
     }
 
-    //check if id is already in the database
-    let customer = customersDB.find(customer => customer.id === id)
-    if (customer) {
-      alert('ID already in the database')
-      return
-    }
+    const res = await registerCustomerToTable(tableId, name, id, contact).then(response => {
+      if (response.status === 200) {
+        fetchCustomers()
+        //TODO: empty the form
+      }
+    })
 
-    //check if contact is already logged in
-    let customerLogged = customers.find(customer => customer.contact === contact)
-    if (customerLogged) {
-      alert('Contact already logged in')
-      return
-    }
-
-    //here the id and contact are valid
-
-    //send a message if it is a phone number
-    if (regexIsPhone.test(contact)) {
-      alert('A message will be sent to your phone number to confirm')
-    }
-    //send a message if it is an email
-    if (regexIsEmail.test(contact)) {
-      alert('A message will be sent to your email to confirm')
-    }
-
-    //here you click on "it's me" and confirm it's you
-
-    //temp message
-
-    if (confirm('Is it you ?')) {
-      //send the id and contact to the server
-
-      alert('You have been registered')
-      let newCustomers = [...customers, { name, id, contact }]
-      setCustomers(newCustomers)
-
-      let newCustomersDB = [...customersDB, { name, id, contact }]
-      setCustomersDB(newCustomersDB)
-    }
-    else {
-      alert('Timeout')
-    }
 
   }
 
   const logOut = async (id) => {
     if (confirm('Are you sure you want to log out ?')) {
-      let newCustomers = customers.filter(customer => customer.id !== id)
-      setCustomers(newCustomers)
-      alert('You have been logged out')
+      logOutCustomerFromATable(id).then(response => {
+        fetchCustomers()
+      }
+      )
     }
   }
 

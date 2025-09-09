@@ -40,7 +40,6 @@ export async function getOrderById(id) {
       order.sauces = sauces
     }
 
-    console.log(order);
 
     //get the choosen salads 
     if (order.salad) {
@@ -205,10 +204,8 @@ export async function getPriceByOrderId(id) {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
 
     const db = client.db(process.env.DB_NAME);
-    console.log(id);
 
     let order = await getOrderById(id)
-    console.log(order, 'hey');
 
     //add the add price of add ingredients
     const addPrice = order.adds?.reduce((sum, add) => sum + (add.price || 0), 0) || 0

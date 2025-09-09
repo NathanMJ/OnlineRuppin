@@ -8,10 +8,10 @@ export default function FCHistoryOrder(props) {
                 alert('No changes detected')
                 return
             }
-            props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId, sendedOrder: props.order });
+            props.goto('/productPage', { productId: props.order.productId, tableId: props.tableId, sendedOrder: props.order });
         }
         else {
-            props.goto('/productPage', { productId: props.order.product_id, tableId: props.tableId });
+            props.goto('/productPage', { productId: props.order.productId, tableId: props.tableId });
         }
     }
 
@@ -27,12 +27,9 @@ export default function FCHistoryOrder(props) {
                     <h3 onClick={() => goToOrderPage(true)}>Go to the page with same changements you did</h3>
                 </div>
             </div>
-            <div className="details">
-                <h1>Ordered the : {new Date(props.order.date).toLocaleDateString('fr-FR')} with {props.order.customers.map((customer, index) => (
-                    `${customer.name}${index < props.order.customers.length - 1 ? ', ' : ''}`
-                ))}
-                </h1>
-            </div>
+            {/* <div className="details">
+                <h1>Ordered the : {new Date(props.order.date).toLocaleDateString('fr-FR')} </h1>
+            </div> */}
         </div>
     )
 }
