@@ -18,7 +18,7 @@ export default function ProductPage(props) {
     const [product, setProduct] = useState(null)
 
     //is the id of the salads added
-    const [selectedSalad, setSelectedSalad] = useState(sendedOrder?.salad || 1)
+    const [selectedSalad, setSelectedSalad] = useState(sendedOrder?.salad?._id || 1)
     //is the ids of the sauces addeds
     const [selectedSauces, setSelectedSauces] = useState(sendedOrder?.sauces || [])
 
@@ -104,15 +104,16 @@ export default function ProductPage(props) {
 
 
     const addSauce = (sauceId) => {
+        
         const exist = selectedSauces.find(sauce => sauce.id === sauceId)
-
+        
         //if the sauce is already in selectedSauces use changeQuantitySauce(sauceId, '+')
         if (exist) {
             changeQuantitySauce(sauceId, '+')
         }
         else {
             //if not existing add it in selectedSauces
-            selectedSauces.push({ id: sauceId, quantity: 1 })
+            selectedSauces.push({ _id: sauceId, quantity: 1 })
         }
 
     }

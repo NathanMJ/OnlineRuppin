@@ -158,6 +158,36 @@ export default function Menu(props) {
         props.goto('/customerRegisterLogin', { tableId, customers })
     }
 
+
+    const getTotalPriceOfOrder = (order) => {
+        let firstPrice = order.price
+        //add the price of the adds if there is any
+        if (order.adds && order.adds.length > 0) {
+            order.adds.forEach(add => {
+                firstPrice += add.price
+            })
+        }
+        //add the price of the changes if there is any
+        if (order.changes && order.changes.length > 0) {
+            order.changes.forEach(ch => {
+                firstPrice += ch.price
+            })
+        }
+        //add the price of the salad if there is any
+        if (order.salad) {
+            firstPrice += order.salad.price
+        }
+        return firstPrice
+    }
+
+    const getTotalPriceOfOrders = () => {
+        let total = 0
+        orders.forEach(order => {
+            total += getTotalPriceOfOrder(order)
+        })
+        return total
+    }
+
     return (
         <div className='menuPage'>
 
@@ -176,7 +206,7 @@ export default function Menu(props) {
                     <div className='pipe'></div>
                     <button>Order everythings</button>
                     <div className='pipe'></div>
-                    <h1>Total {totalPrice} ₪</h1>
+                    <h1>Total {getTotalPriceOfOrders()} ₪</h1>
                 </div>
             </div>
             <div className='main'>

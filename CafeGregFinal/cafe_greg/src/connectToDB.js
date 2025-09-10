@@ -16,7 +16,6 @@ export async function getTables() {
     }
 }
 
-
 export async function addTableById(id) {
     try {
         const response = await fetch(`${serverUrl}/table/${id}/addTable`, {
@@ -68,7 +67,6 @@ export async function sendOrder(tableId, order) {
     }
 }
 
-
 export async function getOrderOfTable(tableId) {
 
     try {
@@ -84,7 +82,6 @@ export async function getOrderOfTable(tableId) {
         console.error("Erreur réseau :", error);
     }
 }
-
 
 export async function getProduct(productId) {
 
@@ -174,7 +171,6 @@ export async function getCustomersFromTable(tableId) {
     }
 }
 
-
 export async function registerCustomerToTable(tableId, name, id, contact) {
     try {
         const response = await fetch(`${serverUrl}/customer/register/${tableId}`, {
@@ -189,6 +185,7 @@ export async function registerCustomerToTable(tableId, name, id, contact) {
         console.error("Erreur réseau :", error);
     }
 }
+
 export async function loginCustomerToTable(tableId, id) {
     try {
         const response = await fetch(`${serverUrl}/customer/login/${tableId}`, {
@@ -231,8 +228,6 @@ export async function deleteTableDB(tableId) {
     }
 }
 
-
-
 export async function changeStatusOfTable(tableId, statusId) {
     try {
         const response = await fetch(`${serverUrl}/table/${tableId}/status/${statusId}`, {
@@ -245,9 +240,9 @@ export async function changeStatusOfTable(tableId, statusId) {
     }
 }
 
-export async function payTableInDB(tableId) {
+export async function payTableInDB(tableId, tipValue) {
     try {
-        const response = await fetch(`${serverUrl}/table/${tableId}/payTable`, {
+        const response = await fetch(`${serverUrl}/table/${tableId}/payTable/${tipValue}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });
@@ -257,6 +252,19 @@ export async function payTableInDB(tableId) {
     }
 }
 
+export async function getPriceOfTable(tableId) {
+    try {
+        const response = await fetch(`${serverUrl}/table/${tableId}/priceOfTable`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        const data = await response.json();
+
+        return data.price
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
 
 export async function getHistoryOfCustomers(customers, date1, date2) {
 
@@ -277,6 +285,7 @@ export async function getHistoryOfCustomers(customers, date1, date2) {
         console.error("Erreur réseau :", error);
     }
 }
+
 
 
 

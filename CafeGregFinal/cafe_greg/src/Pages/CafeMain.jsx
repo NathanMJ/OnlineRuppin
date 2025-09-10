@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
-import { addTableById, changeStatusOfTable, deleteTableDB, getTables, payTableInDB } from "../connectToDB.js"
+import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, payTableInDB } from "../connectToDB.js"
 
 export default function CafeMain(props) {
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
@@ -62,7 +62,11 @@ export default function CafeMain(props) {
                 props.goto(`/menu`, { tableId: id })
                 return
             case 'payment':
-                openTip(240, id)
+                //get the total price of the table from the db
+                const totalPrice = await getPriceOfTable(id)
+                console.log('total price of the table ', totalPrice);
+
+                openTip(totalPrice, id)
                 break
             case 'switchTables':
                 //TODO: switch two table already existing or switch the table of the table 
@@ -163,6 +167,7 @@ export default function CafeMain(props) {
     const [tip, setTip] = useState({
         show: false,
         value: 0,
+        type: '%',
         tablePrice: 0,
         tableId: 0
     })
@@ -188,12 +193,11 @@ export default function CafeMain(props) {
     const cancelTip = () => {
         setTip((prevS) => ({
             ...prevS,
-            show: false
+            show: false,
         }))
     }
 
     const confirmTip = () => {
-        console.log('go to final pay');
         cancelTip()
         setPayment({ show: true })
     }
@@ -223,7 +227,15 @@ export default function CafeMain(props) {
 
 
     const setTableToPaid = async () => {
-        await payTableInDB(tip.tableId)
+        //get the value of the tip according to the tip state
+        let tipValue = 0
+        if (tip.type == '%') {
+            tipValue = Math.round((tip.value / 100 * tip.tablePrice) * 10) / 10
+        }
+        else if (tip.type == '₪') {
+            tipValue = Number(tip.value)
+        }
+        await payTableInDB(tip.tableId, tipValue)
         fetchAndCompare()
     }
 
@@ -236,14 +248,12 @@ export default function CafeMain(props) {
 
         setTimeout(() => {
             setPayment((prevS) => ({ ...prevS, loading: false, message: "Payment accepted !" }))
+            setTableToPaid()
         }, 4000)
 
         setTimeout(() => {
             setPayment({ show: false })
         }, 6000)
-
-        //TODO: set the table to paid in the db
-        setTableToPaid()
     }
 
 

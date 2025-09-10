@@ -67,7 +67,8 @@ export async function getPriceOfTable(req, res) {
 
 export async function payTable(req, res) {
     const tableId = Number(req.params.id)   
-    const response = await Table.pay(tableId)
+    const tipValue = Number(req.params.tipValue)
+    const response = await Table.pay(tableId, tipValue)
     return res.status(200).json(response)
 }
 

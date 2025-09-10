@@ -53,11 +53,16 @@ export async function getOrderById(id) {
     if (order.changes) {
       const tempChanges = []
       for (const c of order.changes) {
-        const { ingredientId, change } = c;
+        const { ingredientId, change } = c;       
         const ingredient = await getIngredientById(ingredientId)
         const realChange = await db.collection('ingredient_changes').findOne({ _id: change })
+        console.log('change',ingredient);
+        //get the price of the change or 0 if not exist
+        const price = ingredient.changes.find(ch => ch._id == change)?.price || 0
+        
         delete ingredient.changes
-        tempChanges.push({ ...ingredient, change: realChange.change })
+
+        tempChanges.push({ ...ingredient, change: realChange.change, price})
       }
       order.changes = tempChanges
 
@@ -85,7 +90,7 @@ export async function getOrderById(id) {
         order.adds.map(async (add) => {
           const ingredient = await getIngredientById(add)
           const price = product.adds.find(a => a._id == add).price
-          const ingredientAdded = { name: ingredient.name, price }
+          const ingredientAdded = { name: ingredient.name, price, _id: add }
           return ingredientAdded
         })
       )
@@ -212,8 +217,9 @@ export async function getPriceByOrderId(id) {
     //add the price of the salad
     const saladPrice = order.salad?.price || 0
     //add the price of ingredients that have change for changes
+    const changesPrice = order.changes?.reduce((sum, change) => sum + (change.price || 0), 0) || 0
 
-    return { price: order.price + addPrice + saladPrice }
+    return { price: order.price + addPrice + saladPrice + changesPrice}
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;

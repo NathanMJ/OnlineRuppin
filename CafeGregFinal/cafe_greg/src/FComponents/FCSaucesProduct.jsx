@@ -5,6 +5,7 @@ export default function FCSaucesProduct(props) {
     const eachAddPrice = 1
     const tempImage = 'https://www.emballagefute.com/1028-large_default/pots-a-sauce.jpg'
 
+   
     const sectionRef = useRef(null)
 
     const [showSauces, setShowSauces] = useState(false)
@@ -73,7 +74,7 @@ export default function FCSaucesProduct(props) {
                 {props.selectedSauces.map(sauceObj => {
 
                     //find the sauce in sauces
-                    const sauce = props.sauces.find(searchSauce => searchSauce._id == sauceObj.id)
+                    const sauce = props.sauces.find(searchSauce => searchSauce._id == sauceObj._id)
 
                     return <div className="sauce" key={sauce._id}>
                         <h1 className="name">{sauce.name}</h1>

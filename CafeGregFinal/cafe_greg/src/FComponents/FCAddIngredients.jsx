@@ -72,6 +72,8 @@ export default function FCAddIngredients(props) {
             {props.addedIngredients?.length > 0 &&
                 <div className="addedIngredients">
                     {props.addedIngredients.map((eachIng, index) => {
+                        console.log('eachIng', eachIng);
+                        
                         const currentIngredient = props.adds.find((i) => i._id == eachIng)
                         console.log(currentIngredient);
 

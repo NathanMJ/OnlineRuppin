@@ -33,8 +33,8 @@ export default class Table {
     static async getTotal(tableId) {
         return await getPriceOfTableInDB(tableId)
     }
-    static async pay(tableId) {
-        return await payInDB(tableId)
+    static async pay(tableId, tipValue) {
+        return await payInDB(tableId, tipValue)
     }
 
     

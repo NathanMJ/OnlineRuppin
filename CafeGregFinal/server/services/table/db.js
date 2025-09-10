@@ -284,7 +284,7 @@ export async function getPriceOfTableInDB(id) {
 
 
 
-export async function payInDB(id) {
+export async function payInDB(id, tipValue) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -296,14 +296,16 @@ export async function payInDB(id) {
             return { success: false, message: `Table ${id} doesnt exist` };
         }
         //if there are customers set them in customer history
-        if(table.customers && table.customers.length>0){
-            const now = new Date();
-            const historyEntry = {
-                date: now,
-                customers: table.customers,
-                orders: table.orders || []}
-            await db.collection("customers_order_history").insertOne(historyEntry)
+
+        const now = new Date();
+        const historyEntry = {
+            date: now,
+            customers: table.customers || [],
+            orders: table.orders || [],
+            tip: tipValue || 0
         }
+        await db.collection("customers_order_history").insertOne(historyEntry)
+
         //delete the table
         await db.collection("tables").deleteOne({ _id: Number(id) })
 

@@ -21,7 +21,7 @@ tableRouter
     .get('/:id/customers', logger, getCustomersOfTable)
     .get('/:id/priceOfTable', logger, getPriceOfTable)
     .post('/:id/addTable', logger, addTable)
-    .post('/:id/payTable', logger, payTable)
+    .post('/:id/payTable/:tipValue', logger, payTable)
     .post('/:id/status/:statusId', logger, changeStatus)
     .post('/:id/order', logger, addOrder)
     .delete('/:id/delete', logger, removeTable)
