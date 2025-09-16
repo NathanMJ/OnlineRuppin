@@ -1,6 +1,9 @@
-import { addTableById, findAllTables, findTableById, addOrderToTable, getOrdersOfTable, 
-    changeStatusInDB, getCustomersOfTableInDB,deleteInDB
-    ,getPriceOfTableInDB,payInDB} from './db.js';
+import {
+    addTableById, findAllTables, findTableById, addOrderToTable, getOrdersOfTable,
+    changeStatusInDB, getCustomersOfTableInDB, deleteInDB
+    , getPriceOfTableInDB, payInDB,
+    switchTablesInDB
+} from './db.js';
 
 export default class Table {
     static async allTables() {
@@ -27,7 +30,7 @@ export default class Table {
         return await deleteInDB(tableId)
     }
     static async changeStatus(tableId, statusId) {
-        return await changeStatusInDB(tableId,statusId)
+        return await changeStatusInDB(tableId, statusId)
     }
 
     static async getTotal(tableId) {
@@ -36,7 +39,8 @@ export default class Table {
     static async pay(tableId, tipValue) {
         return await payInDB(tableId, tipValue)
     }
-
-    
+    static async switch(tableId, tableId2) {
+        return await switchTablesInDB(tableId, tableId2)
+    }    
 
 }

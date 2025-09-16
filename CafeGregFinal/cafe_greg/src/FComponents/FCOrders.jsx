@@ -137,7 +137,8 @@ export default function FCOrders(props) {
                             {order.changes.map((change, idx) => (
                                 <p key={idx}>{capitalFirstLetter(change.change)} {change.name} ({writeAddPrice(change.price)})</p>
                             ))}
-                            {order.adds.map((change, idx) => (
+                            {order.adds && order.adds.length > 0 && <h3>-- Adds: --</h3>}
+                            {order.adds && order.adds.map((change, idx) => (
                                 <p key={idx}>{capitalFirstLetter(change.change)} {change.name} ({writeAddPrice(change.price)})</p>
                             ))}
                         </div>

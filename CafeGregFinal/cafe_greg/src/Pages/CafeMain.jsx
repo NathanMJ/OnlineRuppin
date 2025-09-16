@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
-import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, payTableInDB } from "../connectToDB.js"
+import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, payTableInDB, switchTables } from "../connectToDB.js"
 
 export default function CafeMain(props) {
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
@@ -54,6 +54,7 @@ export default function CafeMain(props) {
         }
     }
 
+    const [tableSwitch, setTableSwitch] = useState()
 
     const clickOnTable = async (id) => {
         //TODO: make the real function of each one
@@ -69,8 +70,12 @@ export default function CafeMain(props) {
                 openTip(totalPrice, id)
                 break
             case 'switchTables':
-                //TODO: switch two table already existing or switch the table of the table 
-                console.log('switch the table ', id);
+                setTableSwitch(id)
+                setClickOnTableMode("switchTable2")
+                return
+            case 'switchTable2':
+                await switchTables(tableSwitch, id)
+                fetchAndCompare()
                 break
             case 'removeATable':
                 await deleteTableDB(id)

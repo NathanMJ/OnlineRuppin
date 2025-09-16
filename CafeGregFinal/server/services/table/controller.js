@@ -74,3 +74,9 @@ export async function payTable(req, res) {
 
 
 
+export async function switchTables(req, res){
+    const tableId = Number(req.params.id)
+    const tableId2 = Number(req.params.id2)
+    const response = await Table.switch(tableId, tableId2)
+    return res.status(200).json(response)
+}

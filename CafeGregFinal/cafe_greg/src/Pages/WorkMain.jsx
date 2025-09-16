@@ -1,15 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AskIdMsg from '../FComponents/AskIdMsg'
 import ReturnButton from "../FComponents/ReturnButton"
 import { useNavigate } from 'react-router-dom';
+import { useIdContext } from '../Contexts/askIdContext';
 
 export default function WorkMain(props) {
     const [show, setShow] = useState(false);
     const [destination, setDestination] = useState('')
     const navigate = useNavigate()
 
-    const goToWithId = () => {
+
+    const { getWorkerId } = useIdContext();
+
+
+
+    const goToWithId = async () => {
+
+        setDestination('')
         //TO DO : check if the id exist in the db
+        const id = await getWorkerId()
 
 
         //TO DO : check if the id got the autorization to go to the space
@@ -25,7 +34,7 @@ export default function WorkMain(props) {
                 alert("Bar side is not available yet")
                 break;
             case 'kitchen':
-                alert("Kitchen side is not available yet")
+                props.goto('/kitchenBarPreparation')
                 break;
             case 'manager':
                 alert("Manager side is not available yet")
@@ -33,17 +42,16 @@ export default function WorkMain(props) {
         }
     }
 
+    useEffect(() => {
+        if (destination != '') {
+            goToWithId()
+        }
+        console.log(destination);
+
+    }, [destination])
+
     const clickOnField = (field) => {
         setDestination(field)
-        showMsg()
-    }
-
-    const showMsg = () => {
-        setShow(true);
-    }
-
-    const hideMsg = () => {
-        setShow(false);
     }
 
 
@@ -66,7 +74,6 @@ export default function WorkMain(props) {
                 onClick={() => clickOnField('manager')}>
                 <h3>Manager side</h3></div>
             <ReturnButton returnButton={returnButton} bottom={'3vh'} left={'3vh'} />
-            <AskIdMsg exec={goToWithId} showMsg={() => setShow(true)} hideMsg={() => setShow(false)} show={show}></AskIdMsg>
         </div>
     )
 }
