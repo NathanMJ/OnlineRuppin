@@ -1,294 +1,101 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import FCTimer from '../FComponents/FCTimer';
+import { changeStatusOfOrder, getOrdersFromDestionation } from '../connectToDB';
+import { useLocation } from 'react-router-dom';
+import ReturnButton from "../FComponents/ReturnButton";
 
-export default function KitchenBarPreparation() {
+export default function KitchenBarPreparation(props) {
 
-    const maxTimeInMS = 200;
+
+    const location = useLocation();
+    const destination = location.state.destinationId || 0;
 
     //In orders get every order in the order of the time and set them according to table
 
-    //TODO: set the pannel to change the status
-    //TODO: set the timer to working
-    //TODO: accessibility to hide the ingredients
 
-
-
-
-
-    const groupOfOrders = [
-        {
-            table: 5,
-            orders: [{
-                _id: 11,
-                productId: 4,
-                changes: [
-                    {
-                        _id: 11,
-                        name: "spinach",
-                        change: "aside",
-                        price: 0
-                    },
-                    {
-                        _id: 3,
-                        name: "egg",
-                        change: "omelette",
-                        price: 0
-                    },
-                    {
-                        _id: 17,
-                        name: "black pepper",
-                        change: "a lot of",
-                        price: 0
-                    }
-                ],
-                adds: [
-                    {
-                        name: "smoked salmon",
-                        price: 15,
-                        _id: 10
-                    }
-                ],
-                salad: {
-                    _id: 3,
-                    name: "Galilee salad",
-                    description: "red quinoa, black lentils, greens, cranberries, almonds",
-                    price: 15
-                },
-                ingredients: [
-                    {
-                        _id: 15,
-                        name: "hollandaise"
-                    },
-                    {
-                        _id: 16,
-                        name: "onion jam"
-                    },
-                    {
-                        _id: 9,
-                        name: "green onion"
-                    }
-                ],
-                img: "https://imageproxy.wolt.com/menu/menu-images/shared/e8222ada-b2d9-11ee-b363-a2e21199740d_benedict_photoroom.jpg?w=600",
-                name: "Eggs Benedict",
-                price: 68,
-                status: {
-                    _id: 0,
-                    time: "12:07:33",
-                    code: 0,
-                    orderId: 11,
-                    status: "pending",
-                    background_color: "red",
-                    color: "white"
-                }
-            }, {
-                _id: 12,
-                productId: 4,
-                changes: [
-                    {
-                        _id: 11,
-                        name: "spinach",
-                        change: "aside",
-                        price: 0
-                    },
-                    {
-                        _id: 3,
-                        name: "egg",
-                        change: "omelette",
-                        price: 0
-                    },
-                    {
-                        _id: 17,
-                        name: "black pepper",
-                        change: "a lot of",
-                        price: 0
-                    }
-                ],
-                adds: [
-                    {
-                        name: "smoked salmon",
-                        price: 15,
-                        _id: 10
-                    }
-                ],
-                salad: {
-                    _id: 3,
-                    name: "Galilee salad",
-                    description: "red quinoa, black lentils, greens, cranberries, almonds",
-                    price: 15
-                },
-                ingredients: [
-                    {
-                        _id: 15,
-                        name: "hollandaise"
-                    },
-                    {
-                        _id: 16,
-                        name: "onion jam"
-                    },
-                    {
-                        _id: 9,
-                        name: "green onion"
-                    }
-                ],
-                img: "https://imageproxy.wolt.com/menu/menu-images/shared/e8222ada-b2d9-11ee-b363-a2e21199740d_benedict_photoroom.jpg?w=600",
-                name: "Eggs Benedict",
-                price: 68,
-                status: {
-                    _id: 0,
-                    time: "12:07:33",
-                    code: 0,
-                    orderId: 11,
-                    status: "pending",
-                    background_color: "red",
-                    color: "white"
-                }
-            }, {
-                _id: 13,
-                productId: 4,
-                changes: [
-                    {
-                        _id: 11,
-                        name: "spinach",
-                        change: "aside",
-                        price: 0
-                    },
-                    {
-                        _id: 3,
-                        name: "egg",
-                        change: "omelette",
-                        price: 0
-                    },
-                    {
-                        _id: 17,
-                        name: "black pepper",
-                        change: "a lot of",
-                        price: 0
-                    }
-                ],
-                adds: [
-                    {
-                        name: "smoked salmon",
-                        price: 15,
-                        _id: 10
-                    }
-                ],
-                salad: {
-                    _id: 3,
-                    name: "Galilee salad",
-                    description: "red quinoa, black lentils, greens, cranberries, almonds",
-                    price: 15
-                },
-                ingredients: [
-                    {
-                        _id: 15,
-                        name: "hollandaise"
-                    },
-                    {
-                        _id: 16,
-                        name: "onion jam"
-                    },
-                    {
-                        _id: 9,
-                        name: "green onion"
-                    }
-                ],
-                img: "https://imageproxy.wolt.com/menu/menu-images/shared/e8222ada-b2d9-11ee-b363-a2e21199740d_benedict_photoroom.jpg?w=600",
-                name: "Eggs Benedict",
-                price: 68,
-                status: {
-                    _id: 0,
-                    time: "12:07:33",
-                    code: 0,
-                    orderId: 11,
-                    status: "pending",
-                    background_color: "red",
-                    color: "white"
-                }
-            }]
-        },
-        {
-            table: 20,
-            orders: [{
-                _id: 11,
-                productId: 4,
-                changes: [
-                    {
-                        _id: 11,
-                        name: "spinach",
-                        change: "aside",
-                        price: 0
-                    },
-                    {
-                        _id: 3,
-                        name: "egg",
-                        change: "omelette",
-                        price: 0
-                    },
-                    {
-                        _id: 17,
-                        name: "black pepper",
-                        change: "a lot of",
-                        price: 0
-                    }
-                ],
-                adds: [
-                    {
-                        name: "smoked salmon",
-                        price: 15,
-                        _id: 10
-                    }
-                ],
-                salad: {
-                    _id: 3,
-                    name: "Galilee salad",
-                    description: "red quinoa, black lentils, greens, cranberries, almonds",
-                    price: 15
-                },
-                ingredients: [
-                    {
-                        _id: 15,
-                        name: "hollandaise"
-                    },
-                    {
-                        _id: 16,
-                        name: "onion jam"
-                    },
-                    {
-                        _id: 9,
-                        name: "green onion"
-                    }
-                ],
-                img: "https://imageproxy.wolt.com/menu/menu-images/shared/e8222ada-b2d9-11ee-b363-a2e21199740d_benedict_photoroom.jpg?w=600",
-                name: "Eggs Benedict",
-                price: 68,
-                status: {
-                    _id: 0,
-                    time: "12:07:33",
-                    code: 0,
-                    orderId: 11,
-                    status: "pending",
-                    background_color: "red",
-                    color: "white"
-                }
-            }]
-        }
+    const statusToChange = [
+        { id: 1, name: 'Ordered' },
+        { id: 2, name: 'In preparation' },
+        { id: 3, name: 'Ready' },
+        { id: 4, name: 'Sended' }
     ]
+
+    const [statusContainer, setStatusContainer] = useState({
+        orderId: 0
+    })
+
+
+
+    const [showPictureOfOrder, setShowPictureOfOrder] = useState([])
+
+    const clickOnShowPicture = (orderId) => {
+        if (showPictureOfOrder.some(o => o == orderId)) {
+            const tempArr = showPictureOfOrder.filter(o => o != orderId)
+            setShowPictureOfOrder(tempArr)
+        }
+        else {
+            setShowPictureOfOrder([...showPictureOfOrder, orderId])
+        }
+    }
+
+    const isThePictureShowing = (orderId) => {
+        return showPictureOfOrder.some(o => o == orderId)
+    }
+
+
+
+    const [groupOfOrders, setGroupOfOrders] = useState([])
+
+    const fetchTheOrders = async () => {
+        const temp = await getOrdersFromDestionation(destination)
+        setGroupOfOrders(temp.orders || [])
+    }
+
+    useEffect(() => {
+        fetchTheOrders()
+    }, [])
+
+
+    const changeTheOrderStatus = async (orderId, newStatus) => {
+        setStatusContainer({ orderId: undefined })
+
+        await changeStatusOfOrder(orderId, newStatus.id)
+        fetchTheOrders()
+    }
+
+
 
     return (
         <div className='kitchenBarPreparationPage'>
+            <ReturnButton right={'0px'} top={'0px'}></ReturnButton>
             <header>
-                <p>Received time</p>
-                <p>Cooked time</p>
+                <p className='receiveTime'>Received time</p>
+                <p className='preparationTime'>Cooked time</p>
+                <p className='readyTime'>Ready time</p>
             </header>
             <div className='ordersSide'>
                 {groupOfOrders.map((g, index) => {
                     return <div className='table' key={index}>
-                        <p className='numberOfTheTable'>{g.table}</p>
+                        <p className='numberOfTheTable'>{g.tableId}</p>
                         <div className='orders'>
                             {g.orders.map(o => {
                                 return <div className='order' key={o._id}>
-                                    <div className='headerOrder'>
+                                    <div className='headerOrder' style={{
+                                        flexDirection: isThePictureShowing(o._id) ? 'column' : 'row'
+                                    }}>
                                         <p className='name'>{o.name}</p>
-                                        <img src={o.img} />
+                                        <img className='pictureOfMeal'
+                                            onClick={() => clickOnShowPicture(o._id)}
+
+                                            style={{
+                                                display: isThePictureShowing(o._id) ? 'block' : 'none'
+                                            }} src={o.img} />
+                                        <img className='pictureOfLogo'
+                                            src="../Pictures/Camera-logo.png"
+                                            onClick={() => clickOnShowPicture(o._id)}
+                                            style={{
+                                                display: isThePictureShowing(o._id) ? 'none' : 'block'
+                                            }} />
                                     </div>
                                     <div className='ingredients'>
                                         {o.ingredients && <div className='base'>
@@ -298,7 +105,7 @@ export default function KitchenBarPreparation() {
                                             })}
                                         </div>}
 
-                                        {o.changes && <div className='changes'>
+                                        {o.changes && o.changes.length > 0 && <div className='changes'>
                                             <h1>Changes:</h1>
                                             {o.changes.map((i) => {
                                                 return <p key={i._id}>{i.change} {i.name}</p>
@@ -311,14 +118,32 @@ export default function KitchenBarPreparation() {
                                                 return <p key={i._id}>{i.name}</p>
                                             })}
                                         </div>}
+
+                                        {o.salad && <div className='salad'>
+                                            <h1>Salad:</h1>
+                                            <p>{o.salad.name}</p>
+                                        </div>}
                                     </div>
                                     <div className='footer'>
-                                            <p className='receivedTimer timer'>00:00</p>
-                                            <p className='wordTimer timer'>00:00</p>
+                                        <div className='receiveTime timer'>{o.ordered_status_time && <FCTimer start={o.ordered_status_time}></FCTimer>}</div>
+                                        {o.preparation_status_time && <div className='preparationTime timer'><FCTimer start={o.preparation_status_time}></FCTimer></div>}
+                                        {o.ready_status_time && <div className='readyTime timer'><FCTimer start={o.ready_status_time}></FCTimer></div>}
+
+                                        <div className='statusContainer'>
                                             <p className="status"
-                                            style={{backgroundColor:o.status.background_color,
-                                                color:o.status.color
-                                            }}>{o.status.status}</p>
+                                                onClick={() => setStatusContainer({ orderId: o._id == statusContainer.orderId ? null : o._id })}
+                                                style={{
+                                                    backgroundColor: o.status.background_color,
+                                                    color: o.status.color
+                                                }}>{o.status.status}</p>
+                                            <div className='statusSelection' style={{
+                                                display: statusContainer.orderId == o._id ? 'flex' : 'none'
+                                            }}>
+                                                {statusToChange.map((s, indexStatus) =>
+                                                    (<p onClick={() => changeTheOrderStatus(o._id, s)} key={indexStatus}>{s.name}</p>)
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             })}

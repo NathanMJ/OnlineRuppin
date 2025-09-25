@@ -35,6 +35,10 @@ export default function FCOrders(props) {
         props.refreshOrders();
     };
 
+    const confirmReceivedOrder = async (id) => {
+        await changeStatusOfOrder(id, 5);
+        props.refreshOrders();
+    }
     const capitalFirstLetter = (word) => {
         if (!word) return '';
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
@@ -101,6 +105,8 @@ export default function FCOrders(props) {
                             <img onClick={() => removeOrder(order._id)} src='../Pictures/Cross.png' className="cross" />}
                         {order.status?.code === 0 &&
                             <img onClick={() => confirmOrder(order._id)} src='../Pictures/Confirmation.png' className="validate" />}
+                        {order.status?.code === 4 &&
+                            <img onClick={() => confirmReceivedOrder(order._id)} src='../Pictures/Confirmation.png' className="validate" />}
                         <div className="mainOrder">
                             <div className="imageContainer">
                                 <img src={order.img} />

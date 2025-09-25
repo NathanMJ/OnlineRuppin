@@ -291,7 +291,6 @@ export async function getHistoryOfCustomers(customers, date1, date2) {
 
 
 export async function callAPI(api, method, body) {
-
     try {
         const response = await fetch(`${serverUrl}/${api}`, {
             method,
@@ -309,4 +308,13 @@ export async function callAPI(api, method, body) {
 
 export async function switchTables(tableId1, tableId2){
     await callAPI(`table/${tableId1}/switchWith/${tableId2}`,'POST')
+}
+
+
+export async function getOrdersFromDestionation(destinationId) {
+    return await callAPI(`order/fromDestination/${destinationId}`, 'GET')
+}
+
+export async function getWorkerById(workerId) {
+    return await callAPI(`worker/${workerId}`)
 }

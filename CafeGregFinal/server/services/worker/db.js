@@ -1,0 +1,56 @@
+import { log } from 'node:console';
+import { __dirname } from '../../globals.js';
+import { MongoClient, ObjectId } from 'mongodb';
+
+function capitalize(word) {
+  if (!word) return "";
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+
+export async function getWorkerFromDB(id) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+        let worker = await db.collection("workers").aggregate([
+            {
+                $match: { _id: id }
+            },
+            {
+                $lookup: {
+                    localField: "authorizations",   // tableau d’IDs
+                    from: "worker_authorizations",
+                    foreignField: "_id",            // champ dans worker_authorizations
+                    as: "authorizations"            // ça remplace le tableau par les objets
+                }
+            }
+        ]).toArray();
+
+        console.log(worker);
+        
+        if(worker.length > 0)
+            worker = worker[0]
+        else 
+            return
+        
+        
+
+        worker.authorizations.forEach(auth => {            
+            worker[`is${capitalize(auth.name)}`] = true
+        });
+
+        delete worker.authorizations
+
+        return worker;
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+

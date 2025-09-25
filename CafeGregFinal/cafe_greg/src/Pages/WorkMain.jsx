@@ -3,6 +3,7 @@ import AskIdMsg from '../FComponents/AskIdMsg'
 import ReturnButton from "../FComponents/ReturnButton"
 import { useNavigate } from 'react-router-dom';
 import { useIdContext } from '../Contexts/askIdContext';
+import { getWorkerById } from '../connectToDB';
 
 export default function WorkMain(props) {
     const [show, setShow] = useState(false);
@@ -12,34 +13,48 @@ export default function WorkMain(props) {
 
     const { getWorkerId } = useIdContext();
 
-
+    const gotAuthorization = (arrAuth, auth) => {
+        if (!arrAuth)
+            return
+        return arrAuth.some(a => a.name == auth)
+    }
 
     const goToWithId = async () => {
-
-        setDestination('')
         //TO DO : check if the id exist in the db
         const id = await getWorkerId()
 
+        const worker = await getWorkerById(id)
+        console.log(worker);
+        if (!worker) {
+            setDestination('')
+            return
+        }
 
-        //TO DO : check if the id got the autorization to go to the space
+        console.log(worker.authorizations, destination);
+        
+
+        if (destination != 'service' && !gotAuthorization(worker.authorizations, destination)) {
+            console.log('doesnt have the aut for ', destination);
+            setDestination('')
+            return
+        }
+
         switch (destination) {
             case 'service':
-                if (true) {
-                    navigate('/toggleService', { state: { id: '345538268' } })
-                } else {
-
-                }
+                navigate('/toggleService', { state: { id } })
                 break;
             case 'bar':
-                alert("Bar side is not available yet")
+                props.goto('/kitchenBarPreparation', { destinationId: 1 })
                 break;
             case 'kitchen':
-                props.goto('/kitchenBarPreparation')
+                props.goto('/kitchenBarPreparation', { destinationId: 0 })
                 break;
             case 'manager':
                 alert("Manager side is not available yet")
                 break;
         }
+        setDestination('')
+
     }
 
     useEffect(() => {

@@ -36,5 +36,11 @@ export async function changeStatus(req, res) {
 }
 
 
+export async function getOrdersFromDestination(req, res){
+    const destinationId = Number(req.params.destination)
+    const orders = await Order.fromDestination(destinationId)
+    return res.status(200).json(orders)
+}
+
 
 

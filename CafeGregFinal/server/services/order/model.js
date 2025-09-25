@@ -1,4 +1,4 @@
-import { changeOrderStatusById, getOrderById, removeOrderById,getPriceByOrderId} from './db.js';
+import { changeOrderStatusById, getOrderById, removeOrderById,getPriceByOrderId, getOrdersFromDestinationInDB} from './db.js';
 
 export default class Order {
     static async get(id) {
@@ -14,7 +14,9 @@ export default class Order {
         return await getPriceByOrderId(id);
     }
 
-    
+    static async fromDestination(destinationId){
+        return await getOrdersFromDestinationInDB(destinationId)
+    }
 
     
 }

@@ -43,16 +43,6 @@ export default function CustomersHistory(props) {
 
 
 
-    /*
-        TODO : CAN FILTER ACCORDING TO CUSTOMERS
-        TODO : CAN FILTER ACCORDING TO MULTIPLY CUSTOMERS
-        TODO : CAN FILTER ACCORDING TO DATES
-        TODO : CAN FILTER ACCORDING TO TWO DATES
-        TODO : REPLACE THE CALENDAR LOGO
-        TODO : SEND THE CHANGES OF THE ORDERS
-        TODO : IF NO CHANGES WRITE NO CHANGE DETECTED    
-    */
-
     const clickOnCustomer = (id) => {
         const exist = customersFilter.some(eachId => eachId == id)
         if (exist) {

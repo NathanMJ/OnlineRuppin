@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
-import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, payTableInDB, switchTables } from "../connectToDB.js"
+import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, getWorkerById, payTableInDB, switchTables } from "../connectToDB.js"
 
 export default function CafeMain(props) {
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
@@ -110,17 +110,17 @@ export default function CafeMain(props) {
     const openSetting = async () => {
         const id = await getWorkerId("Enter your ID:");
         if (id) {
-            //TODO : check that the worker exist in the db 
-            const worker = true
+            const worker = await getWorkerById(id);
+            console.log(worker);
 
-            if (worker) {
-                //TODO : check that the worker is a waiter or a manager
-                const status = 'manager'
-                setShowSettings({ show: true, isManager: status === 'manager' });
+            const isManager = worker?.isManager || false;
+            const isWaiter = worker?.isWaiter || false;
+
+            if (isManager || isWaiter) {
+                setShowSettings({ show: true, isManager });
             }
         }
-
-    }
+    };
 
 
     //Here concern the open a new table
