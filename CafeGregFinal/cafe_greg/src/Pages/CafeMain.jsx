@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
-import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, payTableInDB } from "../connectToDB.js"
+import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, getWorkerById, payTableInDB, switchTables } from "../connectToDB.js"
+import { useMessageContext } from "../Contexts/messageContext.jsx";
 
 export default function CafeMain(props) {
+
+    const { addMessage } = useMessageContext();
+
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
 
     const { getWorkerId } = useIdContext();
@@ -45,7 +49,7 @@ export default function CafeMain(props) {
 
 
     const getAskLogo = (statusCode) => {
-        //TODO: if no status code is here maybe think the status like thinking, waiting for order, etc...     
+        //if no status code is here maybe think the status like thinking, waiting for order, etc...     
         switch (statusCode) {
             case 1:
                 return <img className="askLogo" src="/Pictures/Hand-up.png" />
@@ -53,6 +57,30 @@ export default function CafeMain(props) {
                 return <img className="askLogo" src="/Pictures/Pay-logo.png" />
         }
     }
+
+    const [tableSwitch, setTableSwitch] = useState()
+
+    useEffect(() => {
+        //set a message according to the mode
+        switch (clickOnTableMode) {
+            case 'switchTables':
+                addMessage("Select the first table to switch with", "info", 5000)
+                break
+            case 'switchTable2':
+                addMessage("Select the second table to switch with", "info", 5000)
+                break
+            case 'removeATable':
+                addMessage("Select the table to remove", "info", 5000)
+                break
+            case 'removeAnOrder':
+                break
+            case 'checkTable':
+                addMessage("The table has been checked", "info", 5000)
+                break
+            case 'reduction':
+                break
+        }
+    }, [clickOnTableMode])
 
 
     const clickOnTable = async (id) => {
@@ -65,12 +93,16 @@ export default function CafeMain(props) {
                 //get the total price of the table from the db
                 const totalPrice = await getPriceOfTable(id)
                 console.log('total price of the table ', totalPrice);
-
                 openTip(totalPrice, id)
                 break
             case 'switchTables':
-                //TODO: switch two table already existing or switch the table of the table 
-                console.log('switch the table ', id);
+                setTableSwitch(id)
+                setClickOnTableMode("switchTable2")
+                return
+            case 'switchTable2':
+                await switchTables(tableSwitch, id)
+                fetchAndCompare()
+                addMessage(`Tables have been switched`, "success", 5000)
                 break
             case 'removeATable':
                 await deleteTableDB(id)
@@ -103,19 +135,23 @@ export default function CafeMain(props) {
 
 
     const openSetting = async () => {
+        addMessage("Enter your ID to access settings", "info", 3000)
         const id = await getWorkerId("Enter your ID:");
-        if (id) {
-            //TODO : check that the worker exist in the db 
-            const worker = true
 
-            if (worker) {
-                //TODO : check that the worker is a waiter or a manager
-                const status = 'manager'
-                setShowSettings({ show: true, isManager: status === 'manager' });
+        if (id) {
+            const worker = await getWorkerById(id);
+
+            const isManager = worker?.isManager || false;
+            const isWaiter = worker?.isWaiter || false;
+
+            if (isManager || isWaiter) {
+                setShowSettings({ show: true, isManager });
+            }
+            else {
+                addMessage("You are not authorized to access settings", "warning", 5000);
             }
         }
-
-    }
+    };
 
 
     //Here concern the open a new table
@@ -130,13 +166,12 @@ export default function CafeMain(props) {
         const id = await getWorkerId("Enter your ID:");
         //if id is correct set the value of the table to next value free
         //TODO: take the value from the database
-        const nextValue = 4
+        const nextValue = 1
         setAddTablePannel({ show: true, value: nextValue })
     }
 
 
     const addTable = async () => {
-        //TODO: check if the table already exist
         const exist = false
         if (!exist) {
             //create the table and go to the page with the id of the table
@@ -153,7 +188,6 @@ export default function CafeMain(props) {
             }
         }
         else {
-            //TODO: message of "table already exist"
             console.log('table already exist');
 
         }

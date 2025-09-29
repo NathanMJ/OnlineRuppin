@@ -18,6 +18,8 @@ export default function Menu(props) {
 
     const fetchOrders = async () => {
         const tempOrders = await getOrderOfTable(tableId)
+        console.log('orders found from DB', tempOrders);
+        
         setOrders([...tempOrders])
     }
 

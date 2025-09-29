@@ -4,7 +4,6 @@ export default function FCHeaderCustomers(props) {
 
     const [showCustomers, setShowCustomers] = useState(null)
 
-    //TODO if customer is empty we cant open the header
 
     if (props.customers.length == 0) {
         return <></>

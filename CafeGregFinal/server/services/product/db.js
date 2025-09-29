@@ -32,6 +32,8 @@ export async function findProductById(id) {
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
 
+    console.log(id);
+    
     const db = client.db(process.env.DB_NAME);
     const product = (await db.collection("products")
       .aggregate([
@@ -47,7 +49,7 @@ export async function findProductById(id) {
       ])
       .toArray())[0];
 
-    const tempIngredients = product.ingredients
+    const tempIngredients = product.ingredients || []
     const ingredients = await Promise.all(
       tempIngredients.map(async (i) => {
         const id = i._id ?? i

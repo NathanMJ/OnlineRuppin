@@ -1,0 +1,8 @@
+[{
+  "_id": {
+    "$oid": "68235df99cbf230e9edf362f"
+  },
+  "login": "CafeGreg",
+  "password": "123",
+  "recovery_email": "nathanmimoun2001@gmail.com"
+}]

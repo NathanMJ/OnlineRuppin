@@ -6,6 +6,7 @@ import { findProductById } from '../product/db.js';
 import { getIngredientById } from '../ingredient/db.js';
 import { getStatusByOrderId } from '../status/db.js';
 import { get } from 'http';
+import { getOrdersOfTable } from '../table/db.js';
 
 
 
@@ -18,13 +19,13 @@ export async function getOrderById(id) {
     const db = client.db(process.env.DB_NAME);
     let order = await db.collection("orders").findOne({ _id: id })
 
-
-
     const product = await findProductById(order.productId)
 
     //of product we need just img, name, price
 
-    const { img, name, price } = product
+    const { img, name, price, destination} = product
+    console.log(product);
+    
 
 
     if (order.sauces) {
@@ -53,16 +54,15 @@ export async function getOrderById(id) {
     if (order.changes) {
       const tempChanges = []
       for (const c of order.changes) {
-        const { ingredientId, change } = c;       
+        const { ingredientId, change } = c;
         const ingredient = await getIngredientById(ingredientId)
         const realChange = await db.collection('ingredient_changes').findOne({ _id: change })
-        console.log('change',ingredient);
         //get the price of the change or 0 if not exist
         const price = ingredient.changes.find(ch => ch._id == change)?.price || 0
-        
+
         delete ingredient.changes
 
-        tempChanges.push({ ...ingredient, change: realChange.change, price})
+        tempChanges.push({ ...ingredient, change: realChange.change, price })
       }
       order.changes = tempChanges
 
@@ -101,7 +101,7 @@ export async function getOrderById(id) {
     const status = await getStatusByOrderId(id)
 
 
-    return { ...order, img, name, price, status };
+    return { ...order, img, name, price, status, destination};
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;
@@ -206,9 +206,6 @@ export async function changeOrderStatusById(orderId, statusId) {
 export async function getPriceByOrderId(id) {
   let client = null
   try {
-    client = await MongoClient.connect(process.env.CONNECTION_STRING);
-
-    const db = client.db(process.env.DB_NAME);
 
     let order = await getOrderById(id)
 
@@ -219,7 +216,7 @@ export async function getPriceByOrderId(id) {
     //add the price of ingredients that have change for changes
     const changesPrice = order.changes?.reduce((sum, change) => sum + (change.price || 0), 0) || 0
 
-    return { price: order.price + addPrice + saladPrice + changesPrice}
+    return { price: order.price + addPrice + saladPrice + changesPrice }
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;
@@ -231,3 +228,152 @@ export async function getPriceByOrderId(id) {
   }
 }
 
+
+export async function getOrdersFromDestinationInDB(destinationId) {
+  let client = null
+  try {
+    client = await MongoClient.connect(process.env.CONNECTION_STRING);
+
+    const db = client.db(process.env.DB_NAME);
+
+    //get every orders of the tables
+    const tables = await db.collection('tables').find({}).toArray()
+    //get the orders with their status and destination
+    let everyTablesOrders = await Promise.all(
+      tables.map(async (table) => {
+        const orders = await getOrdersOfTable(table._id);
+        return { tableId: table._id, orders: orders.orders || [] };
+      })
+    );
+
+    //TODO: get only from destinationId
+
+    //get only the orders with the status between 1 and 3 included with destinationId
+    everyTablesOrders.map((t) => {
+      t.orders = t.orders.filter(o => 1 <= o.status._id && o.status._id <= 3 && o.destination == destinationId)
+    })
+
+    //clean every empty table
+    everyTablesOrders.filter(t => t.orders && Array.isArray(t.orders) && t.orders.length > 0)
+
+    //get the time of status ordered
+    const everyTableHistories = await Promise.all(
+      // 1. We map over the tables. This creates an array of Promises.
+      everyTablesOrders.map(async (t) => {
+
+        // 2. We create another array of Promises for the database lookups.
+        const orderHistoryPromises = t.orders.map(o => {
+          // 3. The query now correctly looks for status 1.
+          // Note: I'm assuming the status field is named 'statusId'. Adjust if needed.
+          return db.collection('order_status_history').findOne({
+            orderId: o._id,
+            code: 1 // This is the crucial missing part
+          });
+        });
+
+        // 4. We use Promise.all HERE to wait for all the inner database queries to finish.
+        const ordersWithStatus1 = await Promise.all(orderHistoryPromises);
+
+        // 5. We return the table's data, filtering out any null results
+        //    (in case an order didn't have a history record for status 1).
+        return { tableId: t.tableId, orders: ordersWithStatus1.filter(Boolean) };
+      })
+    );
+
+
+    // flat the orders 
+    const allOrders = everyTableHistories.flatMap(table =>
+      table.orders.map(order => ({
+        ...order,
+        tableId: table.tableId
+      }))
+    );
+
+    // sort according to the time 
+    allOrders.sort((a, b) => a.time.localeCompare(b.time));
+
+
+    //group the orders by table
+    const ordersGrouped = allOrders.reduce((acc, currentOrder) => {
+      if (acc.length == 0) {
+        const { orderId, tableId } = currentOrder;
+        return [{ tableId, orders: [orderId] }]
+      }
+      else {
+        const lastTableId = acc[acc.length - 1].tableId
+        const { orderId, tableId } = currentOrder
+        if (tableId == lastTableId) {
+          acc[acc.length - 1].orders.push(orderId)
+        }
+        else {
+          acc.push({ tableId, orders: [orderId] })
+        }
+        return acc
+      }
+
+    }, [])
+
+
+    //change the of id by the real order
+
+    const orderGroupedWithRealOrders = ordersGrouped.map((groupOfOrder) => {
+      //everyTablesOrders is the objet with the full orders  
+
+      const tableIdOfTheGroup = groupOfOrder.tableId
+
+      const tempTable = everyTablesOrders.find(t => t.tableId == tableIdOfTheGroup)
+
+      //change the ids of the table by the orders
+      const fullOrders = groupOfOrder.orders.reduce((acc, orderId) => {
+        const tempOrder = tempTable.orders.find(o => o._id == orderId)
+
+        acc.push(tempOrder)
+        return acc
+      }, [])
+
+      return { tableId: tableIdOfTheGroup, orders: fullOrders }
+    })
+
+
+
+    for (let table of orderGroupedWithRealOrders) {
+      for (let order of table.orders) {
+        /*3 options:
+          order : set the ordered_status and no preparation
+          in preparation : set the in preparation and get the ordered from the top
+          ready : get ordered and no preparation
+        */
+
+        if (order.status.code == 1) {
+          //order : set the ordered_status and no preparation
+          order.ordered_status_time = order.status.time
+        }
+        else if (order.status.code == 2) {
+          //in preparation : set the in preparation and get the ordered from the top
+          order.preparation_status_time = order.status.time
+
+          const orderedStatus = allOrders.find(o => o.orderId == order._id)
+          order.ordered_status_time = orderedStatus.time
+
+        }
+        else if (order.status.code == 3) {
+          //ready : get ordered and no preparation
+          const orderedStatus = allOrders.find(o => o.orderId == order._id)
+          order.ordered_status_time = orderedStatus.time
+          order.ready_status_time = order.status.time
+        }
+      }
+    }
+
+
+    return { orders: orderGroupedWithRealOrders }
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  }
+  finally {
+    if (client) {
+      client.close();
+    }
+  }
+}

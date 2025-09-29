@@ -1,49 +1,69 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import AskIdMsg from '../FComponents/AskIdMsg'
 import ReturnButton from "../FComponents/ReturnButton"
 import { useNavigate } from 'react-router-dom';
+import { useIdContext } from '../Contexts/askIdContext';
+import { getWorkerById } from '../connectToDB';
 
 export default function WorkMain(props) {
     const [show, setShow] = useState(false);
     const [destination, setDestination] = useState('')
     const navigate = useNavigate()
 
-    const goToWithId = () => {
+
+    const { getWorkerId } = useIdContext();
+
+    const gotAuthorization = (arrAuth, auth) => {
+        if (!arrAuth)
+            return
+        return arrAuth.some(a => a.name == auth)
+    }
+
+    const goToWithId = async () => {
         //TO DO : check if the id exist in the db
+        const id = await getWorkerId()
+
+        const worker = await getWorkerById(id)
+        console.log(worker);
+        if (!worker) {
+            setDestination('')
+            return
+        }
 
 
-        //TO DO : check if the id got the autorization to go to the space
+
         switch (destination) {
             case 'service':
-                if (true) {
-                    navigate('/toggleService', { state: { id: '345538268' } })
-                } else {
-
-                }
+                navigate('/toggleService', { state: { id } })
                 break;
             case 'bar':
-                alert("Bar side is not available yet")
+                if (worker.isBarman) {
+                    props.goto('/kitchenBarPreparation', { destinationId: 1 })
+                }
                 break;
             case 'kitchen':
-                alert("Kitchen side is not available yet")
+                if (worker.isChef) {
+                    props.goto('/kitchenBarPreparation', { destinationId: 0 })
+                }
                 break;
             case 'manager':
                 alert("Manager side is not available yet")
                 break;
         }
+        setDestination('')
+
     }
+
+    useEffect(() => {
+        if (destination != '') {
+            goToWithId()
+        }
+        console.log(destination);
+
+    }, [destination])
 
     const clickOnField = (field) => {
         setDestination(field)
-        showMsg()
-    }
-
-    const showMsg = () => {
-        setShow(true);
-    }
-
-    const hideMsg = () => {
-        setShow(false);
     }
 
 
@@ -66,7 +86,6 @@ export default function WorkMain(props) {
                 onClick={() => clickOnField('manager')}>
                 <h3>Manager side</h3></div>
             <ReturnButton returnButton={returnButton} bottom={'3vh'} left={'3vh'} />
-            <AskIdMsg exec={goToWithId} showMsg={() => setShow(true)} hideMsg={() => setShow(false)} show={show}></AskIdMsg>
         </div>
     )
 }

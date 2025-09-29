@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get_product } from "../tempDB";
 import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
 import FCSaladsProduct from "../FComponents/FCSaladsProduct.jsx";
 import FCSaucesProduct from "../FComponents/FCSaucesProduct.jsx";
@@ -9,8 +8,7 @@ import { getProduct, sendOrder } from "../connectToDB.js"
 
 export default function ProductPage(props) {
 
-
-    //TODO : if we are from the history get the change if we got
+    //TODO: if we are from history get the history details and return them to get same when return
 
     const location = useLocation();
     const { productId, tableId, sectionId, sendedOrder } = location.state;
@@ -104,9 +102,9 @@ export default function ProductPage(props) {
 
 
     const addSauce = (sauceId) => {
-        
+
         const exist = selectedSauces.find(sauce => sauce.id === sauceId)
-        
+
         //if the sauce is already in selectedSauces use changeQuantitySauce(sauceId, '+')
         if (exist) {
             changeQuantitySauce(sauceId, '+')
@@ -119,8 +117,10 @@ export default function ProductPage(props) {
     }
 
     const changeQuantitySauce = (sauceId, mark) => {
+        console.log('sauceId', sauceId, mark);
+        console.log(selectedSauces);
 
-        const indexSauce = selectedSauces.findIndex(sauce => sauce.id == sauceId)
+        const indexSauce = selectedSauces.findIndex(sauce => sauce._id == sauceId)
 
         if (indexSauce == null) {
             return
@@ -152,7 +152,6 @@ export default function ProductPage(props) {
     const addAnIngredient = (indexAddIngredient) => {
         const addedIngredient = product.adds[indexAddIngredient]
         //check if the ingredient is already added
-        console.log('added', addedIngredient);
 
         if (addedIngredients.some(ingredientId => ingredientId === addedIngredient._id)) {
             return
@@ -165,8 +164,6 @@ export default function ProductPage(props) {
         const newAddedIngredients = addedIngredients.filter(ing => ing != id)
         setAddedIngredients(newAddedIngredients)
     }
-
-    console.log(product);
 
 
     return (
@@ -186,12 +183,12 @@ export default function ProductPage(props) {
             <div className="rightPage">
                 <div className="contentProduct">
 
-                    <h1 className="title">Ingredients</h1>
+                    <h1 className="title">Changes details</h1>
                     {product.ingredients.map(ingredient => (
                         <FCChangeIngredient change={changeIngredient} ingredient={ingredient} changeChosen={changes.find(c => c.ingredientId == ingredient._id)?.change} key={ingredient._id} />
                     ))}
                     {product.adds && <FCAddIngredients addedIngredients={addedIngredients} addAnIngredient={addAnIngredient} removeAnAddedIngredient={removeAnAddedIngredient} adds={product.adds} />}
-                    <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />
+                    {product.sauces.length > 0 && <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />}
                     {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad} /> : ''}
 
 

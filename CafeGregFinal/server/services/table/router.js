@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
     addTable, getAllTables, getTable, addOrder, getOrders,
     getCustomersOfTable, getPriceOfTable, removeTable, changeStatus,
-    payTable
+    payTable,
+    switchTables
 } from './controller.js';
 
 function logger(req, res, next) {
@@ -24,6 +25,7 @@ tableRouter
     .post('/:id/payTable/:tipValue', logger, payTable)
     .post('/:id/status/:statusId', logger, changeStatus)
     .post('/:id/order', logger, addOrder)
+    .post('/:id/switchWith/:id2', logger, switchTables)
     .delete('/:id/delete', logger, removeTable)
 
 export default tableRouter;

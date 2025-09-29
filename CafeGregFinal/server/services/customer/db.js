@@ -189,7 +189,7 @@ export async function disconnectInDB(id) {
 }
 
 export async function getHistoryFromDB(customers, date1, date2) {
-    
+
     let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -199,57 +199,52 @@ export async function getHistoryFromDB(customers, date1, date2) {
             return { orders: [] };
         }
 
-        // Récupérer l'historique des commandes pour les clients
-        let history = await db.collection('customers_order_history').find({ 
-            customers: { $all: customers } 
+        // Get history from the database
+        let history = await db.collection('customers_order_history').find({
+            customers: { $all: customers }
         }).toArray();
 
-        // Filtrage par date(s)
+        // Filter by date(s)
         if (date1 && !date2) {
-            // Une seule date - filtrer pour ce jour exact
+            // one date - filter for that specific date
             const d1 = new Date(date1);
-            
+
             if (isNaN(d1.getTime())) {
                 console.error('Date invalide:', date1);
                 return { orders: [] };
             }
-            
+
             history = history.filter(order => {
                 const orderDate = new Date(order.date);
                 return orderDate.toDateString() === d1.toDateString();
             });
         }
         else if (date1 && date2) {
-            // Deux dates - filtrer entre les deux (incluses)
+            // two dates - filter for the range (inclusive)
             const d1 = new Date(date1);
             const d2 = new Date(date2);
-            
+
             if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
                 console.error('Date(s) invalide(s):', date1, date2);
                 return { orders: [] };
             }
-            
-            // S'assurer que startDate <= endDate
             const startDate = d1 <= d2 ? d1 : d2;
             const endDate = d1 <= d2 ? d2 : d1;
-            
+
             history = history.filter(order => {
                 const orderDate = new Date(order.date);
-                // ✅ Utiliser getTime() pour une comparaison correcte
-                return orderDate.getTime() >= startDate.getTime() && 
-                       orderDate.getTime() <= endDate.getTime();
+                return orderDate.getTime() >= startDate.getTime() &&
+                    orderDate.getTime() <= endDate.getTime();
             });
         }
-
-        // Si aucune commande trouvée après filtrage
+        // If no history found, return empty orders
         if (history.length === 0) {
             return { orders: [] };
         }
 
-        
-        // Récupérer toutes les commandes détaillées
+        // Extract all order IDs from the history
         let allOrders = [];
-        
+
         for (const historyItem of history) {
             const tempOrders = historyItem.orders;
             try {
@@ -258,14 +253,11 @@ export async function getHistoryFromDB(customers, date1, date2) {
                         return await getOrderById(orderId);
                     })
                 );
-                // Aplatir directement dans allOrders
                 allOrders.push(...orders);
             } catch (error) {
                 console.error(`Erreur lors de la récupération des commandes pour ${historyItem._id}:`, error);
-                // Continuer avec les autres items même si celui-ci échoue
             }
         }
-
         return { orders: allOrders };
 
     } catch (error) {

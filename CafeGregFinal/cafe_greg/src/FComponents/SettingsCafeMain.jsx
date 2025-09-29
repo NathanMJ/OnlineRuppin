@@ -1,6 +1,6 @@
-import React from 'react'
 
 export default function SettingsCafeMain(props) {
+
 
     if (!props.show) {
         return

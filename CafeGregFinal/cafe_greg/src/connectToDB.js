@@ -1,6 +1,7 @@
 const serverUrl = 'http://localhost:5500/api'
 
-export async function getTables() {
+export async function getTables() {    
+
     try {
         const response = await fetch(`${serverUrl}/table`)
 
@@ -9,6 +10,8 @@ export async function getTables() {
         }
 
         const tables = await response.json()
+        console.log(tables);
+        
         return tables
     } catch (error) {
         console.error('Error fetching tables:', error)
@@ -287,6 +290,35 @@ export async function getHistoryOfCustomers(customers, date1, date2) {
 }
 
 
+export async function callAPI(api, method, body) {
+    try {
+        const response = await fetch(`${serverUrl}/${api}`, {
+            method,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+        // Transformer la réponse en JSON
+        const data = await response.json();
+        return data
+    } catch (error) {
+        console.error("Erreur réseau :", error);
+    }
+}
 
 
+export async function switchTables(tableId1, tableId2){
+    await callAPI(`table/${tableId1}/switchWith/${tableId2}`,'POST')
+}
 
+
+export async function getOrdersFromDestionation(destinationId) {
+    return await callAPI(`order/fromDestination/${destinationId}`, 'GET')
+}
+
+export async function getWorkerById(workerId) {
+    return await callAPI(`worker/${workerId}`)
+}
+
+export async function connectToWebsite(login, password) {
+    return await callAPI(`website/connect`, 'POST', { login, password })
+}

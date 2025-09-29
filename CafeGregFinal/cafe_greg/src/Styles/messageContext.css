@@ -1,0 +1,277 @@
+/* Container principal des messages */
+.messagesContextContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+/* Message de base */
+.message {
+  position: relative;
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.3s ease;
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  animation: messageSlideIn 0.4s ease-out forwards;
+}
+
+/* Animation d'entrée */
+@keyframes messageSlideIn {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Animation de sortie */
+.message.removing {
+  animation: messageSlideOut 0.3s ease-in forwards;
+}
+
+@keyframes messageSlideOut {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Effet hover */
+.message:hover {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* Barre latérale colorée */
+.message::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--message-color, #3b82f6);
+  border-radius: 2px 0 0 2px;
+}
+
+/* Icône */
+.message::after {
+  content: var(--message-icon, 'ℹ️');
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--message-color, #3b82f6);
+}
+
+/* Texte du message */
+.message .text {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  margin: 0;
+  color: #374151;
+  word-wrap: break-word;
+}
+
+/* Bouton de fermeture */
+.message .remover {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.message .remover:hover {
+  background: #f3f4f6;
+  color: #374151;
+  transform: scale(1.05);
+}
+
+.message .remover:active {
+  transform: scale(0.95);
+}
+
+/* Types de messages */
+
+/* Success - Vert clair */
+.message.success {
+  --message-color: #10b981;
+  --message-icon: '✅';
+  background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+  border-color: #bbf7d0;
+}
+
+.message.success .text {
+  color: #065f46;
+}
+
+.message.success .remover {
+  background: #dcfce7;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.message.success .remover:hover {
+  background: #bbf7d0;
+}
+
+/* Error - Rouge clair */
+.message.error {
+  --message-color: #ef4444;
+  --message-icon: '❌';
+  background: linear-gradient(135deg, #fef2f2 0%, #fef2f2 100%);
+  border-color: #fecaca;
+}
+
+.message.error .text {
+  color: #991b1b;
+}
+
+.message.error .remover {
+  background: #fee2e2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.message.error .remover:hover {
+  background: #fecaca;
+}
+
+/* Warning - Orange clair */
+.message.warning {
+  --message-color: #f59e0b;
+  --message-icon: '⚠️';
+  background: linear-gradient(135deg, #fffbeb 0%, #fefce8 100%);
+  border-color: #fed7aa;
+}
+
+.message.warning .text {
+  color: #92400e;
+}
+
+.message.warning .remover {
+  background: #fef3c7;
+  border-color: #fed7aa;
+  color: #d97706;
+}
+
+.message.warning .remover:hover {
+  background: #fed7aa;
+}
+
+/* Info - Bleu clair */
+.message.info {
+  --message-color: #3b82f6;
+  --message-icon: 'ℹ️';
+  background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+  border-color: #bfdbfe;
+}
+
+.message.info .text {
+  color: #1e40af;
+}
+
+.message.info .remover {
+  background: #dbeafe;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+.message.info .remover:hover {
+  background: #bfdbfe;
+}
+
+/* Barre de progression */
+.message .progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--message-color);
+  opacity: 0.3;
+  border-radius: 0 0 12px 12px;
+  transform-origin: left;
+  animation: progressCountdown linear;
+}
+
+@keyframes progressCountdown {
+  0% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .messagesContextContainer {
+    right: 12px;
+    left: 12px;
+    max-width: none;
+    top: 12px;
+  }
+  
+  .message {
+    padding: 14px 16px;
+  }
+  
+  .message .text {
+    font-size: 13px;
+  }
+}
+
+/* Animation en cascade */
+.messagesContextContainer .message:nth-child(1) { animation-delay: 0s; }
+.messagesContextContainer .message:nth-child(2) { animation-delay: 0.1s; }
+.messagesContextContainer .message:nth-child(3) { animation-delay: 0.2s; }
+.messagesContextContainer .message:nth-child(4) { animation-delay: 0.3s; }
+.messagesContextContainer .message:nth-child(5) { animation-delay: 0.4s; }

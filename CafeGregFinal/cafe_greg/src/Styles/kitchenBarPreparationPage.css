@@ -1,0 +1,199 @@
+.kitchenBarPreparationPage {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+
+
+    .receiveTime {
+        background-color: green;
+    }
+
+    .preparationTime {
+        background-color: orange;
+    }
+
+    .readyTime {
+        background-color: cyan;
+    }
+
+    header {
+        background-color: rgb(130, 155, 123);
+        display: flex;
+        flex-direction: row;
+        font-size: 30px;
+        gap: 20px;
+        padding: 10px;
+
+        p{
+            padding: 5px;
+            border-radius: 3px;
+        }
+    }
+
+    .ordersSide {
+        flex: 1;
+        background-color: rgb(36, 65, 46);
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding: 20px;
+        overflow-Y: auto;
+        overflow-X: hidden;
+
+        .table {
+            background-color: rgb(207, 238, 204);
+            border: 5px rgb(7, 24, 7) solid;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            .numberOfTheTable {
+                text-align: center;
+                width: fit-content;
+                padding: 10px;
+                background-color: red;
+                border: black solid 3px;
+                font-size: 30px;
+                color: white;
+                font-weight: 800;
+
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                z-index: 5;
+                border-radius: 0px 0px 0px 30px;
+            }
+
+            .orders {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 10px;
+
+                .order {
+                    border-radius: 4px;
+                    background-color: white;
+                    flex: 0 0 500px;
+                    padding-block: 20px;
+                    position: relative;
+                    margin-bottom: 40px;
+                    height: fit-content;
+                    box-shadow: rgba(0, 0, 0, 0.432) 15px 15px 20px;
+
+                    .headerOrder {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        gap: 10px;
+
+                        .name {
+                            font-size: 40px;
+                            text-align: center;
+                        }
+
+                        .pictureOfMeal {
+                            background-color: aliceblue;
+                            width: 100%;
+                            height: 200px;
+                            object-fit: cover;
+                            object-position: center;
+
+                        }
+
+                        .pictureOfLogo {
+                            background-color: aliceblue;
+                            width: 50px;
+
+                        }
+                    }
+
+                    .ingredients {
+                        display: flex;
+                        font-size: 20px;
+                        padding: 10px;
+                        gap: 5px;
+
+                        div {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 4px;
+                        }
+
+                        h1 {
+                            padding-bottom: 10px;
+                        }
+
+                        p {
+                            background-color: aliceblue;
+                            border: 1px black solid;
+                            padding: 2px;
+                        }
+                    }
+
+                    .footer {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: space-around;
+                        font-size: 30px;
+                        position: absolute;
+                        width: 100%;
+                        z-index: 30;
+
+                        .timer {
+                            padding: 5px;
+                            border-radius: 4px;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
+
+                        .statusContainer {
+                            position: relative;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+
+                            .status {
+                                border-radius: 4px;
+                                padding: 10px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                cursor: pointer;
+                            }
+
+                            .statusSelection {
+                                border: black 5px solid;
+                                background-color: rgb(0, 0, 0);
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                                gap: 1px;
+                                font-size: 30px;
+                                position: absolute;
+                                bottom: 100%;
+
+
+                                p {
+                                    padding: 3px;
+                                    width: 100%;
+                                    text-align: center;
+                                    background-color: white;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

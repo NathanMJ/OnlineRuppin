@@ -10,7 +10,8 @@
 }
 
 .loginWebsite h1{
-    padding: 2vh
+    padding: 2vh;
+    font-size: 40px;
 }
 
 .loginWebsite div:first-of-type{
@@ -36,12 +37,14 @@
     font-size: calc(var(--font-size-h1)/4);
 }
 
-.answer{
+.loginWebsite .answer{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 10px;
+    font-size: 30px;
+    color: red;
 }
 
 .loginWebsite .loadingImg{

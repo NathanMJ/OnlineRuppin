@@ -35,7 +35,7 @@ export default function FCSaucesProduct(props) {
 
     }
 
-    const clickOnASauce = (sauceId) => {
+    const clickOnASauce = (sauceId) => {       
         props.addSauce(sauceId)
         setShowSauces(false)
     }

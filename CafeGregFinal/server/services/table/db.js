@@ -323,3 +323,53 @@ export async function payInDB(id, tipValue) {
 }
 
 
+export async function switchTablesInDB(tableId, tableId2) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+
+        //get the firstTable
+
+        let table1 = await db.collection('tables').findOne({ _id: tableId })
+        if (!table1) {
+            table1 = { _id: tableId }
+        }
+        else {
+            await db.collection('tables').deleteOne({ _id: tableId })
+        }
+
+        //get the secondTable
+
+        let table2 = await db.collection('tables').findOne({ _id: tableId2 })
+        if (!table2) {
+            table2 = { _id: tableId2 }
+        }
+        else {
+            await db.collection('tables').deleteOne({ _id: tableId2 })
+        }
+
+
+        //switch the ids
+        table1._id = tableId2
+        table2._id = tableId
+
+        //insert the new ones
+
+        await db.collection('tables').insertMany(
+            [table1, table2]
+        )
+
+
+        return { success: true, message: `Tables ${tableId} and ${tableId2} were switched` };
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}

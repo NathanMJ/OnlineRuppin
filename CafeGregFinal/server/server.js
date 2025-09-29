@@ -9,6 +9,8 @@ import ingredientRouter from './services/ingredient/router.js';
 import orderRouter from './services/order/router.js';
 import sectionRouter from './services/section/router.js';
 import statusRouter from './services/status/router.js';
+import workerRouter from './services/worker/router.js';
+import websiteRouter from './services/website/router.js';
 
 //set server port
 const PORT = process.env.PORT || 5500
@@ -33,6 +35,8 @@ server.use('/api/ingredient', ingredientRouter)
 server.use('/api/order', orderRouter)
 server.use('/api/section', sectionRouter)
 server.use('/api/status', statusRouter)
+server.use('/api/worker', workerRouter)
+server.use('/api/website', websiteRouter)
 
 
 
