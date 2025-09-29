@@ -11,7 +11,11 @@ export default function ProductPage(props) {
     //TODO: if we are from history get the history details and return them to get same when return
 
     const location = useLocation();
-    const { productId, tableId, sectionId, sendedOrder } = location.state;
+    const { productId, tableId, sectionId, sendedOrder, researchSettings} = location.state;
+
+    if(researchSettings){
+        console.log('researchSettings', researchSettings);
+    }
 
     const [product, setProduct] = useState(null)
 
@@ -24,8 +28,6 @@ export default function ProductPage(props) {
     const [addedIngredients, setAddedIngredients] = useState(sendedOrder?.adds || [])
 
     const [changes, setChanges] = useState(sendedOrder?.changes || [])
-
-    const navigate = useNavigate()
 
     const changeIngredient = (ingredientId, newChange) => {
 
@@ -67,7 +69,7 @@ export default function ProductPage(props) {
             props.goto('/menu', { tableId, sectionId })
         }
         else {
-            navigate(-1)
+            props.goto('/customerHistory', {researchSettings, tableId})
         }
 
     }

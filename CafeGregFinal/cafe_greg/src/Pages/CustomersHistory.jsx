@@ -5,41 +5,55 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import ReturnButton from "../FComponents/ReturnButton";
-import { getHistoryOfCustomers } from "../connectToDB";
+import { getCustomersFromTable, getHistoryOfCustomers } from "../connectToDB";
 
 export default function CustomersHistory(props) {
 
     const location = useLocation()
     const navigate = useNavigate();
 
-    const { customers, tableId } = location.state
+    const { tableId, researchSettings } = location.state
+    const [customers, setCustomers] = useState([])
+
+    useEffect(() => {
+        //fetch customers from the server
+        const tempCustomer = async () => {
+            getCustomersFromTable(tableId).then(data => {
+                if (data && Array.isArray(data)) {
+                    setCustomers(data)
+                }
+            })
+        }
+        tempCustomer()
+    }, [tableId])
+
+    if (researchSettings) {
+        console.log('researchSettings', researchSettings);
+    }
 
     //Customers filter is the id of the customer for filter
-    const [customersFilter, setCustomersFilter] = useState([])
+    const [customersFilter, setCustomersFilter] = useState(researchSettings?.customersFilter || [])
 
-    const [datesFilter, setDatesFilter] = useState({})
+    const [datesFilter, setDatesFilter] = useState(researchSettings?.datesFilter || {})
     const [orders, setOrders] = useState([])
 
     const fetchOrders = async () => {
         //fetch the orders from the server
-
         getHistoryOfCustomers(customersFilter, datesFilter.date1, datesFilter.date2).then(data => {
-            if (data && Array.isArray(data)) {               
+            if (data && Array.isArray(data)) {
                 setOrders(data)
-                
             }
         })
     }
 
     useEffect(() => {
         fetchOrders()
+        console.log('customersFilter', { datesFilter, customersFilter });
     }, [datesFilter, customersFilter]);
-
 
     useEffect(() => {
         console.log('orders', orders);
-    }, [orders])
-
+    }, [orders]);
 
 
     const clickOnCustomer = (id) => {
@@ -91,8 +105,8 @@ export default function CustomersHistory(props) {
                     <div className="customers">
 
                         {customers.map((customer, index) => (
-                            <div className={`customer ${customersFilter.includes(customer._id) ? 'selected' : 'notSelected'}`} 
-                            onClick={() => clickOnCustomer(customer._id)} key={index}>
+                            <div className={`customer ${customersFilter.includes(customer._id) ? 'selected' : 'notSelected'}`}
+                                onClick={() => clickOnCustomer(customer._id)} key={index}>
                                 <h1>{customer.name}</h1>
                             </div>
                         ))}
@@ -200,26 +214,27 @@ export default function CustomersHistory(props) {
             <div className="historySide">
                 <div className="header">
                     <h1>History</h1>
-                    {customersFilter?.length > 0 && <h2>In common of : {customersFilter.map((customer, index) => {
-                        return (customers.find(c => c._id == customer).name + (index < customersFilter.length - 1 ? ', ' : ''))
-                    })}</h2>}
+                    {customersFilter?.length > 0 && <h2>In common of : {customersFilter?.length > 0 && <h2>In common of : {customersFilter.map((customer, index) => {
+    const foundCustomer = customers.find(c => c._id == customer);
+    return foundCustomer ? (foundCustomer.name + (index < customersFilter.length - 1 ? ', ' : '')) : '';
+})}</h2>}</h2>}
                     {datesFilter.date1 && (
                         datesFilter.date2 ?
                             <h2>
-                                Between the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')} and {new 
-                                Date(datesFilter.date2).toLocaleDateString('fr-FR')}
+                                Between the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')} and {new
+                                    Date(datesFilter.date2).toLocaleDateString('fr-FR')}
                             </h2>
                             : <h2>
                                 At the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')}
                             </h2>
                     )}
 
-                    <ReturnButton top={'3vh'} right={'3vh'} returnButton={() => navigate(-1)}></ReturnButton>
+                    <ReturnButton top={'3vh'} right={'3vh'} returnButton={() => props.goto('/customerRegisterLogin', {tableId})}></ReturnButton>
 
                 </div>
                 <div className="orders">
                     {orders.map((order, index) => (
-                        <FCHistoryOrder key={index} order={order} goto={props.goto} tableId={tableId} />
+                        <FCHistoryOrder key={index} order={order} goto={props.goto} tableId={tableId} researchSettings={{ customersFilter, datesFilter }} />
                     ))}
                 </div>
             </div>

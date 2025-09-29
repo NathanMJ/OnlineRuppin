@@ -2,16 +2,15 @@
 export default function FCHistoryOrder(props) {
 
     const goToOrderPage = (withChanges) => {
-        //TODO : go to product page
         if (withChanges) {
             if(!props.order.changes){
                 alert('No changes detected')
                 return
             }
-            props.goto('/productPage', { productId: props.order.productId, tableId: props.tableId, sendedOrder: props.order });
+            props.goto('/productPage', { productId: props.order.productId, tableId: props.tableId, sendedOrder: props.order, researchSettings: props.researchSettings } );
         }
         else {
-            props.goto('/productPage', { productId: props.order.productId, tableId: props.tableId });
+            props.goto('/productPage', { productId: props.order.productId, tableId: props.tableId, researchSettings: props.researchSettings});
         }
     }
 
