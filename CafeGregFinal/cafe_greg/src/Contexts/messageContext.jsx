@@ -18,6 +18,8 @@ export const MessageProvider = ({ children }) => {
     const timeoutsRef = useRef(new Map());
 
     const addMessage = (text, type = 'info', duration = 5000) => {
+        console.log("Adding message:", text, type, duration);
+        
         const id = Date.now() + Math.random();
         const newMessage = { id, text, type };
 
@@ -65,7 +67,7 @@ export const MessageProvider = ({ children }) => {
                     {messages.map(message => (
                         <div
                             key={message.id}
-                            className={`message ${getMessageStyle(message.type)}`}
+                            className={`message ${message.type}`}
                         >
                             <p className="text">{message.text}</p>
                             <button
@@ -84,6 +86,8 @@ export const MessageProvider = ({ children }) => {
 
 // Fonction helper pour les styles
 const getMessageStyle = (type) => {
+    console.log(type);
+    
     switch (type) {
         case 'success':
             return 'bg-green-50 border-green-500 text-green-800';

@@ -60,6 +60,29 @@ export default function CafeMain(props) {
 
     const [tableSwitch, setTableSwitch] = useState()
 
+    useEffect(() => {
+        //set a message according to the mode
+        switch (clickOnTableMode) {
+            case 'switchTables':
+                addMessage("Select the first table to switch with", "info", 5000)
+                break
+            case 'switchTable2':
+                addMessage("Select the second table to switch with", "info", 5000)
+                break
+            case 'removeATable':
+                addMessage("Select the table to remove", "info", 5000)
+                break
+            case 'removeAnOrder':
+                break
+            case 'checkTable':
+                addMessage("The table has been checked", "info", 5000)
+                break
+            case 'reduction':
+                break
+        }
+    }, [clickOnTableMode])
+
+
     const clickOnTable = async (id) => {
         //TODO: make the real function of each one
         switch (clickOnTableMode) {
@@ -79,6 +102,7 @@ export default function CafeMain(props) {
             case 'switchTable2':
                 await switchTables(tableSwitch, id)
                 fetchAndCompare()
+                addMessage(`Tables have been switched`, "success", 5000)
                 break
             case 'removeATable':
                 await deleteTableDB(id)
@@ -113,15 +137,18 @@ export default function CafeMain(props) {
     const openSetting = async () => {
         addMessage("Enter your ID to access settings", "info", 3000)
         const id = await getWorkerId("Enter your ID:");
+
         if (id) {
             const worker = await getWorkerById(id);
-            console.log(worker);
 
             const isManager = worker?.isManager || false;
             const isWaiter = worker?.isWaiter || false;
 
             if (isManager || isWaiter) {
                 setShowSettings({ show: true, isManager });
+            }
+            else {
+                addMessage("You are not authorized to access settings", "warning", 5000);
             }
         }
     };

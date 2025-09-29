@@ -1,0 +1,32 @@
+[{
+  "_id": 0,
+  "change": "without"
+},
+{
+  "_id": 1,
+  "change": "with"
+},
+{
+  "_id": 2,
+  "change": "a lot of"
+},
+{
+  "_id": 3,
+  "change": "aside"
+},
+{
+  "_id": 4,
+  "change": "omelette"
+},
+{
+  "_id": 5,
+  "change": "hard-boiled egg"
+},
+{
+  "_id": 6,
+  "change": "sunny-side-up egg"
+},
+{
+  "_id": 7,
+  "change": "poached eggs"
+}]

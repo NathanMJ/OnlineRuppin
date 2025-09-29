@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
+import { useMessageContext } from './messageContext.jsx';
 
 // Créer le contexte
 const IdContext = createContext();
+
+
 
 // Hook personnalisé pour utiliser le contexte
 export const useIdContext = () => {
@@ -14,6 +17,8 @@ export const useIdContext = () => {
 
 // Provider du contexte
 export const IdProvider = ({ children }) => {
+  const { addMessage } = useMessageContext();
+
   const askIdRef = useRef(null);
   const [askIdContainer, setAskIdContainer] = useState({
     show: false,
@@ -39,6 +44,7 @@ export const IdProvider = ({ children }) => {
 
   const cancel = async () => {
     if (askIdRef.current) {
+      addMessage("ID entry cancelled", "info", 3000);
       askIdRef.current.reject(new Error('User cancelled ID entry'));
       setAskIdContainer({ show: false, id: '', title: '' });
       askIdRef.current = null;
@@ -64,7 +70,7 @@ export const IdProvider = ({ children }) => {
   return (
     <IdContext.Provider value={value}>
       {children}
-      
+
       {/* Modal global */}
       {askIdContainer.show && (
         <div className="modal-overlay">

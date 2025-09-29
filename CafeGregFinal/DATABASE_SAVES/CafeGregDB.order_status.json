@@ -1,0 +1,36 @@
+[{
+  "_id": 0,
+  "status": "pending",
+  "background_color": "red",
+  "color": "white"
+},
+{
+  "_id": 1,
+  "status": "ordered",
+  "background_color": "green",
+  "color": "white"
+},
+{
+  "_id": 2,
+  "status": "in preparation",
+  "background_color": "orange",
+  "color": "white"
+},
+{
+  "_id": 3,
+  "status": "ready",
+  "background_color": "cyan",
+  "color": "black"
+},
+{
+  "_id": 4,
+  "status": "sended",
+  "background_color": "white",
+  "color": "black"
+},
+{
+  "_id": 5,
+  "status": "received",
+  "background_color": "green",
+  "color": "white"
+}]
