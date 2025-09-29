@@ -30,24 +30,21 @@ export default function WorkMain(props) {
             return
         }
 
-        console.log(worker.authorizations, destination);
-        
 
-        if (destination != 'service' && !gotAuthorization(worker.authorizations, destination)) {
-            console.log('doesnt have the aut for ', destination);
-            setDestination('')
-            return
-        }
 
         switch (destination) {
             case 'service':
                 navigate('/toggleService', { state: { id } })
                 break;
             case 'bar':
-                props.goto('/kitchenBarPreparation', { destinationId: 1 })
+                if (worker.isBarman) {
+                    props.goto('/kitchenBarPreparation', { destinationId: 1 })
+                }
                 break;
             case 'kitchen':
-                props.goto('/kitchenBarPreparation', { destinationId: 0 })
+                if (worker.isChef) {
+                    props.goto('/kitchenBarPreparation', { destinationId: 0 })
+                }
                 break;
             case 'manager':
                 alert("Manager side is not available yet")

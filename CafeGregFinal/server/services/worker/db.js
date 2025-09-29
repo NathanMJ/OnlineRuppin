@@ -27,7 +27,6 @@ export async function getWorkerFromDB(id) {
             }
         ]).toArray();
 
-        console.log(worker);
         
         if(worker.length > 0)
             worker = worker[0]

@@ -12,7 +12,6 @@ export default function CustomersHistory(props) {
     const location = useLocation()
     const navigate = useNavigate();
 
-
     const { customers, tableId } = location.state
 
     //Customers filter is the id of the customer for filter
@@ -92,7 +91,8 @@ export default function CustomersHistory(props) {
                     <div className="customers">
 
                         {customers.map((customer, index) => (
-                            <div className={`customer ${customersFilter.includes(customer._id) ? 'selected' : 'notSelected'}`} onClick={() => clickOnCustomer(customer._id)} key={index}>
+                            <div className={`customer ${customersFilter.includes(customer._id) ? 'selected' : 'notSelected'}`} 
+                            onClick={() => clickOnCustomer(customer._id)} key={index}>
                                 <h1>{customer.name}</h1>
                             </div>
                         ))}
@@ -206,7 +206,8 @@ export default function CustomersHistory(props) {
                     {datesFilter.date1 && (
                         datesFilter.date2 ?
                             <h2>
-                                Between the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')} and {new Date(datesFilter.date2).toLocaleDateString('fr-FR')}
+                                Between the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')} and {new 
+                                Date(datesFilter.date2).toLocaleDateString('fr-FR')}
                             </h2>
                             : <h2>
                                 At the date {new Date(datesFilter.date1).toLocaleDateString('fr-FR')}

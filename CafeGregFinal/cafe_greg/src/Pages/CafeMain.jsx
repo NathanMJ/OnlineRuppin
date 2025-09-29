@@ -3,8 +3,12 @@ import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
 import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, getWorkerById, payTableInDB, switchTables } from "../connectToDB.js"
+import { useMessageContext } from "../Contexts/messageContext.jsx";
 
 export default function CafeMain(props) {
+
+    const { addMessage } = useMessageContext();
+
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
 
     const { getWorkerId } = useIdContext();
@@ -45,7 +49,7 @@ export default function CafeMain(props) {
 
 
     const getAskLogo = (statusCode) => {
-        //TODO: if no status code is here maybe think the status like thinking, waiting for order, etc...     
+        //if no status code is here maybe think the status like thinking, waiting for order, etc...     
         switch (statusCode) {
             case 1:
                 return <img className="askLogo" src="/Pictures/Hand-up.png" />
@@ -66,7 +70,6 @@ export default function CafeMain(props) {
                 //get the total price of the table from the db
                 const totalPrice = await getPriceOfTable(id)
                 console.log('total price of the table ', totalPrice);
-
                 openTip(totalPrice, id)
                 break
             case 'switchTables':
@@ -108,6 +111,7 @@ export default function CafeMain(props) {
 
 
     const openSetting = async () => {
+        addMessage("Enter your ID to access settings", "info", 3000)
         const id = await getWorkerId("Enter your ID:");
         if (id) {
             const worker = await getWorkerById(id);
@@ -135,13 +139,12 @@ export default function CafeMain(props) {
         const id = await getWorkerId("Enter your ID:");
         //if id is correct set the value of the table to next value free
         //TODO: take the value from the database
-        const nextValue = 4
+        const nextValue = 1
         setAddTablePannel({ show: true, value: nextValue })
     }
 
 
     const addTable = async () => {
-        //TODO: check if the table already exist
         const exist = false
         if (!exist) {
             //create the table and go to the page with the id of the table
@@ -158,7 +161,6 @@ export default function CafeMain(props) {
             }
         }
         else {
-            //TODO: message of "table already exist"
             console.log('table already exist');
 
         }

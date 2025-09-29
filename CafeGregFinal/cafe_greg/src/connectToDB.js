@@ -318,3 +318,7 @@ export async function getOrdersFromDestionation(destinationId) {
 export async function getWorkerById(workerId) {
     return await callAPI(`worker/${workerId}`)
 }
+
+export async function connectToWebsite(login, password) {
+    return await callAPI(`website/connect`, 'POST', { login, password })
+}

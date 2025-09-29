@@ -15,5 +15,5 @@
     position: fixed;
     bottom: 10px;
     left: 10px;
-    background-color: blue;
+    background-color: rgba(0, 0, 255, 0);
 }
