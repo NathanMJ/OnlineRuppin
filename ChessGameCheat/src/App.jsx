@@ -43,10 +43,10 @@ function App() {
 
   const [currentGame, setCurrentGame] = useState({
     pawns: [
-      { name: 'queen', x: 5, y: 5, color: 'black' },
-      { name: 'rook', x: 2, y: 5, color: 'white' },
-      { name: 'king', x: 1, y: 5, color: 'white' },
-      { name: 'king', x: 5, y: 6, color: 'black' }
+      { name: 'rook', x: 3, y: 5, color: 'white' },
+      { name: 'king', x: 0, y: 5, color: 'white' },
+      { name: 'king', x: 0, y: 7, color: 'black' },
+      { name: "bishop", x: 5, y: 4, color: 'black'}
     ],
     turn: 'white',
     winner: null
@@ -122,10 +122,6 @@ function App() {
 
   const myColor = 'white'
 
-  useEffect(() => {
-    console.log(currentGame);
-  }, [currentGame])
-
   const arrows = [
     {
       start: { x: 0, y: 0 },
@@ -134,10 +130,13 @@ function App() {
   ]
 
 
+  const colors = [
+    'white', 'black'
+  ]
 
   return (
     <div className='mainPage'>
-      <h1 className='turn'>{currentGame.winner ? `${currentGame.winner} won !` : `${currentGame.turn == 'white' ? 'White' : 'Black'} turn`}</h1>
+      <h1 className='turn'>{currentGame.winner ? currentGame.winner == 'draw' ? 'Draw' : `${currentGame.winner} won !` : `${currentGame.turn == 'white' ? 'White' : 'Black'} turn`}</h1>
 
       <FCGame
         sizeSquare={sizeSquare}
