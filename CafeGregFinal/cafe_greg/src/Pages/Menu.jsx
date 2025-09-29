@@ -5,10 +5,12 @@ import { products } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
 import { useIdContext } from '../Contexts/askIdContext.jsx';
-import { getFromSection, getOrderOfTable, getPreviousSection, getProductByName} from '../connectToDB.js';
+import { changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSection, getProductByName} from '../connectToDB.js';
+import { useMessageContext } from '../Contexts/messageContext.jsx';
 
 export default function Menu(props) {
 
+    const { addMessage } = useMessageContext();
 
     const { getWorkerId } = useIdContext();
     const location = useLocation();
@@ -104,8 +106,8 @@ export default function Menu(props) {
 
 
     const askWaiter = () => {
-        //TODO : add notification that the waiter is coming to help
-        alert('Asking the waiter for help...');
+        addMessage('A waiter has been called to your table', 'info', 5000);
+        changeStatusOfTable(tableId, 1);
     }
 
     const placeSections = () => {
