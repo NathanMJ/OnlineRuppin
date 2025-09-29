@@ -1,45 +1,21 @@
-import { use, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function FCGame(props) {
-
-
-
-    /*
-      TODO:
-        make arrows to says where to play or not to play
-          green you win 100%
-          orange you can loose
-          red you loose 100%
-        swap the game according to your color
-        the king can not be moved if he is in check
-        if the king is in check and can not be moved, the game is over
-
-    */
-
-    //According to the rule it will change the eat square 
-    //If no rule just show the game
-
+    // Game state
+    const [currentGame, setCurrentGame] = useState(props.game)
     const [clickedSquare, setClickedSquare] = useState(null)
     const [previewSquares, setPreviewSquares] = useState([])
     const [eatSquares, setEatSquares] = useState([])
-    const [currentGame, setCurrentGame] = useState(props.game)
-
-
-    /*
-        Rules :
-            normal
-            giveaway
-    */
-
     const rule = props.rule;
 
+    // Update parent game state
     useEffect(() => {
         if (props.changePropGame && props.game !== currentGame) {
             props.changePropGame(currentGame);
         }
     }, [currentGame, props.changePropGame, props.game]);
 
-
+    // Utility functions
     const setTurn = (turn) => {
         setCurrentGame(prevGame => ({ ...prevGame, turn }))
     }
@@ -52,166 +28,120 @@ export default function FCGame(props) {
         setCurrentGame(prevGame => ({ ...prevGame, pawns }))
     }
 
-    const writePawns = (x, y, game) => {
+    const getFront = (color) => {
+        return color === 'white' ? 1 : -1
+    }
 
-        const pawn = game.pawns.find(pawns => pawns.x == x && pawns.y == y)
-        if (pawn) {
-            return <div className={`pawn`}><img src={`/${pawn.color}_${pawn.name}.webp`}></img></div >
+    const otherColor = (color) => {
+        if (color === 'white') return 'black'
+        else if (color === 'black') return 'white'
+        return null
+    }
+
+    const isAPawn = (pawns, x, y, color) => {
+        if (!(0 <= x && x < props.widthGame && 0 <= y && y < props.heightGame))
+            return false
+        if (color) {
+            return pawns.find(pawn => pawn.x === x && pawn.y === y && pawn.color === color)
         }
+        return pawns.find(pawn => pawn.x === x && pawn.y === y)
     }
 
-    const isSelected = (x, y) => {
-        return clickedSquare
-            && clickedSquare.y == y
-            && clickedSquare.x == x;
-    }
-
-    const isTrajectory = (x, y) => {
-        const isTrajectory = previewSquares.some(square => square.x == x && square.y == y)
-        return isTrajectory
-    }
-
-    const isAnEatenSquare = (x, y) => {
-        const isTrajectory = eatSquares.some(square => square.x == x && square.y == y)
-        return isTrajectory
-    }
-
-    const setHelpEmplacement = (x, y) => {
-        const help = props.showCoordonnates
-        if (!help)
-            return
-        let writeOnSide = x == 0
-        let writeOnLastLine = y == 0
-        if (writeOnSide || writeOnLastLine)
-            return <div className='helpSquare'>
-                {writeOnLastLine && <p className='letterPosition'>{String.fromCharCode(x + 97)}</p>}
-                {writeOnSide && <p className='numberPosition'>{y + 1}</p>}
-            </div>
-    }
-
+    // Move logic - DOIT ÊTRE DÉFINI AVANT getMovementsOfPawn
     const movePawnTo = (ogPawn, x, y, pawns) => {
         const copyPawn = { ...ogPawn }
-        //cleaned everyEnPassant property
-        pawns.forEach(pawn => {
+        const originalPawns = [...pawns] // Copie pour éviter mutation
+
+        // Clean enPassant property for all pawns
+        originalPawns.forEach(pawn => {
             delete pawn.enPassant
         })
         const front = getFront(ogPawn.color)
-        //erase the pawn
-        pawns = pawns.filter(pawn => !(pawn.x == ogPawn.x && pawn.y == ogPawn.y))
-        //if the pawn is a pawn and the square to go is two squares forward, set the en passant property
-        if (ogPawn.name == 'pawn' && Math.abs(y - ogPawn.y) == 2) {
-            ogPawn.enPassant = true
-        }
-        //if the pawn is a pawn and the square before is a pawn of the other color remove it
-        if (ogPawn.name == 'pawn' && isAPawn(pawns, x, y - front, otherColor(ogPawn.color))) {
-            pawns = pawns.filter(pawn => !(pawn.x == x && pawn.y == y - front))
-        }
-        //remove the new location
-        pawns = pawns.filter(pawn => !(pawn.x == x && pawn.y == y))
 
-        //insert the pawn with the new location
-        if (ogPawn.name == 'pawn') {
-            if (ogPawn.color == 'white' && y == props.heightGame - 1) {
+        // Remove original pawn
+        let newPawns = originalPawns.filter(pawn => !(pawn.x === ogPawn.x && pawn.y === ogPawn.y))
+
+        // En passant logic - set flag if pawn moves 2 squares
+        if (ogPawn.name === 'pawn' && Math.abs(y - ogPawn.y) === 2) {
+            copyPawn.enPassant = true
+        }
+
+        // En passant capture - remove captured pawn
+        if (ogPawn.name === 'pawn') {
+            const enPassantTarget = isAPawn(newPawns, x, y - front, otherColor(ogPawn.color))
+            if (enPassantTarget && enPassantTarget.hasOwnProperty('enPassant')) {
+                newPawns = newPawns.filter(pawn => !(pawn.x === x && pawn.y === y - front))
+            }
+        }
+
+        // Remove piece at destination (normal capture)
+        newPawns = newPawns.filter(pawn => !(pawn.x === x && pawn.y === y))
+
+        // Promotion
+        if (ogPawn.name === 'pawn') {
+            if (ogPawn.color === 'white' && y === props.heightGame - 1) {
                 copyPawn.name = 'queen'
             }
-            if (ogPawn.color == 'black' && y == 0) {
+            if (ogPawn.color === 'black' && y === 0) {
                 copyPawn.name = 'queen'
             }
         }
-        pawns = [...pawns, { ...copyPawn, x, y }]
-        //return the game
-        return pawns
+
+        // Add moved piece to new position
+        newPawns = [...newPawns, { ...copyPawn, x, y }]
+        return newPawns
     }
 
-    const clickOnSquare = (x, y) => {
-        if (!props.movable)
-            return
-
-        if (currentGame.winner) {
-            alert(`The game is over`)
+    // Check if king is in check
+    const isKingInCheck = (pawns, colorOfTheKing) => {
+        const king = pawns.find(pawn => pawn.name === 'king' && pawn.color === colorOfTheKing)
+        if (!king) {
+            return false
         }
 
-        //if the game is normal and there are 0 king cancel
-        if (rule == 'normal'
-            && (currentGame.pawns.filter(pawn => pawn.name == 'king' && pawn.color == 'white').length != 1
-                || currentGame.pawns.filter(pawn => pawn.name == 'king' && pawn.color == 'black').length != 1)) {
-            alert(`A king is missing, the game can not start`)
-            return
+        const otherColorPawns = pawns.filter(pawn => pawn.color !== colorOfTheKing)
+
+        // Get all attack squares from opponent pieces
+        let opponentAttackSquares = []
+        for (let pawn of otherColorPawns) {
+            const { tempEatSquares } = getMovementsOfPawn(pawns, pawn, false) // false = don't check for checks (avoid infinite recursion)
+            opponentAttackSquares = [...opponentAttackSquares, ...tempEatSquares]
         }
 
-        if (clickedSquare && clickedSquare.x == x && clickedSquare.y == y) {
-            setClickedSquare(null)
-            setPreviewSquares([])
-            setEatSquares([])
-            return
-        }
-        //if the square is selected move the pawn to the square
-        const isSelected = [...previewSquares, ...eatSquares].some(square => square.x == x && square.y == y)
-        let pawns = currentGame.pawns
-        if (isSelected) {
+        // Remove duplicates
+        opponentAttackSquares = opponentAttackSquares.filter((square, index) =>
+            opponentAttackSquares.findIndex(s => s.x === square.x && s.y === square.y) === index
+        )
 
-            const pawn = isAPawn(pawns, clickedSquare.x, clickedSquare.y)
-            const newPawns = movePawnTo(pawn, x, y, pawns)
-            setClickedSquare()
-            setEatSquares([])
-            setPreviewSquares([])
-
-            setPawns(newPawns)
-            setTurn(currentGame.turn == 'white' ? 'black' : 'white')
-
-
-            //if the opponnent can not play anymore, he won
-            const pawnCanMove = aPawnCanMove(otherColor(currentGame.turn), newPawns)
-            if (!pawnCanMove) {
-                if (rule == 'giveaway') {
-                    setWinner(otherColor(currentGame.turn))
-                    return
-                }
-                else if (rule == 'normal') {
-                    const kingIsInCheck = isKingIsInCheck(newPawns, otherColor(currentGame.turn))
-                    if (kingIsInCheck) {
-                        setWinner(currentGame.turn)
-                    }
-                    else {
-                        setWinner(otherColor(currentGame.turn))
-                    }
-                }
-            }
-
-
-        }
-        else {
-            setClickedSquare({ x, y })
-            setEatSquares([])
-        }
+        return opponentAttackSquares.some(square => square.x === king.x && square.y === king.y)
     }
 
-    useEffect(() => {
-        if (clickedSquare) {
-            setEveryPreviewSquare(clickedSquare.x, clickedSquare.y)
+    // Filter movements that would put own king in check
+    const filterLegalMoves = (pawn, movements, pawns) => {
+        if (rule !== 'normal') {
+            return movements
         }
-    }, [clickedSquare])
 
-    const getFront = (color) => {
-        return color == 'white' ? 1 : -1
+        return movements.filter(movement => {
+            const newPawns = movePawnTo(pawn, movement.x, movement.y, [...pawns])
+            return !isKingInCheck(newPawns, pawn.color)
+        })
     }
 
-    const getMovementsOfPawn = (pawns, pawn) => {
+    // Core game logic - calculate piece movements
+    const getMovementsOfPawn = (pawns, pawn, checkForChecks = true) => {
         const front = getFront(pawn.color)
         const turn = pawn.color
         let { x, y } = pawn
-        // movements = ['one forward', '+', 'square', 'X', 'L', 'front left', 'front right']
-
         let movements = []
 
         switch (pawn.name) {
             case 'pawn':
-
                 if (!isAPawn(pawns, x, y + front)) {
                     movements.push('one forward')
-                    if (((y == 1 && pawn.color == 'white') ||
-                        (y == props.heightGame - 2 && pawn.color == 'black'))
-                        && !isAPawn(pawns, x, y + 2 * (front))) {
+                    if (((y === 1 && pawn.color === 'white') ||
+                        (y === props.heightGame - 2 && pawn.color === 'black')) &&
+                        !isAPawn(pawns, x, y + 2 * front)) {
                         movements.push('two forward')
                     }
                 }
@@ -221,15 +151,18 @@ export default function FCGame(props) {
                 if (isAPawn(pawns, x - 1, y + front, otherColor(turn))) {
                     movements.push('front left')
                 }
-                if (isAPawn(pawns, x + 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
+                // En passant
+                const rightPawn = isAPawn(pawns, x + 1, y, otherColor(turn))
+                if (rightPawn && rightPawn.hasOwnProperty('enPassant')) {
                     movements.push('en passant right')
                 }
-                if (isAPawn(pawns, x - 1, y, otherColor(turn))?.hasOwnProperty('enPassant')) {
+                const leftPawn = isAPawn(pawns, x - 1, y, otherColor(turn))
+                if (leftPawn && leftPawn.hasOwnProperty('enPassant')) {
                     movements.push('en passant left')
                 }
                 break
             case 'queen':
-                movements = ['+', 'x',]
+                movements = ['+', 'x']
                 break
             case 'bishop':
                 movements = ['x']
@@ -247,6 +180,8 @@ export default function FCGame(props) {
 
         let tempPreviewSquares = []
         let tempEatSquares = []
+
+        // Process basic pawn movements
         if (movements.includes('one forward')) {
             tempPreviewSquares.push({ x, y: y + front })
         }
@@ -254,296 +189,339 @@ export default function FCGame(props) {
             tempPreviewSquares.push({ x, y: y + 2 * front })
         }
         if (movements.includes('front right')) {
-            tempPreviewSquares.push({ x: x + 1, y: y + front })
+            tempEatSquares.push({ x: x + 1, y: y + front })
+        }
+        if (movements.includes('front left')) {
+            tempEatSquares.push({ x: x - 1, y: y + front })
         }
         if (movements.includes('en passant right')) {
             tempEatSquares.push({ x: x + 1, y: y + front })
         }
-        if (movements.includes('front left')) {
-            tempPreviewSquares.push({ x: x - 1, y: y + front })
-        }
         if (movements.includes('en passant left')) {
             tempEatSquares.push({ x: x - 1, y: y + front })
         }
-        if (movements.includes('+')) {
-            //right side
-            for (let i = 1; i + x < props.widthGame; i++) {
-                const findedPawn = isAPawn(pawns, x + i, y)
-                if (!findedPawn) {
-                    tempPreviewSquares.push({ x: x + i, y })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x: x + i, y })
-                    }
-                    break;
-                }
-            }
-            //left side
-            for (let i = 1; x - i >= 0; i++) {
-                const findedPawn = isAPawn(pawns, x - i, y)
-                if (!findedPawn) {
-                    tempPreviewSquares.push({ x: x - i, y })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x: x - i, y })
-                    }
-                    break;
-                }
-            }
 
-            //top side
+        // Rook-like movements (+)
+        if (movements.includes('+')) {
+            // Right
+            for (let i = 1; i + x < props.widthGame; i++) {
+                const foundPawn = isAPawn(pawns, x + i, y)
+                if (!foundPawn) {
+                    tempPreviewSquares.push({ x: x + i, y })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: x + i, y })
+                    }
+                    break
+                }
+            }
+            // Left
+            for (let i = 1; x - i >= 0; i++) {
+                const foundPawn = isAPawn(pawns, x - i, y)
+                if (!foundPawn) {
+                    tempPreviewSquares.push({ x: x - i, y })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: x - i, y })
+                    }
+                    break
+                }
+            }
+            // Up
             for (let i = 1; i + y < props.heightGame; i++) {
-                const findedPawn = isAPawn(pawns, x, y + i)
-                if (!findedPawn) {
+                const foundPawn = isAPawn(pawns, x, y + i)
+                if (!foundPawn) {
                     tempPreviewSquares.push({ x, y: y + i })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x, y: y + i })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x, y: y + i })
                     }
-                    break;
+                    break
                 }
             }
-            //bottom side
+            // Down
             for (let i = 1; y - i >= 0; i++) {
-                const findedPawn = isAPawn(pawns, x, y - i)
-                if (!findedPawn) {
-                    tempPreviewSquares.push({ x: x, y: y - i })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x, y: y - i })
+                const foundPawn = isAPawn(pawns, x, y - i)
+                if (!foundPawn) {
+                    tempPreviewSquares.push({ x, y: y - i })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x, y: y - i })
                     }
-                    break;
+                    break
                 }
             }
         }
+
+        // Bishop-like movements (x)
         if (movements.includes('x')) {
-            //botton right side
-            for (let i = 1; i + y < props.heightGame && i + x < props.heightGame; i++) {
-                const findedPawn = isAPawn(pawns, x + i, y + i)
-                if (!findedPawn) {
+            // Bottom right
+            for (let i = 1; i + y < props.heightGame && i + x < props.widthGame; i++) {
+                const foundPawn = isAPawn(pawns, x + i, y + i)
+                if (!foundPawn) {
                     tempPreviewSquares.push({ x: x + i, y: y + i })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x: x + i, y: y + i })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: x + i, y: y + i })
                     }
-                    break;
+                    break
                 }
             }
-            //botton left side
+            // Bottom left
             for (let i = 1; y + i < props.heightGame && x - i >= 0; i++) {
-                const findedPawn = isAPawn(pawns, x - i, y + i)
-                if (!findedPawn) {
+                const foundPawn = isAPawn(pawns, x - i, y + i)
+                if (!foundPawn) {
                     tempPreviewSquares.push({ x: x - i, y: y + i })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x: x - i, y: y + i })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: x - i, y: y + i })
                     }
-                    break;
+                    break
                 }
             }
-            //top left side
+            // Top left
             for (let i = 1; y - i >= 0 && x - i >= 0; i++) {
-                const findedPawn = isAPawn(pawns, x - i, y - i)
-                if (!findedPawn) {
+                const foundPawn = isAPawn(pawns, x - i, y - i)
+                if (!foundPawn) {
                     tempPreviewSquares.push({ x: x - i, y: y - i })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x: x - i, y: y - i })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: x - i, y: y - i })
                     }
-                    break;
+                    break
                 }
             }
-            //top right side
-            for (let i = 1; y - i >= 0 && x + i >= 0; i++) {
-                const findedPawn = isAPawn(pawns, x + i, y - i)
-                if (!findedPawn) {
+            // Top right
+            for (let i = 1; y - i >= 0 && x + i < props.widthGame; i++) {
+                const foundPawn = isAPawn(pawns, x + i, y - i)
+                if (!foundPawn) {
                     tempPreviewSquares.push({ x: x + i, y: y - i })
-                }
-                else {
-                    if (findedPawn.color != turn) {
-                        tempPreviewSquares.push({ x: x + i, y: y - i })
+                } else {
+                    if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: x + i, y: y - i })
                     }
-                    break;
+                    break
                 }
             }
         }
+
+        // Knight movements (L)
         if (movements.includes('L')) {
-            for (let a = 1; a <= 2; a++) {
-                let b = (a == 1 ? 2 : 1)
-                for (let c = 1; c <= 2; c++)
-                    for (let d = 1; d <= 2; d++) {
-                        let newX = x + a * Math.pow(-1, c)
-                        let newY = y + b * Math.pow(-1, d)
-                        if (!isAPawn(pawns, newX, newY, turn))
-                            tempPreviewSquares.push({ x: newX, y: newY })
+            const knightMoves = [
+                [2, 1], [2, -1], [-2, 1], [-2, -1],
+                [1, 2], [1, -2], [-1, 2], [-1, -2]
+            ]
+
+            for (let [dx, dy] of knightMoves) {
+                const newX = x + dx
+                const newY = y + dy
+
+                if (0 <= newX && newX < props.widthGame && 0 <= newY && newY < props.heightGame) {
+                    const foundPawn = isAPawn(pawns, newX, newY)
+                    if (!foundPawn) {
+                        tempPreviewSquares.push({ x: newX, y: newY })
+                    } else if (foundPawn.color !== turn) {
+                        tempEatSquares.push({ x: newX, y: newY })
                     }
+                }
             }
         }
+
+        // King movements (square)
         if (movements.includes('square')) {
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
-                    if (i == 0 && j == 0) continue // skip the current square
-                    let newX = x + i
-                    let newY = y + j
-                    if (isAPawn(pawns, newX, newY, turn)) continue // skip if there is a pawn of the same color
+                    if (i === 0 && j === 0) continue
+
+                    const newX = x + i
+                    const newY = y + j
+
                     if (0 <= newX && newX < props.widthGame && 0 <= newY && newY < props.heightGame) {
-                        tempPreviewSquares.push({ x: newX, y: newY })
+                        const foundPawn = isAPawn(pawns, newX, newY)
+                        if (!foundPawn) {
+                            tempPreviewSquares.push({ x: newX, y: newY })
+                        } else if (foundPawn.color !== turn) {
+                            tempEatSquares.push({ x: newX, y: newY })
+                        }
                     }
                 }
             }
         }
 
-        //change the preview square where there is a pawn to eatSquares 
+        // Apply legal move filtering for normal chess rules
+        if (checkForChecks && rule === 'normal') {
+            tempPreviewSquares = filterLegalMoves(pawn, tempPreviewSquares, pawns)
+            tempEatSquares = filterLegalMoves(pawn, tempEatSquares, pawns)
+        }
 
-        tempEatSquares = [...tempEatSquares, ...tempPreviewSquares.filter(square => isAPawn(pawns, square.x, square.y))]
-        tempPreviewSquares = tempPreviewSquares.filter(square => !isAPawn(pawns, square.x, square.y))
-
-        tempPreviewSquares = sortMovements(pawn, tempPreviewSquares)
-        tempEatSquares = sortMovements(pawn, tempEatSquares)
         return { tempPreviewSquares, tempEatSquares }
     }
 
+    // Check if a player has any legal moves
+    const hasLegalMoves = (color, pawns) => {
+        const colorPawns = pawns.filter(pawn => pawn.color === color)
 
-    const isKingIsInCheck = (pawns, colorOfTheKing) => {
-        const king = pawns.find(pawn => pawn.name == 'king' && pawn.color == colorOfTheKing)
-        if (!king) {
-            return false;
-        }
-        //get every other pawn of the other color
-        //find every eatSquare of the other color
-        const otherColorPawns = pawns.filter(pawn => pawn.color != colorOfTheKing)
-        let opponnentEatSquares = otherColorPawns.flatMap(pawn => {
-            const { tempEatSquares } = getMovementsOfPawn(pawns, pawn)
-            return tempEatSquares
-        });
-
-        opponnentEatSquares = opponnentEatSquares.filter((square, index) =>
-            opponnentEatSquares.findIndex(s => s.x === square.x && s.y === square.y) === index
-        ); // Remove duplicates
-
-
-        //check if the king is in check
-
-        const isInCheck = opponnentEatSquares.some(square => square.x == king.x && square.y == king.y);
-
-        return isInCheck;
-    }
-
-    //TODO WORK ON THIS FUNCTION
-    const sortMovements = (pawn, movements) => {
-        if (rule == 'normal') {
-            const filteredMovements = movements.filter(movement => {
-                const tempPawns = [...currentGame.pawns]; // Créer une copie
-                const newPawns = movePawnTo(pawn, movement.x, movement.y, tempPawns);
-                return !isKingIsInCheck(newPawns, pawn.color);
-            });
-            return filteredMovements;
-        }
-        return movements;
-    }
-
-
-    const aPawnCanMove = (color, pawns) => {
-        //check if the pawns of the color can move
-        if (rule == 'giveaway' || rule == 'normal') {
-
-            const colorPawns = pawns.filter(pawn => pawn.color == color)
-            if (colorPawns.length == 0) {
-                return false
+        for (let pawn of colorPawns) {
+            const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(pawns, pawn, true)
+            if (tempEatSquares.length > 0 || tempPreviewSquares.length > 0) {
+                return true
             }
-
-            for (let pawn of colorPawns) {
-                const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(pawns, pawn)
-
-                if (tempEatSquares.length > 0 || tempPreviewSquares.length > 0)
-                    return true
-            }
-            return false
         }
-
         return false
     }
 
-    const setEveryPreviewSquare = (x, y) => {
-        const pawn = currentGame.pawns.find(pawn => pawn.x == x && pawn.y == y)
-        if (!pawn || pawn.color != currentGame.turn) {
+    // UI helper functions
+    const writePawns = (x, y, game) => {
+        const pawn = game.pawns.find(pawn => pawn.x === x && pawn.y === y)
+        if (pawn) {
+            return <div className="pawn"><img src={`/${pawn.color}_${pawn.name}.webp`} alt={`${pawn.color} ${pawn.name}`} /></div>
+        }
+    }
+
+    const isSelected = (x, y) => {
+        return clickedSquare && clickedSquare.y === y && clickedSquare.x === x
+    }
+
+    const isTrajectory = (x, y) => {
+        return previewSquares.some(square => square.x === x && square.y === y)
+    }
+
+    const isAnEatenSquare = (x, y) => {
+        return eatSquares.some(square => square.x === x && square.y === y)
+    }
+
+    const setHelpEmplacement = (x, y) => {
+        if (!props.showCoordonnates) return
+
+        const writeOnSide = x === 0
+        const writeOnLastLine = y === 0
+
+        if (writeOnSide || writeOnLastLine) {
+            return (
+                <div className='helpSquare'>
+                    {writeOnLastLine && <p className='letterPosition'>{String.fromCharCode(x + 97)}</p>}
+                    {writeOnSide && <p className='numberPosition'>{y + 1}</p>}
+                </div>
+            )
+        }
+    }
+
+    const clickOnSquare = (x, y) => {
+        if (!props.movable || currentGame.winner) return
+
+        // Check for missing kings in normal mode
+        if (rule === 'normal') {
+            const whiteKings = currentGame.pawns.filter(pawn => pawn.name === 'king' && pawn.color === 'white').length
+            const blackKings = currentGame.pawns.filter(pawn => pawn.name === 'king' && pawn.color === 'black').length
+
+            if (whiteKings !== 1 || blackKings !== 1) {
+                alert('A king is missing, the game cannot start')
+                return
+            }
+        }
+
+        // Unselect if clicking same square
+        if (clickedSquare && clickedSquare.x === x && clickedSquare.y === y) {
+            setClickedSquare(null)
             setPreviewSquares([])
+            setEatSquares([])
             return
         }
 
-        let { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(currentGame.pawns, pawn)
+        // Check if clicked square is a valid move
+        const isValidMove = [...previewSquares, ...eatSquares].some(square => square.x === x && square.y === y)
 
+        if (isValidMove && clickedSquare) {
+            // Make the move
+            const pawn = isAPawn(currentGame.pawns, clickedSquare.x, clickedSquare.y)
+            const newPawns = movePawnTo(pawn, x, y, [...currentGame.pawns])
 
-        //for the giveaway rule :
-        //if a pawn can be eaten by another pawn of the color's turn set tempPreviewSquares to empty
-        if (props.rule == 'giveaway' && (tempEatSquares.length > 0 || aPawnCanBeEat(currentGame.pawns, currentGame.turn))) {
-            tempPreviewSquares = []
+            // Clear selection
+            setClickedSquare(null)
+            setEatSquares([])
+            setPreviewSquares([])
+
+            // Update game state
+            setPawns(newPawns)
+            const newTurn = currentGame.turn === 'white' ? 'black' : 'white'
+            setTurn(newTurn)
+
+            // Check game end conditions
+            const opponentHasMoves = hasLegalMoves(newTurn, newPawns)
+
+            if (!opponentHasMoves) {
+                if (rule === 'normal') {
+                    const kingInCheck = isKingInCheck(newPawns, newTurn)
+                    if (kingInCheck) {
+                        // Checkmate - current player wins
+                        setWinner(currentGame.turn)
+                    } else {
+                        // Stalemate - draw
+                        setWinner('draw')
+                    }
+                } else if (rule === 'giveaway') {
+                    // In giveaway, losing all moves means you win
+                    setWinner(newTurn)
+                }
+            }
+        } else {
+            // Select new square
+            setClickedSquare({ x, y })
+        }
+    }
+
+    const setEveryPreviewSquare = (x, y) => {
+        const pawn = currentGame.pawns.find(pawn => pawn.x === x && pawn.y === y)
+
+        if (!pawn || pawn.color !== currentGame.turn) {
+            setPreviewSquares([])
+            setEatSquares([])
+            return
         }
 
-        setPreviewSquares(tempPreviewSquares)
+        const { tempEatSquares, tempPreviewSquares } = getMovementsOfPawn(currentGame.pawns, pawn, true)
+
+        // Apply giveaway rule if needed
+        if (rule === 'giveaway' && tempEatSquares.length > 0) {
+            setPreviewSquares([]) // Must capture if possible
+        } else {
+            setPreviewSquares(tempPreviewSquares)
+        }
+
         setEatSquares(tempEatSquares)
     }
 
-    const aPawnCanBeEat = (pawns, color) => {
-        for (let pawn of pawns) {
-            if (pawn.color == color) {
-                const { tempEatSquares } = getMovementsOfPawn(pawns, pawn)
-                if (tempEatSquares.length > 0) {
-                    return true
-                }
-            }
+    // Update preview when square clicked
+    useEffect(() => {
+        if (clickedSquare) {
+            setEveryPreviewSquare(clickedSquare.x, clickedSquare.y)
         }
-        return false
-    }
+    }, [clickedSquare])
 
-    const isAPawn = (pawns, x, y, color) => {
-
-        if (!(0 <= x && x < props.widthGame && 0 <= y && y <= props.heightGame))
-            return false
-        if (color) {
-            return pawns.find(pawn => pawn.x == x && pawn.y == y && pawn.color == color)
-        }
-        return pawns.find(pawn => pawn.x == x && pawn.y == y)
-    }
-
-    const otherColor = (color) => {
-        if (color == 'white')
-            return 'black'
-        else if (color == 'black')
-            return 'white'
-        return null
-    }
-
-
-    return (<div className='chessGame'>
-        {[...Array(props.heightGame)].map((_, indexRow) => {
-            const invertedIndexRow = props.heightGame - 1 - indexRow
-            return (
-                <div className='rows' key={indexRow}>
-                    {[...Array(props.widthGame)].map((_, indexColumn) => (
-                        <div className={`squares ${(invertedIndexRow + indexColumn) % 2 == 0 ? 'even' : 'odd'} ${isSelected(indexColumn, invertedIndexRow) ? 'selected' : ''} 
-              ${isTrajectory(indexColumn, invertedIndexRow) && 'trajectory'}
-                ${isAnEatenSquare(indexColumn, invertedIndexRow) && 'canBeTaken'}
-              `}
-                            key={indexColumn}
-                            style={{ height: `${props.sizeSquare}px`, width: `${props.sizeSquare}px` }}
-                            onClick={() => { clickOnSquare(indexColumn, invertedIndexRow) }}>
-                            {setHelpEmplacement(indexColumn, invertedIndexRow)}
-                            {writePawns(indexColumn, invertedIndexRow, currentGame)}
-                        </div>
-                    ))}
-                </div>
-            )
-        })}
-    </div>
+    // Render the chess board
+    return (
+        <div className='chessGame'>
+            {[...Array(props.heightGame)].map((_, indexRow) => {
+                const invertedIndexRow = props.heightGame - 1 - indexRow
+                return (
+                    <div className='rows' key={indexRow}>
+                        {[...Array(props.widthGame)].map((_, indexColumn) => (
+                            <div
+                                className={`squares ${(invertedIndexRow + indexColumn) % 2 === 0 ? 'even' : 'odd'} ${isSelected(indexColumn, invertedIndexRow) ? 'selected' : ''} 
+                                    ${isTrajectory(indexColumn, invertedIndexRow) ? 'trajectory' : ''}
+                                    ${isAnEatenSquare(indexColumn, invertedIndexRow) ? 'canBeTaken' : ''}
+                                `}
+                                key={indexColumn}
+                                style={{ height: `${props.sizeSquare}px`, width: `${props.sizeSquare}px` }}
+                                onClick={() => clickOnSquare(indexColumn, invertedIndexRow)}
+                            >
+                                {setHelpEmplacement(indexColumn, invertedIndexRow)}
+                                {writePawns(indexColumn, invertedIndexRow, currentGame)}
+                            </div>
+                        ))}
+                    </div>
+                )
+            })}
+        </div>
     )
 }
-
-
