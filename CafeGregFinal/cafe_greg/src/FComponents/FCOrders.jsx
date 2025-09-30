@@ -78,7 +78,7 @@ export default function FCOrders(props) {
         }
         //add the price of the changes if there is any
         if (order.changes && order.changes.length > 0) {
-            order.changes.forEach(ch => {
+            order.chan ges.forEach(ch => {
                 firstPrice += ch.price
             })
         }

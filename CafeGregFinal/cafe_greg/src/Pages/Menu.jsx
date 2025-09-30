@@ -5,7 +5,7 @@ import { products } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
 import { useIdContext } from '../Contexts/askIdContext.jsx';
-import { changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSection, getProductByName} from '../connectToDB.js';
+import { changeStatusOfOrder, changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSection, getProductByName } from '../connectToDB.js';
 import { useMessageContext } from '../Contexts/messageContext.jsx';
 
 export default function Menu(props) {
@@ -21,7 +21,7 @@ export default function Menu(props) {
     const fetchOrders = async () => {
         const tempOrders = await getOrderOfTable(tableId)
         console.log('orders found from DB', tempOrders);
-        
+
         setOrders([...tempOrders])
     }
 
@@ -38,9 +38,9 @@ export default function Menu(props) {
 
     const [totalPrice, setTotalPrice] = useState(0);
 
-    useEffect(() => {        
+    useEffect(() => {
         console.log(orders[0]);
-        
+
         if (orders.length == 0)
             return
         const tempTotalPrice = orders.reduce((acc, order) => {
@@ -90,7 +90,7 @@ export default function Menu(props) {
         if (sectionId != null && sectionId != undefined) {
             let res = await getFromSection(sectionId)
             setMainContent(res);
-            console.log(res);            
+            console.log(res);
         }
     }
 
@@ -192,6 +192,63 @@ export default function Menu(props) {
         return total
     }
 
+    const clickOnGreenButton = async () => {
+        console.log('everything ordered');
+
+        //if there are no orders, do nothing
+        if (orders.length == 0) {
+            addMessage("You have no orders", "error", 5000)
+            return
+        }
+        //if there are orders with status 0 confirm the orders
+        //find orders with status 0
+        const pendingOrders = orders.reduce((acc, order) => {
+            console.log(order);
+
+            if (order.status._id == 0) {
+                acc.push(order)
+            }
+            return acc
+        }, [])
+        if (pendingOrders.length > 0) {
+            await Promise.all(pendingOrders.map(order => changeStatusOfOrder(order._id, 1)))
+            addMessage("Orders successully", "success", 5000)
+            fetchOrders()
+            return
+        }
+        //if every order is confirmed ask to pay
+        const notEveryOrderIsReceived = orders.some(order => order.status._id != 5)
+        if (!notEveryOrderIsReceived) {
+            changeStatusOfTable(tableId, 2)
+            addMessage("A waiter has been called to pay", "success", 5000)
+            return
+        }
+        else{
+            addMessage("You must wait to receive all your orders before asking for the bill", "error", 5000)
+        }
+
+    }
+
+    const [contentGreenButton, setContentGreenButton] = useState('Order everythings')
+
+    useEffect(() => {
+        if (orders.length == 0) {
+            setContentGreenButton('Order everythings')
+            return
+        }
+        const pendingOrders = orders.reduce((acc, order) => {
+            if (order.status._id == 0) {
+                acc.push(order)
+            }
+            return acc
+        }, [])
+        if (pendingOrders.length > 0) {
+            setContentGreenButton('Order everythings')
+            return
+        }
+        setContentGreenButton('Ask for the bill')
+    }, [orders])
+
     return (
         <div className='menuPage'>
 
@@ -202,13 +259,13 @@ export default function Menu(props) {
                     <h1>My orders</h1>
                     <div className='pipe'></div>
                 </div>
-                <FCOrders 
-                orders={orders || [] }
-                refreshOrders={fetchOrders}></FCOrders>
+                <FCOrders
+                    orders={orders || []}
+                    refreshOrders={fetchOrders}></FCOrders>
 
                 <div className='bottom'>
                     <div className='pipe'></div>
-                    <button>Order everythings</button>
+                    <button onClick={clickOnGreenButton}>{contentGreenButton}</button>
                     <div className='pipe'></div>
                     <h1>Total {getTotalPriceOfOrders()} ₪</h1>
                 </div>
