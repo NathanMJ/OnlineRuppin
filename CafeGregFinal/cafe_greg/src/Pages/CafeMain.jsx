@@ -75,7 +75,7 @@ export default function CafeMain(props) {
             case 'removeAnOrder':
                 break
             case 'checkTable':
-                addMessage("The table has been checked", "info", 5000)
+                addMessage("Click on the table to check", "info", 5000)
                 break
             case 'reduction':
                 break
@@ -113,6 +113,8 @@ export default function CafeMain(props) {
                 break
             case 'checkTable':
                 await changeStatusOfTable(id, 0)
+                addMessage("The table has been checked", "success", 5000)
+
                 fetchAndCompare()
                 break
             case 'reduction':
