@@ -11,6 +11,7 @@ import sectionRouter from './services/section/router.js';
 import statusRouter from './services/status/router.js';
 import workerRouter from './services/worker/router.js';
 import websiteRouter from './services/website/router.js';
+import AIRouter from './AI_assistant/router.js';
 
 //set server port
 const PORT = process.env.PORT || 5500
@@ -37,6 +38,7 @@ server.use('/api/section', sectionRouter)
 server.use('/api/status', statusRouter)
 server.use('/api/worker', workerRouter)
 server.use('/api/website', websiteRouter)
+server.use('/api/AI', AIRouter)
 
 
 

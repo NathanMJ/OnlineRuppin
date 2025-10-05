@@ -3,6 +3,8 @@ export default function ErrorPage(props) {
     const goToLogin = () => {
         props.goto('/login')
     }
+
+    
     return (
         <div className="notFoundPage">
             <h1>404</h1>
