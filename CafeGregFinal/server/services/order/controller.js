@@ -1,4 +1,4 @@
-import { log } from "node:console";
+import { emitTableOrdersUpdate } from "../table/controller.js";
 import Order from "./model.js";
 
 export async function getOrder(req, res) {
@@ -20,8 +20,6 @@ export async function getOrderPrice(req, res) {
 }
 
 
-
-
 export async function removeOrder(req, res) {
     const id = Number(req.params.id)
     let response = await Order.removeOrder(id);
@@ -31,16 +29,32 @@ export async function removeOrder(req, res) {
 export async function changeStatus(req, res) {
     const id = Number(req.params.id)
     const status = Number(req.params.status)
+    const tableId = Number(req.params.tableId)
+    const destinationId = Number(req.params.destinationId)
+    console.log('Changing status for order:', id, 'to status:', status, 'for table:', tableId);
+    emitTableOrdersUpdate(req.io, tableId);
+    emitDestinationOrderUpdate(req.io, destinationId);
+
     let response = await Order.changeStatus(id, status);
     return res.status(200).json(response);
 }
 
-
-export async function getOrdersFromDestination(req, res){
+export async function getOrdersFromDestination(req, res) {
     const destinationId = Number(req.params.destination)
     const orders = await Order.fromDestination(destinationId)
     return res.status(200).json(orders)
 }
 
 
+export const emitDestinationOrderUpdate = (io, destinationId) => {
+    //fetch the order of the destination and fetch the orders
+    Order.fromDestination(destinationId).then(data => {
+        console.log('Emitting updated orders for destination:', destinationId);
+        io.to(`preparationRoom:${destinationId}`).emit('preparationRoom:update', {
+             orders:data.orders || []
+        });
+    }).catch(err => {
+        console.error('Error fetching orders for table:', tableId, err);
+    });
+};
 

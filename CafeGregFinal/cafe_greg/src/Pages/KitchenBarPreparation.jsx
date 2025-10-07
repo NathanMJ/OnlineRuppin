@@ -3,6 +3,7 @@ import FCTimer from '../FComponents/FCTimer';
 import { changeStatusOfOrder, getOrdersFromDestionation } from '../connectToDB';
 import { useLocation } from 'react-router-dom';
 import ReturnButton from "../FComponents/ReturnButton";
+import { socket } from '../App.jsx';
 
 export default function KitchenBarPreparation(props) {
 
@@ -20,10 +21,7 @@ export default function KitchenBarPreparation(props) {
         { id: 4, name: 'Sended' }
     ]
 
-    const [statusContainer, setStatusContainer] = useState({
-        orderId: 0
-    })
-
+    const [statusContainer, setStatusContainer] = useState({ orderId: undefined })
 
 
     const [showPictureOfOrder, setShowPictureOfOrder] = useState([])
@@ -52,15 +50,36 @@ export default function KitchenBarPreparation(props) {
     }
 
     useEffect(() => {
+        if (destination == undefined || destination == null) {
+            return
+        }
         fetchTheOrders()
-    }, [])
+
+        // S'abonner aux mises à jour de cette destination via WebSocket
+        socket.emit('subscribe:preparation', destination);
+
+        // Écouter les mises à jour en temps réel
+        const handleOrdersUpdate = (data) => {
+            console.log('Real-time orders update received:', data.orders);
+            setGroupOfOrders(data.orders);
+        };
+
+        socket.on('preparationRoom:update', handleOrdersUpdate);
+
+        // Nettoyage lors du démontage
+        return () => {
+            socket.emit('unsubscribe:preparation', destination);
+            socket.off('preparationRoom:update', handleOrdersUpdate);
+        };
 
 
-    const changeTheOrderStatus = async (orderId, newStatus) => {
+    }, [destination])
+
+
+    const changeTheOrderStatus = async (orderId, newStatus, tableId) => {
         setStatusContainer({ orderId: undefined })
 
-        await changeStatusOfOrder(orderId, newStatus.id)
-        fetchTheOrders()
+        await changeStatusOfOrder(orderId, newStatus.id, tableId, destination)
     }
 
 
@@ -123,6 +142,13 @@ export default function KitchenBarPreparation(props) {
                                             <h1>Salad:</h1>
                                             <p>{o.salad.name}</p>
                                         </div>}
+
+                                        {o.notesForChanges && <div className='notesForChanges'>
+                                            <h1>Notes:</h1>
+                                            {o.notesForChanges.map((n, index2) => {
+                                                return <p key={index2}>{[...o.changes, ...o.ingredients].find(ing => ing._id == n.ingredientId)?.name} <br /> {n.note}</p>
+                                            })}
+                                        </div>}
                                     </div>
                                     <div className='footer'>
                                         <div className='receiveTime timer'>{o.ordered_status_time && <FCTimer start={o.ordered_status_time}></FCTimer>}</div>
@@ -140,7 +166,7 @@ export default function KitchenBarPreparation(props) {
                                                 display: statusContainer.orderId == o._id ? 'flex' : 'none'
                                             }}>
                                                 {statusToChange.map((s, indexStatus) =>
-                                                    (<p onClick={() => changeTheOrderStatus(o._id, s)} key={indexStatus}>{s.name}</p>)
+                                                    (<p onClick={() => changeTheOrderStatus(o._id, s, g.tableId)} key={indexStatus}>{s.name}</p>)
                                                 )}
                                             </div>
                                         </div>

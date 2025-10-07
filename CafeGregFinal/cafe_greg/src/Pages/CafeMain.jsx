@@ -4,6 +4,8 @@ import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
 import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, getWorkerById, payTableInDB, switchTables } from "../connectToDB.js"
 import { useMessageContext } from "../Contexts/messageContext.jsx";
+import { socket } from "../App.jsx";
+import { use } from "react";
 
 export default function CafeMain(props) {
 
@@ -16,36 +18,59 @@ export default function CafeMain(props) {
     const [clickOnTableMode, setClickOnTableMode] = useState('goto')
 
     const [tables, setTables] = useState([]);
-    const intervalRef = useRef(null);
     const previousDataRef = useRef(null);
 
     const fetchAndCompare = async () => {
         try {
             const newData = await getTables();
-            //Compare the data
-            if (JSON.stringify(newData) !== JSON.stringify(previousDataRef.current)) {
                 setTables(newData);
-                previousDataRef.current = newData;
-            }
         } catch (error) {
             console.error('Error:', error);
         }
     };
 
     useEffect(() => {
-        // First fetch
         fetchAndCompare();
 
-        // Then every 500ms
-        // intervalRef.current = setInterval(fetchAndCompare, 1000);
+        socket.emit('subscribe:cafe-tables');
 
-        // Cleanup 
-        return () => {
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
+        const handleTablesUpdate = (data) => {
+            console.log("Current tables:", previousDataRef.current);            
+            console.log('Real-time orders update received:', data.tables);
+            //compare the data of each table and write a message if there is a change
+            const tempNewTables = data.tables || []
+            const tempOldTables = previousDataRef.current || []
+            tempNewTables.forEach((newTable) => {                
+                const oldTable = tempOldTables.find(t => t._id === newTable._id);
+                console.log({ oldTable, newTable });
+                
+                if (oldTable && oldTable.status !== newTable.status) {
+                    switch (newTable.status) {
+                        case 1:
+                            addMessage(`Table ${newTable._id} has requested service.`, "info", 5000);
+                            break;
+                        case 2:
+                            addMessage(`Table ${newTable._id} has requested to pay.`, "info", 5000);
+                            break;
+                    }
+                }
+            })
+
+            setTables(data.tables || [])
         };
+
+        socket.on('cafe-tables:update', handleTablesUpdate);
+
+        return () => {
+            socket.emit('unsubscribe:cafe-tables');
+            socket.off('cafe:tables:updated');
+        };
+
     }, []);
+
+    useEffect(() => {
+        previousDataRef.current = tables;
+    }, [tables]);
 
 
     const getAskLogo = (statusCode) => {

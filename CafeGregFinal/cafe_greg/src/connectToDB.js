@@ -151,9 +151,9 @@ export async function removeOrderById(orderId) {
     }
 }
 
-export async function changeStatusOfOrder(orderId, statusId) {
+export async function changeStatusOfOrder(orderId, statusId, tableId, destinationId) {
     try {
-        const response = await fetch(`${serverUrl}/order/changeOrderStatus/${orderId}/${statusId}`, {
+        const response = await fetch(`${serverUrl}/order/changeOrderStatus/${orderId}/${statusId}/${tableId}/${destinationId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" }
         });

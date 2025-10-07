@@ -23,9 +23,8 @@ export async function getOrderById(id) {
 
     //of product we need just img, name, price
 
-    const { img, name, price, destination} = product
-    console.log(product);
-    
+    const { img, name, price, destination } = product
+
 
 
     if (order.sauces) {
@@ -101,7 +100,7 @@ export async function getOrderById(id) {
     const status = await getStatusByOrderId(id)
 
 
-    return { ...order, img, name, price, status, destination};
+    return { ...order, img, name, price, status, destination };
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;
@@ -145,17 +144,15 @@ export async function changeOrderStatusById(orderId, statusId) {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
     const db = client.db(process.env.DB_NAME);
 
+    // Check if the order got the status
 
-    //check if the order got the status
-
-    //check if status after exist, if yes erase them
-
+    // Check if status after exist, if yes erase them
     await db.collection('order_status_history').deleteMany({
       orderId: orderId,
       code: { $gt: statusId }
     });
 
-    //for every status before if they dont exist create them with the same time by now
+    // For every status before if they don't exist create them with the same time by now
 
     // Récupérer tous les codes existants pour cet orderId
     const existingCodes = await db.collection('order_status_history')
@@ -164,12 +161,8 @@ export async function changeOrderStatusById(orderId, statusId) {
 
     const existingSet = new Set(existingCodes.map(doc => doc.code));
 
-    // Obtenir l'heure actuelle en HH:MM:SS
-    const now = new Date();
-    const hh = String(now.getHours()).padStart(2, '0');
-    const mm = String(now.getMinutes()).padStart(2, '0');
-    const ss = String(now.getSeconds()).padStart(2, '0');
-    const currentTime = `${hh}:${mm}:${ss}`;
+    // Obtenir l'heure actuelle en format ISO (2025-10-05T09:06:56.113+00:00)
+    const currentTime = new Date()
 
     // Créer tous les codes manquants
     const toInsert = [];
@@ -189,9 +182,6 @@ export async function changeOrderStatusById(orderId, statusId) {
     } else {
       return { success: true, insertedCount: 0 };
     }
-
-
-    return
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;
@@ -228,7 +218,6 @@ export async function getPriceByOrderId(id) {
   }
 }
 
-
 export async function getOrdersFromDestinationInDB(destinationId) {
   let client = null
   try {
@@ -246,7 +235,6 @@ export async function getOrdersFromDestinationInDB(destinationId) {
       })
     );
 
-    //TODO: get only from destinationId
 
     //get only the orders with the status between 1 and 3 included with destinationId
     everyTablesOrders.map((t) => {
@@ -289,8 +277,11 @@ export async function getOrdersFromDestinationInDB(destinationId) {
       }))
     );
 
-    // sort according to the time 
-    allOrders.sort((a, b) => a.time.localeCompare(b.time));
+    allOrders.sort((a, b) => {
+      const dateA = new Date(a.time);
+      const dateB = new Date(b.time);
+      return dateA - dateB;
+    });
 
 
     //group the orders by table

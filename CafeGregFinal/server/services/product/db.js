@@ -32,7 +32,6 @@ export async function findProductById(id) {
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
 
-    console.log(id);
     
     const db = client.db(process.env.DB_NAME);
     const product = (await db.collection("products")
@@ -113,7 +112,6 @@ export async function findProductByName(name) {
       .toArray();
 
 
-    console.log(productsId);
     return productsId
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);

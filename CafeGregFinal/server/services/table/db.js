@@ -74,6 +74,8 @@ export async function addTableById(id) {
 }
 
 export async function addOrderToTable(tableId, order) {
+    console.log('Adding order to table:', tableId, order);
+    
     let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -107,11 +109,7 @@ export async function addOrderToTable(tableId, order) {
 
         //set the status 0 to the order in order_status_history with the time
 
-        const now = new Date();
-        const hh = String(now.getHours()).padStart(2, '0');
-        const mm = String(now.getMinutes()).padStart(2, '0');
-        const ss = String(now.getSeconds()).padStart(2, '0');
-        const time = `${hh}:${mm}:${ss}`;
+        const time = new Date();
 
         const statusToAdd = { time, code: 0, orderId: idOrder }
 

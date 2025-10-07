@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
-import { products } from '../tempDB.js';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
 import { useIdContext } from '../Contexts/askIdContext.jsx';
 import { changeStatusOfOrder, changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSection, getProductByName } from '../connectToDB.js';
 import { useMessageContext } from '../Contexts/messageContext.jsx';
+import { socket } from '../App.jsx';
 
 export default function Menu(props) {
 
@@ -21,16 +21,34 @@ export default function Menu(props) {
     const fetchOrders = async () => {
         const tempOrders = await getOrderOfTable(tableId)
         console.log('orders found from DB', tempOrders);
-
         setOrders([...tempOrders])
     }
 
     useEffect(() => {
-        if (tableId != undefined && tableId != null)
+        if (tableId != undefined && tableId != null) {
             fetchOrders()
+
+            // S'abonner aux mises à jour de cette table
+            socket.emit('subscribe:table', tableId);
+
+            // Écouter les mises à jour en temps réel
+            const handleOrdersUpdate = (data) => {
+                if (data.tableId === tableId) {
+                    console.log('Real-time orders update received:', data.orders);
+                    setOrders(data.orders);
+                }
+            };
+
+            socket.on('table:orders:updated', handleOrdersUpdate);
+
+            // Nettoyage lors du démontage
+            return () => {
+                socket.emit('unsubscribe:table', tableId);
+                socket.off('table:orders:updated', handleOrdersUpdate);
+            };
+        }
     }, [tableId])
 
-    const [customers, setCustomers] = useState([{ name: 'Nathan', id: '345538268', contact: '0584020406' }])
 
     const [showQRcode, setShowQRcode] = useState(false)
 
@@ -39,8 +57,6 @@ export default function Menu(props) {
     const [totalPrice, setTotalPrice] = useState(0);
 
     useEffect(() => {
-        console.log(orders[0]);
-
         if (orders.length == 0)
             return
         const tempTotalPrice = orders.reduce((acc, order) => {
@@ -48,6 +64,9 @@ export default function Menu(props) {
         }, 0);
         setTotalPrice(tempTotalPrice);
     }, [orders])
+
+
+
 
     //For menu side :
 
@@ -90,7 +109,6 @@ export default function Menu(props) {
         if (sectionId != null && sectionId != undefined) {
             let res = await getFromSection(sectionId)
             setMainContent(res);
-            console.log(res);
         }
     }
 
@@ -154,12 +172,13 @@ export default function Menu(props) {
     }
 
     const clickOnProduct = (productId) => {
+    console.log('tableId sended', tableId);
+        
         props.goto('/productPage', { productId, tableId, sectionId });
     }
 
     const clickOnRegisterLogin = () => {
-        //TODO: instead of send customers he will just send the tableId and with the table id take the customers from the database
-        props.goto('/customerRegisterLogin', { tableId, customers })
+        props.goto('/customerRegisterLogin', { tableId })
     }
 
 
@@ -184,16 +203,14 @@ export default function Menu(props) {
         return firstPrice
     }
 
-    const getTotalPriceOfOrders = () => {
-        let total = 0
-        orders.forEach(order => {
-            total += getTotalPriceOfOrder(order)
-        })
+    const getTotalPriceOfOrders = () => {      
+        let total = orders.reduce((acc, order) => {
+            return acc + getTotalPriceOfOrder(order)
+        }, 0)
         return total
     }
 
     const clickOnGreenButton = async () => {
-        console.log('everything ordered');
 
         //if there are no orders, do nothing
         if (orders.length == 0) {
@@ -203,15 +220,13 @@ export default function Menu(props) {
         //if there are orders with status 0 confirm the orders
         //find orders with status 0
         const pendingOrders = orders.reduce((acc, order) => {
-            console.log(order);
-
             if (order.status._id == 0) {
                 acc.push(order)
             }
             return acc
         }, [])
         if (pendingOrders.length > 0) {
-            await Promise.all(pendingOrders.map(order => changeStatusOfOrder(order._id, 1)))
+            await Promise.all(pendingOrders.map(order => changeStatusOfOrder(order._id, 1, tableId, order.destination)))
             addMessage("Orders successully", "success", 5000)
             fetchOrders()
             return
@@ -223,8 +238,9 @@ export default function Menu(props) {
             addMessage("A waiter has been called to pay", "success", 5000)
             return
         }
-        else{
+        else {
             addMessage("You must wait to receive all your orders before asking for the bill", "error", 5000)
+            return
         }
 
     }
@@ -261,6 +277,7 @@ export default function Menu(props) {
                 </div>
                 <FCOrders
                     orders={orders || []}
+                    tableId={tableId}
                     refreshOrders={fetchOrders}></FCOrders>
 
                 <div className='bottom'>

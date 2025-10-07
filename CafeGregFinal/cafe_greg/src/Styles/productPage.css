@@ -105,6 +105,61 @@
                     margin-bottom: 20px;
                 }
 
+                .changesAndNotesContainer {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 90%;
+                    margin-bottom: 20px;
+                }
+
+                .notesContainerExpanded {
+                    font-size: 30px;
+                    width: 90%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 20px;
+
+                    .noteInput {
+                        font-size: 30px;
+                        border-radius: 10px;
+                        border: none;
+                        padding: 10px;
+                        width: 100%;
+                    }
+                }
+
+                .notesContainer {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
+                    border-radius: 10px;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: lightgray;
+                    width: min-content;
+                    padding: 10px 5px;
+
+                    &.selected {
+                        background-color: darkgray;
+                        box-shadow: 0 0 10px black;
+                        transform: translateY(5px);
+                    }
+
+                    p {
+                        font-size: 30px;
+                        text-align: center;
+                    }
+
+                    img {
+                        height: 60px;
+                        filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.349)) brightness(0.8) saturate(2);
+                    }
+                }
+
                 .changesContainer {
                     display: flex;
                     flex-direction: row;
@@ -131,6 +186,7 @@
                     }
 
                     .change {
+                        cursor: pointer;
                         z-index: 1;
                         box-shadow: rgba(0, 0, 0, 0.466) 0px 15px 10px;
                         background-color: lightgray;
@@ -142,11 +198,11 @@
                         justify-content: space-between;
 
                         .name {
-                            font-size: 4vh;
+                            font-size: 40px;
                         }
 
                         .price {
-                            font-size: 3vh;
+                            font-size: 30px;
                             justify-self: flex-end;
                             padding-block: 5px;
 
@@ -390,8 +446,8 @@
                     }
                 }
 
-                .eachAddedIngredient{
-                    h2{
+                .eachAddedIngredient {
+                    h2 {
                         background-color: rgb(81, 129, 173) !important;
                     }
                 }

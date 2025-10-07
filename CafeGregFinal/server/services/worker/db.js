@@ -1,4 +1,3 @@
-import { log } from 'node:console';
 import { __dirname } from '../../globals.js';
 import { MongoClient, ObjectId } from 'mongodb';
 

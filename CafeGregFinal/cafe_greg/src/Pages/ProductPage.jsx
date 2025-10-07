@@ -13,10 +13,9 @@ export default function ProductPage(props) {
     const location = useLocation();
     const { productId, tableId, sectionId, sendedOrder, researchSettings} = location.state;
 
-    if(researchSettings){
-        console.log('researchSettings', researchSettings);
-    }
 
+    console.log('tableId received', tableId);
+    
     const [product, setProduct] = useState(null)
 
     //is the id of the salads added
@@ -28,6 +27,23 @@ export default function ProductPage(props) {
     const [addedIngredients, setAddedIngredients] = useState(sendedOrder?.adds || [])
 
     const [changes, setChanges] = useState(sendedOrder?.changes || [])
+
+    const [notesForChanges, setNotesForChanges] = useState(sendedOrder?.notesForChanges || [])
+
+    const writeNoteForChange = (ingredientId, note) => {
+        if(!note || note.trim() === ''){
+            deleteNoteForChange(ingredientId)
+            return
+        }
+        const index = notesForChanges.findIndex(n => n.ingredientId == ingredientId)
+        let tempNotes = notesForChanges.filter((_, i) => i !== index)
+        setNotesForChanges([...tempNotes, { ingredientId, note }])
+    }
+
+    const deleteNoteForChange = (ingredientId) => {
+        const newNotes = notesForChanges.filter(n => n.ingredientId != ingredientId)
+        setNotesForChanges(newNotes)
+    }
 
     const changeIngredient = (ingredientId, newChange) => {
 
@@ -45,11 +61,6 @@ export default function ProductPage(props) {
             setChanges(tempChanges)
         }
     };
-
-
-    useEffect(() => {
-        console.log(changes);
-    }, [changes])
 
 
     useEffect(() => {
@@ -87,7 +98,8 @@ export default function ProductPage(props) {
             ...(changes && { changes }),
             ...(addedIngredients.length > 0 && { adds: addedIngredients }),
             ...(product.salads && { salad: selectedSalad }),
-            ...(selectedSauces.length > 0 && { sauces: selectedSauces })
+            ...(selectedSauces.length > 0 && { sauces: selectedSauces }),
+            ...(notesForChanges.length > 0 && { notesForChanges })
         };
 
         const result = await sendOrder(tableId, tempOrder);
@@ -119,8 +131,6 @@ export default function ProductPage(props) {
     }
 
     const changeQuantitySauce = (sauceId, mark) => {
-        console.log('sauceId', sauceId, mark);
-        console.log(selectedSauces);
 
         const indexSauce = selectedSauces.findIndex(sauce => sauce._id == sauceId)
 
@@ -187,7 +197,9 @@ export default function ProductPage(props) {
 
                     <h1 className="title">Changes details</h1>
                     {product.ingredients.map(ingredient => (
-                        <FCChangeIngredient change={changeIngredient} ingredient={ingredient} changeChosen={changes.find(c => c.ingredientId == ingredient._id)?.change} key={ingredient._id} />
+                        <FCChangeIngredient change={changeIngredient} 
+                        writeNoteForChange={writeNoteForChange} deleteNoteForChange={deleteNoteForChange} 
+                        ingredient={ingredient} changeChosen={changes.find(c => c.ingredientId == ingredient._id)?.change} key={ingredient._id} />
                     ))}
                     {product.adds && <FCAddIngredients addedIngredients={addedIngredients} addAnIngredient={addAnIngredient} removeAnAddedIngredient={removeAnAddedIngredient} adds={product.adds} />}
                     {product.sauces.length > 0 && <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />}

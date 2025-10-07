@@ -9,7 +9,7 @@ orderRouter
     .get('/:id/price', logger, getOrderPrice) 
     .get('/fromDestination/:destination', logger, getOrdersFromDestination) 
     .post('/remove/:id', logger, removeOrder) 
-    .post('/changeOrderStatus/:id/:status', logger, changeStatus) 
+    .post('/changeOrderStatus/:id/:status/:tableId/:destinationId', logger, changeStatus) 
 
 export default orderRouter;
 

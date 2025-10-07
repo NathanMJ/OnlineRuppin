@@ -1,5 +1,6 @@
 import { log } from "node:console";
 import Customer from "./model.js";
+import { emitCafeTableUpdate } from "../table/controller.js";
 
 export async function getAllCustomers(req, res) {
     //check permits 
@@ -64,6 +65,7 @@ export async function registerCustomer(req, res) {
         };
         const tableId = Number(req.params.tableId);
         const response = await Customer.register(tableId, customer);
+        emitCafeTableUpdate(req.io);
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -75,6 +77,7 @@ export async function loginCustomer(req, res) {
         const { id } = req.body;
         const tableId = Number(req.params.tableId);
         const response = await Customer.login(tableId, id);
+        emitCafeTableUpdate(req.io);
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });
@@ -85,6 +88,7 @@ export async function disconnectCustomer(req, res) {
     try {
         const { id } = req.body;
         const response = await Customer.disconnect(id);
+        emitCafeTableUpdate(req.io);
         return res.status(200).json(response);
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message });

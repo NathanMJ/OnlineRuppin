@@ -16,7 +16,6 @@ export async function getFromTheSectionId(id) {
         //test if the id we got child_section if not get products
 
         const currentSection = await db.collection("sections").findOne({ _id: Number(id) })
-        console.log(currentSection);
 
         if (currentSection.child_sections) {
             const fullChildSections = await Promise.all(
@@ -60,7 +59,6 @@ export async function getPreviousIdSectionsById(id) {
 
         if (!previousSection)
             throw new Error('No previous section found')
-        console.log(previousSection._id);
         return previousSection._id
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);

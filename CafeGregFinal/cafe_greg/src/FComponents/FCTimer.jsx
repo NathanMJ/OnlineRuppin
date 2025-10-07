@@ -7,10 +7,8 @@ export default function FCTimer({ start }) {
     const updateTimer = () => {
       const now = new Date();
       
-      // Parser le format "HH:MM:SS" et créer une date aujourd'hui avec cette heure
-      const [hours, minutes, seconds] = start.split(':').map(Number);
-      const startTime = new Date();
-      startTime.setHours(hours, minutes, seconds, 0);
+      // Parser la date ISO directement
+      const startTime = new Date(start);
       
       // Calculer la différence en secondes
       const diff = Math.floor((now - startTime) / 1000);
