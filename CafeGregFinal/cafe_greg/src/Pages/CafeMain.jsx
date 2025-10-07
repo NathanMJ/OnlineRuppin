@@ -32,11 +32,11 @@ export default function CafeMain(props) {
     useEffect(() => {
         fetchAndCompare();
 
+        //TODO :Ajouter un listener pour les mises a jour de commandes qui sont pretes (commande prete en cuisine/bar)
+
         socket.emit('subscribe:cafe-tables');
 
         const handleTablesUpdate = (data) => {
-            console.log("Current tables:", previousDataRef.current);            
-            console.log('Real-time orders update received:', data.tables);
             //compare the data of each table and write a message if there is a change
             const tempNewTables = data.tables || []
             const tempOldTables = previousDataRef.current || []

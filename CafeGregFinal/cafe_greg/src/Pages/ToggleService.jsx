@@ -1,7 +1,22 @@
-import React, { useState, useEffect } from "react";
-import { tempTimeWorker, tempWorkers } from "../tempDB";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ReturnButton from "../FComponents/ReturnButton.jsx";
+
+export const tempTimeWorker = [
+    {
+        startTime: '2025-05-19T12:26:30',
+        startId: '345538268',
+        pauseTime: '2025-05-19T13:32:23',
+        pauseId: '345538268'
+    },
+    {
+        startTime: '2025-05-19T13:24:22',
+        startId: '345538268',
+        pauseTime: '2025-05-19T15:52:35',
+        pauseId: '345538268'
+    }
+]
+
 
 export default function ToggleService(props) {
   //TO DO : 
@@ -17,17 +32,13 @@ export default function ToggleService(props) {
   },[id])
 
   const changeStatus = async () => {
-
     //change status of the worker in the database
-
-    //Change the button according to the new status
-    setIsWorking(!isWorking);
-
+    console.log("Change status clicked");
+    
 
   }
 
   const checkIfWorking = async () => {
-    // TO DO : check if the worker is working or not
     if(tempTimeWorker.length > 0) {
       if(tempTimeWorker[tempTimeWorker.length - 1].pauseTime) {
         return true;
@@ -45,15 +56,16 @@ export default function ToggleService(props) {
     fetchWorkingStatus();
   }, []);
 
-  if (isWorking == null) {
-    return (<div><h1>Loading...</h1></div>);
-  }
-  
   const timeToString = (time) => {
     const date = new Date(time);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' , second: '2-digit' });
   }
+
   const totalDay = () => {
+    //if is working return a timer
+    //if not return the total time worked today
+
+
     // Sum all time differences for today
     let totalMs = 0;
     const today = new Date().toDateString();
@@ -100,16 +112,12 @@ const totalTime = (start, pause) => {
 
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
   }
-  return "00:00";
+  return "00:00:00";
 };
 
 
   const getNameById = (id) => {
-    const worker = tempWorkers.find(worker => worker.id === id);
-    if (worker) {
-      return `${worker.firstname} ${worker.lastname}`;
-    }
-    return "Unknown";
+    return "Temp Name"; 
   }
 
   return (
