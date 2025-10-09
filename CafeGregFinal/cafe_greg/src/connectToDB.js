@@ -327,6 +327,10 @@ export async function workerEntry(workerId, clickerId) {
     return await callAPI(`worker/entry`, 'POST', { workerId, clickerId })
 }
 
+export async function workerPause(workerId, clickerId) {
+    return await callAPI(`worker/pause`, 'POST', { workerId, clickerId })
+}
+
 export async function getWorkerEntries(workerId) {
     return await callAPI(`worker/getEntries`, 'POST', { workerId })
 }

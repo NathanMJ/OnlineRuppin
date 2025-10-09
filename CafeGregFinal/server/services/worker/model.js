@@ -1,7 +1,8 @@
 import {
     entryWorker,
     getWorkerFromDB,
-    getEntriesFromDB
+    getEntriesFromDB,
+    pauseWorker
 } from './db.js';
 
 export default class Worker {
@@ -11,6 +12,10 @@ export default class Worker {
 
     static async entry(id, clickerId){
         return await entryWorker(id, clickerId)
+    }
+
+    static async pause(id, clickerId){
+        return await pauseWorker(id, clickerId)
     }
 
     static async getEntries(workerId){

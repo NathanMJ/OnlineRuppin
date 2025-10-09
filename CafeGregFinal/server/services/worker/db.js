@@ -84,14 +84,48 @@ export async function entryWorker(workerId, clickerId) {
     }
 }
 
+
+export async function pauseWorker(workerId, clickerId) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+        const pauseTime = new Date()
+        //check if there is a doc with a shift with only entry
+        let exist = await db.collection('workers_shifts').findOne({
+            workerId,
+            startTime: { $exists: true },
+            pauseTime: { $exists: false }
+        })
+        if (!exist) {
+            throw new Error("The worker is not working")
+        }
+        await db.collection('workers_shifts').updateOne({
+            workerId, pauseTime: {$exists: false}} , { $set: {
+                pauseId: clickerId,
+                pauseTime
+            }})
+        return pauseTime
+    }
+    catch (error) {
+        console.error('Erreur attrapee', error)
+    }
+    finally {
+        if (client) {
+            client.close
+        }
+    }
+}
+
 export async function getEntriesFromDB(workerId) {
     let client
     try {
-        client = await MongoClient(process.env.CONNECTION_STRING)
+        client = await MongoClient.connect(process.env.CONNECTION_STRING)
         const db = client.db(process.env.DB_NAME)
-        let shifts = db.collection('workers_shifts').aggregate([
+        let shifts = await db.collection('workers_shifts').aggregate([
             {
                 $match: {
+                    workerId: workerId,
                     startTime: {
                         $gte: new Date(new Date().setHours(0, 0, 0, 0)),
                         $lt: new Date(new Date().setHours(23, 59, 59, 999))
@@ -101,20 +135,24 @@ export async function getEntriesFromDB(workerId) {
             {
                 $lookup: {
                     from: "workers",
-                    localField:"startId",
+                    localField: "startId",
                     foreignField: "_id",
-                    as: "startName"
+                    as: "starter"
                 }
             },
+            { $unwind: { path: "$starter", preserveNullAndEmptyArrays: true } }, // 👈 transforme le tableau en objet
+
             {
                 $lookup: {
                     from: "workers",
-                    localField:"pauseId",
+                    localField: "pauseId",
                     foreignField: "_id",
-                    as: "pauseName"
+                    as: "pauser"
                 }
-            }
-        ])
+            },
+                { $unwind: { path: "$pauser", preserveNullAndEmptyArrays: true } } // 👈 transforme le tableau en objet
+
+        ]).toArray()
         return shifts
     }
     catch (err) {
@@ -122,6 +160,6 @@ export async function getEntriesFromDB(workerId) {
     }
     finally {
         if (client)
-            client.close
+            client.close()
     }
 }

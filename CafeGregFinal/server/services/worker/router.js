@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
     getWorker,entry,
-    getEntries
+    getEntries, pause
 } from './controller.js';
 
 function logger(req, res, next) {
@@ -17,5 +17,6 @@ workerRouter
     .get('/:id', logger, getWorker)
     .post('/getEntries', logger, getEntries)
     .post('/entry', logger, entry)
+    .post('/pause', logger, pause)
 
 export default workerRouter;

@@ -60,7 +60,7 @@ server.use('/api/website', websiteRouter)
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('Client connecté:', socket.id);
-  
+
   // 🧠 1️⃣ Afficher le nombre de clients connectés
   console.log("Nombre total de clients :", io.engine.clientsCount);
 
@@ -81,12 +81,12 @@ io.on('connection', (socket) => {
   });
 
   // Le client peut se connecter a la cuisine/bar
-    socket.on('subscribe:preparation', (destinationId) => {
+  socket.on('subscribe:preparation', (destinationId) => {
     socket.join(`preparationRoom:${destinationId}`);
     console.log(`Client ${socket.id} connecte à la preparation ${destinationId}`);
   });
 
-  
+
   // Se désabonner d'une table
   socket.on('unsubscribe:preparation', (destinationId) => {
     socket.leave(`preparationRoom:${destinationId}`);
@@ -105,7 +105,19 @@ io.on('connection', (socket) => {
     console.log(`Client ${socket.id} désabonné des changements des tables`);
   });
 
-  
+  // S'abonner aux changement des tables
+  socket.on('subscribe:worker-entries', (workerId) => {
+    socket.join(`get-entries:${workerId}`);
+    console.log(`Client ${socket.id} abonné aux changements des entrees du worker ${workerId}`);
+  });
+
+  // Se désabonner des changement des tables
+  socket.on('unsubscribe:worker-entries', (workerId) => {
+    socket.leave(`get-entries:${workerId}`);
+    console.log(`Client ${socket.id} désabonné des changements des entrees du worker ${workerId}`);
+  });
+
+
   socket.on('disconnect', () => {
     console.log('Client déconnecté:', socket.id);
   });

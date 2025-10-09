@@ -1,51 +1,69 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import ReturnButton from "../FComponents/ReturnButton.jsx";
-import { getWorkerEntries, workerEntry } from "../connectToDB.js";
+import { getWorkerEntries, workerEntry, workerPause } from "../connectToDB.js";
+import { socket } from "../App.jsx";
 
 
 
 
 export default function ToggleService(props) {
-  //TO DO : 
-  // Check if the current id is working or not 
-  // Set the button according to the current status
-  const location = useLocation();
 
-  const workerId = location.state?.id || 'not found';
-  const clickerId = location.state?.clickerId || workerId
+  //TODO: if is worker set the time to a timer and the total to timer
+  const location = useLocation();
+  //workerId
+  const worker = location.state?.worker || 'not found';
+  const clickerId = location.state?.clickerId || worker._id
   const [workerTimes, setWorkerTimes] = useState([])
 
   useEffect(() => {
-    console.log(workerId);
-    if (workerId) {
+    if (worker._id) {
       const fetchWorkerTimes = async () => {
-        console.log("Get workerTIme");
-        
-        const tempWorkerTimes = await getWorkerEntries(workerId)
-        console.log(tempWorkerTimes);
-        
-        setWorkerTimes(tempWorkerTimes)
+        const data = await getWorkerEntries(worker._id)
+        console.log(data.entries);
+        setWorkerTimes(data.entries)
       }
       fetchWorkerTimes()
+
+      socket.emit(`subscribe:worker-entries`, worker._id)
+
+      const handleEntriesUpdate = (data) => {
+        console.log(data);
+        
+        if(data.workerId == worker._id){
+          setWorkerTimes(data.entries)
+        }
+      }
+
+        socket.on(`get-entries:updated`, handleEntriesUpdate)
+
+      return () => {
+        socket.emit('unsubscribe:worker-entries', worker._id)
+        socket.off(`get-entries:updated`, handleEntriesUpdate)
+      }
     }
-  }, [workerId])
+  }, [worker._id])
 
   const changeStatus = async () => {
     //change status of the worker in the database
     console.log("Change status clicked");
-    if (checkIfWorking()) {
-      const a = await workerEntry(workerId, clickerId)
+
+    if (!isWorking()) {
+      console.log("Starting work");
+
+      const a = await workerEntry(worker._id, clickerId)
     }
-
-
+    else {
+      const a = await workerPause(worker._id, clickerId)
+    }
   }
 
-  const checkIfWorking = async () => {
+  const isWorking = () => {
     if (workerTimes.length > 0) {
       if (workerTimes[workerTimes.length - 1].pauseTime) {
-        return true;
+        return false;
       }
+      else { return true; }
     }
     return false;
   };
@@ -110,17 +128,22 @@ export default function ToggleService(props) {
   };
 
 
-  const getNameById = (id) => {
-    return "Temp Name";
+  const whoClicked = (clicker) => {
+    if (clicker.id === worker.id) {
+      return "Me"
+    }
+    return clicker.name
   }
-
   return (
     <div className="managerTimer">
-      <h2 className="welcome">Welcome {getNameById(workerId)}</h2>
+      <h2 className="welcome">Welcome {worker.name}</h2>
       <h2>Time worked today :</h2>
       <h3 className="timer">{totalDay()}</h3>
-      <button onClick={changeStatus}
-        className={checkIfWorking ? "start" : "pause"}></button>
+      <button
+        onClick={changeStatus}
+        className={isWorking() ? "pause" : "start"}
+      >
+      </button>
       <table>
         <thead>
           <tr>
@@ -129,19 +152,33 @@ export default function ToggleService(props) {
             <th>Total</th>
           </tr>
         </thead>
-        {workerTimes.map((time => (
-          <tbody key={time.startTime}>
-            <tr>
+        <tbody>
+          {workerTimes.map((time, index) => (
+            <tr key={index}>
               <td>
-                {timeToString(time.startTime)}<br />({getNameById(time.startId)})
+                {timeToString(time.startTime)}
+                <br />
+                ({whoClicked(time.starter)})
               </td>
-              <td>{timeToString(time.pauseTime)}<br />({getNameById(time.pauseId)})</td>
+              <td>
+                {time.pauseTime
+                  ? <>
+                    {timeToString(time.pauseTime)}
+                    <br />
+                    ({whoClicked(time.pauser)})
+                  </>
+                  : "Currently working"}
+              </td>
               <td>{totalTime(time.startTime, time.pauseTime)}</td>
             </tr>
-          </tbody>
-        )))}
+          ))}
+        </tbody>
       </table>
-      <ReturnButton bottom={'3vh'} left={'3vh'} returnButton={() => props.goto('/workMain')}></ReturnButton>
+      <ReturnButton
+        bottom={"3vh"}
+        left={"3vh"}
+        returnButton={() => props.goto("/workMain")}
+      />
     </div>
   );
 }

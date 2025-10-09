@@ -34,7 +34,7 @@ export default function WorkMain(props) {
 
         switch (destination) {
             case 'service':
-                navigate('/toggleService', { state: { id } })
+                navigate('/toggleService', { state: { worker} })
                 break;
             case 'bar':
                 if (worker.isBarman) {
