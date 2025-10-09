@@ -2,8 +2,8 @@ import { __dirname } from '../../globals.js';
 import { MongoClient, ObjectId } from 'mongodb';
 
 function capitalize(word) {
-  if (!word) return "";
-  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    if (!word) return "";
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
 
@@ -26,15 +26,15 @@ export async function getWorkerFromDB(id) {
             }
         ]).toArray();
 
-        
-        if(worker.length > 0)
-            worker = worker[0]
-        else 
-            return
-        
-        
 
-        worker.authorizations.forEach(auth => {            
+        if (worker.length > 0)
+            worker = worker[0]
+        else
+            return
+
+
+
+        worker.authorizations.forEach(auth => {
             worker[`is${capitalize(auth.name)}`] = true
         });
 
@@ -52,3 +52,76 @@ export async function getWorkerFromDB(id) {
     }
 }
 
+export async function entryWorker(workerId, clickerId) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+        const startTime = new Date()
+        //check if there is a doc with a shift with only entry
+        let exist = await db.collection('workers_shifts').findOne({
+            workerId,
+            startTime: { $exists: true },
+            pauseTime: { $exists: false }
+        })
+        if (exist) {
+            throw new Error("The worker is already connected")
+        }
+        await db.collection('workers_shifts').insertOne({
+            workerId,
+            startId: clickerId,
+            startTime
+        })
+        return startTime
+    }
+    catch (error) {
+        console.error('Erreur attrapee', error)
+    }
+    finally {
+        if (client) {
+            client.close
+        }
+    }
+}
+
+export async function getEntriesFromDB(workerId) {
+    let client
+    try {
+        client = await MongoClient(process.env.CONNECTION_STRING)
+        const db = client.db(process.env.DB_NAME)
+        let shifts = db.collection('workers_shifts').aggregate([
+            {
+                $match: {
+                    startTime: {
+                        $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                        $lt: new Date(new Date().setHours(23, 59, 59, 999))
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: "workers",
+                    localField:"startId",
+                    foreignField: "_id",
+                    as: "startName"
+                }
+            },
+            {
+                $lookup: {
+                    from: "workers",
+                    localField:"pauseId",
+                    foreignField: "_id",
+                    as: "pauseName"
+                }
+            }
+        ])
+        return shifts
+    }
+    catch (err) {
+
+    }
+    finally {
+        if (client)
+            client.close
+    }
+}

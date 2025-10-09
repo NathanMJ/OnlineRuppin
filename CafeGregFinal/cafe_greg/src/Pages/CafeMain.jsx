@@ -5,7 +5,6 @@ import { useIdContext } from "../Contexts/askIdContext";
 import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, getWorkerById, payTableInDB, switchTables } from "../connectToDB.js"
 import { useMessageContext } from "../Contexts/messageContext.jsx";
 import { socket } from "../App.jsx";
-import { use } from "react";
 
 export default function CafeMain(props) {
 

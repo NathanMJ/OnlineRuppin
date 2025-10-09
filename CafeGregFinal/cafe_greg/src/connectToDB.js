@@ -1,6 +1,6 @@
 const serverUrl = 'http://localhost:5500/api'
 
-export async function getTables() {    
+export async function getTables() {
 
     try {
         const response = await fetch(`${serverUrl}/table`)
@@ -11,7 +11,7 @@ export async function getTables() {
 
         const tables = await response.json()
         console.log(tables);
-        
+
         return tables
     } catch (error) {
         console.error('Error fetching tables:', error)
@@ -306,8 +306,8 @@ export async function callAPI(api, method, body) {
 }
 
 
-export async function switchTables(tableId1, tableId2){
-    await callAPI(`table/${tableId1}/switchWith/${tableId2}`,'POST')
+export async function switchTables(tableId1, tableId2) {
+    await callAPI(`table/${tableId1}/switchWith/${tableId2}`, 'POST')
 }
 
 
@@ -321,4 +321,12 @@ export async function getWorkerById(workerId) {
 
 export async function connectToWebsite(login, password) {
     return await callAPI(`website/connect`, 'POST', { login, password })
+}
+
+export async function workerEntry(workerId, clickerId) {
+    return await callAPI(`worker/entry`, 'POST', { workerId, clickerId })
+}
+
+export async function getWorkerEntries(workerId) {
+    return await callAPI(`worker/getEntries`, 'POST', { workerId })
 }
