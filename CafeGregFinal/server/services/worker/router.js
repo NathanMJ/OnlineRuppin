@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import {
-    getWorker,entry,
-    getEntries, pause
+    getWorker, entry,
+    getEntries, pause, getEveryEntriesWithWorkers
 } from './controller.js';
 
 function logger(req, res, next) {
@@ -15,6 +15,7 @@ const workerRouter = Router();
 
 workerRouter
     .get('/:id', logger, getWorker)
+    .post('/getEveryEntriesWithWorkers', logger, getEveryEntriesWithWorkers)
     .post('/getEntries', logger, getEntries)
     .post('/entry', logger, entry)
     .post('/pause', logger, pause)

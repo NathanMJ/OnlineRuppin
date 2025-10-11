@@ -47,39 +47,43 @@ export async function getWorkerFromDB(id) {
     }
     finally {
         if (client) {
-            client.close();
+            await client.close();
         }
     }
 }
-
 export async function entryWorker(workerId, clickerId) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
         const startTime = new Date()
-        //check if there is a doc with a shift with only entry
+
+        // Check if there is a doc with a shift with only entry
         let exist = await db.collection('workers_shifts').findOne({
             workerId,
             startTime: { $exists: true },
             pauseTime: { $exists: false }
         })
+        
         if (exist) {
-            throw new Error("The worker is already connected")
+            return {success : false, message: "The worker is already working, go to the manager to fix it"}
         }
+
         await db.collection('workers_shifts').insertOne({
             workerId,
             startId: clickerId,
             startTime
         })
-        return startTime
+
+        return { success: true, startTime } // ✅ Retourne un objet avec success
     }
     catch (error) {
-        console.error('Erreur attrapee', error)
+        console.error('Erreur attrapee dans entryWorker:', error)
+        return { success: false, message: error.message } // ✅ Retourne l'erreur
     }
     finally {
         if (client) {
-            client.close
+            await client.close() // ✅ Ajoutez await
         }
     }
 }
@@ -91,28 +95,46 @@ export async function pauseWorker(workerId, clickerId) {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
         const pauseTime = new Date()
-        //check if there is a doc with a shift with only entry
+
+        // Check if there is a doc with a shift with only entry
         let exist = await db.collection('workers_shifts').findOne({
             workerId,
             startTime: { $exists: true },
             pauseTime: { $exists: false }
         })
+
         if (!exist) {
             throw new Error("The worker is not working")
         }
-        await db.collection('workers_shifts').updateOne({
-            workerId, pauseTime: {$exists: false}} , { $set: {
-                pauseId: clickerId,
-                pauseTime
-            }})
-        return pauseTime
+
+        const result = await db.collection('workers_shifts').updateOne(
+            { workerId, pauseTime: { $exists: false } },
+            {
+                $set: {
+                    pauseId: clickerId,
+                    pauseTime
+                }
+            }
+        )
+
+        // ✅ Vérifier que l'update a fonctionné
+        if (result.matchedCount === 0) {
+            throw new Error("No active shift found")
+        }
+
+        if (result.modifiedCount === 0) {
+            throw new Error("Failed to update shift")
+        }
+
+        return { success: true, pauseTime } // ✅ Retourne un objet avec success
     }
     catch (error) {
-        console.error('Erreur attrapee', error)
+        console.error('Erreur attrapee dans pauseWorker:', error)
+        return { success: false, error: error.message } // ✅ Retourne l'erreur
     }
     finally {
         if (client) {
-            client.close
+            await client.close() // ✅ Ajoutez await
         }
     }
 }
@@ -150,7 +172,7 @@ export async function getEntriesFromDB(workerId) {
                     as: "pauser"
                 }
             },
-                { $unwind: { path: "$pauser", preserveNullAndEmptyArrays: true } } // 👈 transforme le tableau en objet
+            { $unwind: { path: "$pauser", preserveNullAndEmptyArrays: true } } // 👈 transforme le tableau en objet
 
         ]).toArray()
         return shifts
@@ -160,6 +182,39 @@ export async function getEntriesFromDB(workerId) {
     }
     finally {
         if (client)
-            client.close()
+            await client.close()
     }
 }
+
+export async function getEveryEntriesWithWorkersFromDB() {
+  let client;
+  try {
+    client = await MongoClient.connect(process.env.CONNECTION_STRING);
+    const db = client.db(process.env.DB_NAME);
+
+    // 1️⃣ Récupérer tous les workers (juste _id et name)
+    const workers = await db.collection('workers')
+      .find({}, { projection: { _id: 1, name: 1 } })
+      .toArray();
+
+    // 2️⃣ Pour chaque worker, récupérer ses entrées via getEntriesFromDB
+    // Ici on doit passer worker._id
+    const entriesWithWorkers = await Promise.all(
+      workers.map(async (w) => {
+        const entries = await getEntriesFromDB(w._id); // ✅ ta fonction existante
+        return {
+          worker: w,
+          entries,
+        };
+      })
+    );
+
+    return entriesWithWorkers;
+  } catch (err) {
+    console.error("Error in getEveryEntriesWithWorkersFromDB:", err);
+    return null;
+  } finally {
+    if (client) await client.close();
+  }
+}
+

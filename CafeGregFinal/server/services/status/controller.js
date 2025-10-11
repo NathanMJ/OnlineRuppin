@@ -9,3 +9,12 @@ export async function getStatusOfOrder(req, res) {
     return res.status(200).json(response);
 }
 
+export async function getEveryStatus(req, res) {
+    const response = await Status.getEveryStatus();
+    if (!response.ok) {
+        return res.status(404).json(response);
+    }
+    return res.status(200).json(response);
+}
+
+

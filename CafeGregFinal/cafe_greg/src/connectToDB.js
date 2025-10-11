@@ -334,3 +334,23 @@ export async function workerPause(workerId, clickerId) {
 export async function getWorkerEntries(workerId) {
     return await callAPI(`worker/getEntries`, 'POST', { workerId })
 }
+
+export async function getEveryEntriesWithWorkers() {
+    const data = await callAPI(`worker/getEveryEntriesWithWorkers`, 'POST')
+    return data.entriesWithWorkers
+}
+
+export async function fetchEveryProducts() {
+    const data = await callAPI(`product/`, 'GET')
+    return data
+}
+
+export async function sendNewProduct(newProduct) {
+    const data = await callAPI(`product/changeProduct`, 'POST', { newProduct })
+    return data
+}
+
+export async function getEveryStatus() {
+    const data = await callAPI(`status`, 'GET')
+    return data
+}

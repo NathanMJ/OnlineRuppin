@@ -1,81 +1,89 @@
-.toggleService {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    height: 100vh;
-}
-
-
-.managerTimer .timer::before {
-    content: '🕒 ';
-}
-
 .managerTimer {
-    margin-top: 33vh;
+
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(rgb(180, 226, 198), rgb(82, 151, 97));
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
     gap: 10px;
+
+
+    .welcome {
+        font-size: 40px;
+    }
+
+    .titleWorkedToday {
+        font-size: 30px;
+
+    }
+
+
+    .timerContainer {
+        font-size: 40px;
+    }
+
+
+    .changeStatusButton {
+        font-size: 35px;
+        padding: 20px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .changeStatusButton:not(.notActivated):hover {
+        filter: brightness(.5);
+        transform: translateY(2px);
+    }
+
+
+    .start {
+        color: white;
+        background-color: green;
+    }
+
+    .pause {
+        color: white;
+        background-color: red;
+    }
+
+    .start.notActivated,
+    .pause.notActivated {
+        opacity: 0.5;
+    }
+
+    .start::before {
+        content: '▶️ Start service'
+    }
+
+    .pause::before {
+        content: '⏸️ Pause service'
+    }
+
+    table {
+        border-collapse: collapse;
+        border-radius: 10px;
+        border: 5px black solid;
+        overflow: hidden;
+    }
+
+    table tr,
+    table td,
+    table th {
+        border: 3px rgb(1, 12, 5) solid;
+        padding: 15px;
+        text-align: center;
+        font-size: 25px;
+    }
+
+    table tr:nth-child(even) {
+        background-color: rgb(214, 214, 214);
+    }
+
+    table tr:nth-child(odd) {
+        background-color: rgb(156, 156, 156);
+    }
 }
-
-.managerTimer .start,
-.managerTimer .pause {
-    width: 50%;
-    height: 50px;
-    font-size: 25px;
-    margin: 5px;
-}
-
-.managerTimer .start:hover,
-.managerTimer .pause:hover {
-    filter: brightness(.5);
-    transform: translateY(2px);
-}
-
-
-.managerTimer .start {
-    color: white;
-    background-color: green;
-}
-
-.managerTimer .pause {
-    color: white;
-    background-color: red;
-}
-
-.managerTimer .start::before {
-    content: '▶️ Start service'
-}
-
-.managerTimer .pause::before {
-    content: '⏸️ Pause service'
-}
-
-.managerTimer table {
-    border-collapse: collapse;
-}
-
-.managerTimer table tr,
-.managerTimer table td,
-.managerTimer table th {
-    border: 2px black solid;
-    padding: 5px;
-    text-align: center;
-    width: 100px;
-}
-
-.managerTimer table tr:nth-child(even) {
-    background-color: rgb(214, 214, 214);
-}
-
-.managerTimer table tr:nth-child(odd) {
-    background-color: rgb(156, 156, 156);
-}
-
-.managerTimer .clickedBtn {
-    filter: brightness(.5);
-    transform: translateY(2px);
-}
-

@@ -4,29 +4,25 @@ import ReturnButton from "../FComponents/ReturnButton"
 import { useNavigate } from 'react-router-dom';
 import { useIdContext } from '../Contexts/askIdContext';
 import { getWorkerById } from '../connectToDB';
+import { useMessageContext } from '../Contexts/messageContext';
 
 export default function WorkMain(props) {
-    const [show, setShow] = useState(false);
     const [destination, setDestination] = useState('')
-    const navigate = useNavigate()
 
+    const { addMessage } = useMessageContext();
 
     const { getWorkerId } = useIdContext();
 
-    const gotAuthorization = (arrAuth, auth) => {
-        if (!arrAuth)
-            return
-        return arrAuth.some(a => a.name == auth)
-    }
 
     const goToWithId = async () => {
-        //TO DO : check if the id exist in the db
         const id = await getWorkerId()
 
         const worker = await getWorkerById(id)
-        console.log(worker);
+        console.log('worker is ', worker);
+
         if (!worker) {
             setDestination('')
+            addMessage("No worker found", "error", 5000)
             return
         }
 
@@ -34,7 +30,7 @@ export default function WorkMain(props) {
 
         switch (destination) {
             case 'service':
-                navigate('/toggleService', { state: { worker} })
+                props.goto('/toggleService', { worker })
                 break;
             case 'bar':
                 if (worker.isBarman) {
@@ -47,7 +43,11 @@ export default function WorkMain(props) {
                 }
                 break;
             case 'manager':
-                alert("Manager side is not available yet")
+                if (worker.isManager) {
+                    props.goto('/manager', { manager: worker })
+                }
+                else 
+                    addMessage('You are not allowed.', 'error', 5000)
                 break;
         }
         setDestination('')
@@ -58,8 +58,6 @@ export default function WorkMain(props) {
         if (destination != '') {
             goToWithId()
         }
-        console.log(destination);
-
     }, [destination])
 
     const clickOnField = (field) => {

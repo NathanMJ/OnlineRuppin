@@ -5,20 +5,23 @@ export async function getWorker(req, res) {
     const id = req.params.id
     let worker = await Worker.getWorker(id);
     if (!worker) {
-        return res.status(404).json({ message: "No worker found" });
+        return res.status(404).json(false);
     }
     return res.status(200).json(worker);
 }
 
 
 export async function entry(req, res) {
+    console.log('post entry');
+
     const { workerId, clickerId } = req.body
     let response = await Worker.entry(workerId, clickerId)
-    if (!response) {
-        return res.status(404).json({ message: `Error with the entry of the worker : ${workerId}` })
+    if (!response.success) {
+        return res.status(404).json({ message: response.message })
     }
     emitWorkerUpdate(req.io, workerId)
-    return res.status(200)
+    emitEveryWorkerUpdate(req.io)
+    return res.status(200).json({ ok: true, message: 'Entry confirmed'})
 }
 
 export async function pause(req, res) {
@@ -28,7 +31,8 @@ export async function pause(req, res) {
         return res.status(404).json({ message: `Error with the pause of the worker : ${workerId}` })
     }
     emitWorkerUpdate(req.io, workerId)
-    return res.status(200)
+    emitEveryWorkerUpdate(req.io)
+    return res.status(200).json({ ok: true, message: 'Pause confirmed'})
 }
 
 
@@ -42,16 +46,36 @@ export async function getEntries(req, res) {
     return res.status(200).json({ entries })
 }
 
+export async function getEveryEntriesWithWorkers(req, res) {
+    let entriesWithWorkers = await Worker.getEveryEntriesWithWorkers()
+    if (!entriesWithWorkers) {
+        return res.status(404).json({ message: `Error with the entries of every workers` })
+    }
+    emitEveryWorkerUpdate(req.io)
+    return res.status(200).json({ entriesWithWorkers })
+}
 
 export const emitWorkerUpdate = (io, workerId) => {
     //fetch all the tables and emit to cafe
     Worker.getEntries(workerId).then(data => {
         console.log('Emitting updated entries for worker:', workerId);
         io.to(`get-entries:${workerId}`).emit(`get-entries:updated`, {
-            entries:data,
+            entries: data,
             workerId
         });
     }).catch(err => {
-        console.error('Error fetching cafe tables', err);
+        console.error('Error fetching worker entries of', workerId, err);
+    });
+}
+
+export const emitEveryWorkerUpdate = (io) => {
+    //fetch all the tables and emit to cafe
+    Worker.getEveryEntriesWithWorkers().then(data => {
+        console.log('Emitting updated entries for every workers');
+        io.to(`get-workers-entries`).emit(`manager:worker:updated`, {
+            data
+        });
+    }).catch(err => {
+        console.error('Error fetching every workers entries', err);
     });
 }

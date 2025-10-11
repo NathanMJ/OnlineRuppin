@@ -16,7 +16,7 @@ function App() {
       const navigate = useNavigate()
 
       const goto = (path, states) => {
-        navigate(path, { state: states });
+        navigate(path, { relative: true, state: states });
       }
 
   return (
@@ -34,6 +34,10 @@ function App() {
           <Route path='/customerRegisterLogin' element={<CustomerRegisterLogin goto={goto}/>}></Route>
           <Route path='/customerHistory' element={<CustomersHistory goto={goto}/>}></Route>
           <Route path='/kitchenBarPreparation' element={<KitchenBarPreparation goto={goto}/>}></Route>          
+          <Route path='/manager' element={<ManagerPage goto={goto}/>}></Route>          
+          <Route path='/manager/workers' element={<ManagerWorkerPage goto={goto}/>}></Route>          
+          <Route path='/manager/products' element={<ManagerProductPage goto={goto}/>}></Route>          
+          <Route path='/manager/stats' element={<ManagerStats goto={goto}/>}></Route>          
         </Routes>
       </div>
     </>
@@ -45,4 +49,8 @@ export default App
 
 
 import { io } from "socket.io-client";
+import ManagerPage from './Pages/ManagerPage.jsx'
+import ManagerWorkerPage from './Pages/ManagerWorkerPage.jsx'
+import ManagerProductPage from './Pages/ManagerProductPage.jsx'
+import ManagerStats from './Pages/ManagerStats.jsx'
 export const socket = io("http://localhost:5500");

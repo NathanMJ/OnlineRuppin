@@ -117,6 +117,19 @@ io.on('connection', (socket) => {
     console.log(`Client ${socket.id} désabonné des changements des entrees du worker ${workerId}`);
   });
 
+  // S'abonner aux changement de travailleurs qui travaillent
+  socket.on('subscribe:manager:worker', () => {
+    socket.join(`get-workers-entries`);
+    console.log(`Client ${socket.id} abonné aux changements des entrees des worker`);
+  });
+
+  // Se désabonner aux changement de travailleurs qui travaillent
+  socket.on('unsubscribe:manager:worker', () => {
+    socket.leave(`get-workers-entries`);
+    console.log(`Client ${socket.id} désabonné des changements des entrees des worker`);
+  });
+
+
 
   socket.on('disconnect', () => {
     console.log('Client déconnecté:', socket.id);

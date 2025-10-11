@@ -1,0 +1,116 @@
+.managerStatsPage {
+    background-color: aliceblue;
+    overflow: auto;
+    width: 100vw;
+    height: 100vh;
+
+    .container {
+        overflow: auto;
+        padding-top: 30px;
+        padding-bottom: 350px;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 50px;
+    }
+
+    .totalAverageTable {
+
+        .leftTitle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            text-align: center;
+            padding-block: 25px;
+        }
+
+    }
+
+    table {
+        border-collapse: collapse;
+        border: black 2px solid;
+        width: 100%;
+        table-layout: fixed;
+
+
+        td,
+        tr,
+        th {
+            border-collapse: collapse;
+            border: black 2px solid;
+
+        }
+
+        td,
+        tr {
+            border-bottom: none;
+            border-top: none;
+        }
+
+
+        th {
+            font-size: 30px;
+            padding-block: 10px;
+        }
+
+        tr {
+            border-bottom: none;
+        }
+
+        .product {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            p {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            img {
+                width: 200px;
+            }
+        }
+
+        td {
+            position: relative
+        }
+
+        .duration {
+            position: absolute;
+            right: 0px;
+            top: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            transform: translate(50%, -50%);
+            background-color: rgb(212, 228, 124);
+
+            .arrow {
+                position: absolute;
+                right: 0px;
+                transform: translateX(100%);
+                width: 0;
+                height: 0;
+
+                /* Étape 2: Définir la hauteur de la base du triangle */
+                /* La somme de border-top et border-bottom définit la hauteur totale */
+                border-top: 30px solid transparent;
+                border-bottom: 30px solid transparent;
+
+                /* Étape 3: Définir la couleur et la profondeur du triangle */
+                /* Cette bordure est visible et définit la pointe (la profondeur) */
+                border-left: 40px solid rgb(212, 228, 124);
+                /* La pointe est ici (bordure gauche) */
+
+            }
+        }
+    }
+}

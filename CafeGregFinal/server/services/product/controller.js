@@ -27,3 +27,12 @@ export async function getProductsByName(req, res) {
     return res.status(200).json(product);
 }
 
+export async function changeProduct(req, res) {
+    const { newProduct } = req.body
+   
+    let response = await Product.changeProduct(newProduct)
+    if (!response.ok) {
+        return res.status(404).json({message: response.message })
+    }
+    return res.status(200).json({ok: true, message: response.message })
+}

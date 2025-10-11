@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getStatusOfOrder} from './controller.js';
+import { getStatusOfOrder, getEveryStatus} from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -12,5 +12,6 @@ const statusRouter = Router();
 
 statusRouter
     .get('/:orderId', logger, getStatusOfOrder)
+    .get('/', logger, getEveryStatus)
 
 export default statusRouter;

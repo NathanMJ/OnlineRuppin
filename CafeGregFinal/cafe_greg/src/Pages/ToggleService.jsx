@@ -3,18 +3,22 @@ import { useLocation } from "react-router-dom";
 import ReturnButton from "../FComponents/ReturnButton.jsx";
 import { getWorkerEntries, workerEntry, workerPause } from "../connectToDB.js";
 import { socket } from "../App.jsx";
+import FCTimer from "../FComponents/FCTimer.jsx";
+import { useMessageContext } from "../Contexts/messageContext.jsx";
 
 
 
 
 export default function ToggleService(props) {
 
-  //TODO: if is worker set the time to a timer and the total to timer
   const location = useLocation();
-  //workerId
+      const { addMessage } = useMessageContext();
+  
   const worker = location.state?.worker || 'not found';
   const clickerId = location.state?.clickerId || worker._id
   const [workerTimes, setWorkerTimes] = useState([])
+  const [activeButton, setActiveButton] = useState(true)
+
 
   useEffect(() => {
     if (worker._id) {
@@ -29,13 +33,13 @@ export default function ToggleService(props) {
 
       const handleEntriesUpdate = (data) => {
         console.log(data);
-        
-        if(data.workerId == worker._id){
+
+        if (data.workerId == worker._id) {
           setWorkerTimes(data.entries)
         }
       }
 
-        socket.on(`get-entries:updated`, handleEntriesUpdate)
+      socket.on(`get-entries:updated`, handleEntriesUpdate)
 
       return () => {
         socket.emit('unsubscribe:worker-entries', worker._id)
@@ -46,15 +50,27 @@ export default function ToggleService(props) {
 
   const changeStatus = async () => {
     //change status of the worker in the database
-    console.log("Change status clicked");
+    if (!activeButton)
+      return
 
+    setActiveButton(false)
+    setTimeout(() => {
+      setActiveButton(true)
+    }, 1000)
+
+    let res;
     if (!isWorking()) {
-      console.log("Starting work");
-
-      const a = await workerEntry(worker._id, clickerId)
+      res = await workerEntry(worker._id, clickerId)
     }
     else {
-      const a = await workerPause(worker._id, clickerId)
+      res = await workerPause(worker._id, clickerId)
+    }
+
+    if(res.ok){
+      addMessage(res.message, 'success', 5000)
+    }
+    else {
+      addMessage(res.message, 'error', 5000)
     }
   }
 
@@ -76,7 +92,6 @@ export default function ToggleService(props) {
   const totalDay = () => {
     //if is working return a timer
     //if not return the total time worked today
-
 
     // Sum all time differences for today
     let totalMs = 0;
@@ -101,6 +116,11 @@ export default function ToggleService(props) {
     const minutes = Math.floor((totalMs % 3600000) / 60000);
     const seconds = Math.floor((totalMs % 60000) / 1000);
 
+    if (isWorking()) {
+      const timerDate = new Date(new Date(workerTimes[workerTimes.length - 1].startTime) - (hours * 3600 + minutes * 60 + seconds) * 1000)
+      return <FCTimer start={timerDate}></FCTimer>
+    }
+
     return `${hours.toString().padStart(2, '0')}:${minutes
       .toString()
       .padStart(2, '0')}:${seconds
@@ -124,24 +144,29 @@ export default function ToggleService(props) {
 
       return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
     }
+    else if (start) {
+      return <FCTimer start={start}></FCTimer>
+    }
     return "00:00:00";
   };
 
 
-  const whoClicked = (clicker) => {
-    if (clicker.id === worker.id) {
+  const whoClicked = (clicker) => {  
+    if (clicker._id === worker._id) {
       return "Me"
     }
     return clicker.name
   }
+
   return (
     <div className="managerTimer">
       <h2 className="welcome">Welcome {worker.name}</h2>
-      <h2>Time worked today :</h2>
-      <h3 className="timer">{totalDay()}</h3>
+      <h2 className="titleWorkedToday">Time worked today :</h2>
+      <div className="timerContainer">{totalDay()}</div>
       <button
         onClick={changeStatus}
-        className={isWorking() ? "pause" : "start"}
+        className={`${isWorking() ? "pause" : "start"} 
+        ${!activeButton && 'notActivated'} changeStatusButton`}
       >
       </button>
       <table>

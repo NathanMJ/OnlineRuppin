@@ -32,7 +32,7 @@ export async function findProductById(id) {
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
 
-    
+
     const db = client.db(process.env.DB_NAME);
     const product = (await db.collection("products")
       .aggregate([
@@ -123,5 +123,36 @@ export async function findProductByName(name) {
     }
   }
 }
+
+export async function changeProductInDB(newProduct) {
+
+  let client = null
+  try {
+    client = await MongoClient.connect(process.env.CONNECTION_STRING);
+    const db = client.db(process.env.DB_NAME);
+    await db.collection('products').updateOne(
+      { _id: newProduct._id },
+      {
+        $set: {
+          name: newProduct.name, price: newProduct.price, img: newProduct.img,
+          description: newProduct.description
+        }
+      }
+    )
+    const test = await db.collection('products').findOne({ _id: newProduct._id })
+    console.log('test', test);
+
+    return { message: 'Did change', ok: true}
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error
+  }
+  finally {
+    if (client) {
+      client.close();
+    }
+  }
+}
+
 
 
