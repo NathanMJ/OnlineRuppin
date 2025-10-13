@@ -38,6 +38,7 @@ function App() {
           <Route path='/manager/workers' element={<ManagerWorkerPage goto={goto}/>}></Route>          
           <Route path='/manager/products' element={<ManagerProductPage goto={goto}/>}></Route>          
           <Route path='/manager/stats' element={<ManagerStats goto={goto}/>}></Route>          
+          <Route path='/manager/sendMessageToTables' element={<ManagerSendMessageToTables goto={goto}/>}></Route>          
         </Routes>
       </div>
     </>
@@ -53,4 +54,5 @@ import ManagerPage from './Pages/ManagerPage.jsx'
 import ManagerWorkerPage from './Pages/ManagerWorkerPage.jsx'
 import ManagerProductPage from './Pages/ManagerProductPage.jsx'
 import ManagerStats from './Pages/ManagerStats.jsx'
+import ManagerSendMessageToTables from './Pages/ManagerSendMessageToTables.jsx'
 export const socket = io("http://localhost:5500");

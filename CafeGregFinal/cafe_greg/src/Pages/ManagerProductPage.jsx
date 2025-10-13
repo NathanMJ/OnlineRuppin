@@ -78,7 +78,7 @@ export default function ManagerProductPage() {
                 </div>
                 <div>
                     <p>Price of the product :</p>
-                    <input type="text" value={currentProduct.price || ''} onChange={(e) => setCurrentProduct((prevS) => ({ ...prevS, print: e.target.value }))} />
+                    <input type="text" value={currentProduct.price || ''} onChange={(e) => setCurrentProduct((prevS) => ({ ...prevS, price: Number(e.target.value) }))} />
                 </div>
                 <div>
                     <p>Description of the product :</p>
