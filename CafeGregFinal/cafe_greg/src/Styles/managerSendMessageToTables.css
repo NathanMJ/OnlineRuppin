@@ -1,3 +1,240 @@
-.sendMessageToTables{
-    
+.sendMessageToTables {
+    min-height: 100vh;
+    background: #f5f7fa;
+    padding: 2rem;
+    position: relative;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sendMessageToTables h1 {
+    color: #2d3748;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+}
+
+.sendMessageToTables h1:first-child {
+    margin-top: 0;
+}
+
+/* Form Styles */
+.sendMessageToTables form {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #e2e8f0;
+}
+
+.sendMessageToTables form>div {
+    margin-bottom: 1.5rem;
+}
+
+.sendMessageToTables form>div:last-of-type {
+    margin-bottom: 2rem;
+}
+
+/* Labels */
+.sendMessageToTables form p {
+    color: #4a5568;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* Input Text Field */
+.sendMessageToTables input[type="text"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    outline: none;
+    background: white;
+}
+
+.sendMessageToTables input[type="text"]:focus {
+    border-color: #4299e1;
+}
+
+.sendMessageToTables input[type="text"]::placeholder {
+    color: #a0aec0;
+}
+
+/* Select Dropdown */
+.sendMessageToTables select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    outline: none;
+}
+
+.sendMessageToTables select:focus {
+    border-color: #4299e1;
+}
+
+/* Duration Slider Section */
+.sendMessageToTables form>div>div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.sendMessageToTables form>div>div p:first-child {
+    margin: 0;
+}
+
+.sendMessageToTables form>div>div p:last-child {
+    background: #4299e1;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* Range Slider */
+.sendMessageToTables input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 10px;
+    background: #e2e8f0;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+.sendMessageToTables input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4299e1;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.sendMessageToTables input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.sendMessageToTables input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4299e1;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s ease;
+}
+
+.sendMessageToTables input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* Submit Button */
+.sendMessageToTables button[type="submit"] {
+    width: 100%;
+    padding: 0.875rem;
+    background: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sendMessageToTables button[type="submit"]:hover {
+    background: #3182ce;
+}
+
+.sendMessageToTables button[type="submit"]:active {
+    background: #2c5aa0;
+}
+
+/* Predefined Messages Section */
+.predefinedMessage {
+    background: white;
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+}
+
+.predefinedMessage:hover {
+    border-color: #4299e1;
+    box-shadow: 0 4px 12px rgba(66, 153, 225, 0.15);
+}
+
+.predefinedMessage p {
+    margin: 0;
+}
+
+.predefinedMessage p:first-child {
+    color: #2d3748;
+    font-weight: 500;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.predefinedMessage p:last-child {
+    background: #edf2f7;
+    color: #4a5568;
+    padding: 0.4rem 0.875rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-left: 1rem;
+    white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sendMessageToTables {
+        padding: 1rem;
+    }
+
+    .sendMessageToTables h1 {
+        font-size: 1.5rem;
+    }
+
+    .sendMessageToTables form {
+        padding: 1.5rem;
+    }
+
+    .predefinedMessage {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .predefinedMessage p:last-child {
+        margin-left: 0;
+    }
 }

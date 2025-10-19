@@ -21,6 +21,7 @@
 
         img {
             cursor: pointer;
+            mix-blend-mode: multiply;
         }
 
         .addTableLogo {

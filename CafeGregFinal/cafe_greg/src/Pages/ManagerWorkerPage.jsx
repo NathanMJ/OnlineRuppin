@@ -8,15 +8,6 @@ import { useMessageContext } from "../Contexts/messageContext"
 
 export default function ManagerWorkerPage() {
 
-    //TODO:
-    /*
-        Get every worker
-            set them in the order of the working worker in first
-        X   can see if they are working, 
-            can stop them from working or start 
-            
-            */
-
     const location = useLocation()
     const { manager } = location.state
     const [selectedWorkerId, setSelectedWorkerId] = useState(-1)
@@ -183,7 +174,7 @@ export default function ManagerWorkerPage() {
                     </div>
                 })}
             </div>
-            <ReturnButton bottom={'10px'} left={'10px'}></ReturnButton>
+            <ReturnButton position={'fixed'} bottom={'10px'} left={'10px'}></ReturnButton>
         </div>
     )
 }

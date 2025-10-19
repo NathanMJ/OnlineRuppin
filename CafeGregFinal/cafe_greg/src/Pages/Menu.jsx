@@ -41,6 +41,11 @@ export default function Menu(props) {
 
             socket.on('table:orders:updated', handleOrdersUpdate);
 
+            socket.on("every-table:update", (data) => {
+                const {message }= data
+                addMessage(message.text, message.type, message.duration)                
+            })
+
             // Nettoyage lors du démontage
             return () => {
                 socket.emit('unsubscribe:table', tableId);
@@ -172,8 +177,8 @@ export default function Menu(props) {
     }
 
     const clickOnProduct = (productId) => {
-    console.log('tableId sended', tableId);
-        
+        console.log('tableId sended', tableId);
+
         props.goto('/productPage', { productId, tableId, sectionId });
     }
 
@@ -203,7 +208,7 @@ export default function Menu(props) {
         return firstPrice
     }
 
-    const getTotalPriceOfOrders = () => {      
+    const getTotalPriceOfOrders = () => {
         let total = orders.reduce((acc, order) => {
             return acc + getTotalPriceOfOrder(order)
         }, 0)

@@ -12,7 +12,11 @@
     padding: 20px;
     border: rgb(74, 16, 128) 7px solid;
 
-    .close{
+    img:not(.close) {
+        mix-blend-mode: multiply;
+    }
+
+    .close {
         position: absolute;
         top: 0;
         right: 0;
@@ -31,16 +35,18 @@
         display: flex;
         z-index: -1;
     }
-    div{
+
+    div {
         text-align: center;
     }
-    img{
+
+    img {
         cursor: pointer;
         width: 10vh;
     }
 
-    .managerSections{
+    .managerSections {
         display: flex;
-        
+
     }
 }

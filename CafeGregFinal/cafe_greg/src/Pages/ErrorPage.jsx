@@ -9,7 +9,7 @@ export default function ErrorPage(props) {
         <div className="notFoundPage">
             <h1>404</h1>
             <h2>Oops... page not found</h2>
-            <h3>We don't know how you end up here, but you should go away now.</h3>
+            <h3>The page you're looking for doesn't exist or has been moved</h3>
             <div className="hiddenDoor" onClick={goToLogin}></div>
         </div>
     )

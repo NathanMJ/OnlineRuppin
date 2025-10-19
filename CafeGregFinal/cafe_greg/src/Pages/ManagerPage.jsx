@@ -6,7 +6,6 @@ export default function ManagerPage(props) {
     //TODO:
     /*
         change the autorizations of the workers
-        send a message to every table
      */
     const location = useLocation()
     const { manager } = location.state
@@ -18,8 +17,8 @@ export default function ManagerPage(props) {
                 <div className="workerSide">
                     <h1>Worker</h1>
                     <button onClick={() => { props.goto('/manager/workers', { manager }) }}>See the worker</button>
-                    <button onClick={() => { props.goto('/manager/addWorkers', { manager }) }}>Add a worker</button>
-                    <button onClick={() => { props.goto('/manager/changeAutorizations', { manager }) }}>Change autorizations</button>
+                    {/* <button onClick={() => { props.goto('/manager/addWorkers', { manager }) }}>Add a worker</button>
+                    <button onClick={() => { props.goto('/manager/changeAutorizations', { manager }) }}>Change autorizations</button> */}
                 </div>
                 <div className="productSide">
                     <h1>Products</h1>
