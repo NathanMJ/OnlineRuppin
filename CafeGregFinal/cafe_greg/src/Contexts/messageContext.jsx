@@ -26,7 +26,7 @@ export const MessageProvider = ({ children }) => {
         setMessages(prev => [...prev, newMessage]);
 
         // Programmer la suppression automatique
-        if (duration > 0) {
+        if (duration > 0 && duration != 'infinite') {
             const timeout = setTimeout(() => {
                 removeMessage(id);
             }, duration);

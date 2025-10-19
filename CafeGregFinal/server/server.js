@@ -129,6 +129,14 @@ io.on('connection', (socket) => {
     console.log(`Client ${socket.id} désabonné des changements des entrees des worker`);
   });
 
+  socket.on('broadcast:allTables', (message) => {
+    for (const [id, room] of io.sockets.adapter.rooms) {
+      if (id.startsWith("table:")) {
+        io.to(id).emit("every-table:update", { message })
+      }
+    }
+  })
+
 
 
   socket.on('disconnect', () => {

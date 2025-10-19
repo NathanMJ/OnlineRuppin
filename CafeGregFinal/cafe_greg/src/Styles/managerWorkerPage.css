@@ -1,57 +1,128 @@
 .managerWorkerPage {
-    overflow-y: auto;
-    background-color: aliceblue;
+    min-height: 100vh;
+    background: #f5f7fa;
+    padding: 2rem;
+    padding-bottom: 100px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.managerWorkerPage > h1 {
+    color: #2d3748;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    margin-top: 0;
+}
+
+/* Workers Grid */
+.workers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Individual Worker Card */
+.worker {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    height: 100vh;
+    gap: 1rem;
+    transition: box-shadow 0.2s ease;
+}
 
-    >h1 {
-        padding-top: 30px;
-        font-size: 50px;
+.worker:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Worker Name */
+.worker h1 {
+    color: #2d3748;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Status Button */
+.worker button {
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.worker button.working {
+    background: #48bb78;
+    color: white;
+}
+
+.worker button.working:hover {
+    background: #38a169;
+}
+
+.worker button.notWorking {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.worker button.notWorking:hover {
+    background: #cbd5e0;
+}
+
+.worker button:active {
+    transform: scale(0.98);
+}
+
+/* Total Time */
+.totalTimeWorker {
+    color: #4a5568;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    background: #f7fafc;
+    border-radius: 6px;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .managerWorkerPage {
+        padding: 1rem;
+    }
+
+    .managerWorkerPage > h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
     }
 
     .workers {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        width: fit-content;
-        padding-block: 30px;
-
-        .worker {
-
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            align-items: center;
-            gap: 20px;
-            font-size: 40px;
-            padding-inline: 50px;
-
-            button {
-                font-size: 40px;
-                padding: 5px;
-                border-radius: 4px;
-                color: white;
-
-                &.working {
-                    background-color: rgb(37, 129, 37);
-                }
-
-                &.notWorking {
-                    background-color: rgb(255, 0, 0);
-                }
-            }
-        }
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
-    .addWorker {
-        background-color: rgb(0, 174, 255);
-        font-size: 50px;
-        border-radius: 10px;
-        border: none;
-        color: white;
-        width: fit-content;
-        padding: 10px;
+    .worker {
+        padding: 1.25rem;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .workers {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1025px) {
+    .workers {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
