@@ -13,34 +13,53 @@ import KitchenBarPreparation from './Pages/KitchenBarPreparation.jsx'
 
 function App() {
 
+  const localStorageName = 'profil-ez-dinner'
   const navigate = useNavigate()
+  const { addMessage } = useMessageContext();
+
 
   const goto = (path, states) => {
     navigate(path, { relative: true, state: states });
   }
 
-  const [profilName, setProfilName] = useState(null)
+  const [profile, setProfile] = useState(null)
 
-  const login = (login, password) => {
-    const profilFound = 'CafeGreg'
-    if (profilFound) {
-      console.log('connect with login');
-      setProfilName(profilFound)
-
+  //if you try to connect directly you go to login if you are not correctly connected
+  useEffect(() => {
+    const checkProfile = async () => {
+      const accessPaths = ['/', '/login']
+      const currentPath = location.pathname;
+      const isPathWithProfil = !accessPaths.some(p => p == currentPath);
+      if (!isPathWithProfil) {
+        localStorage.removeItem(localStorageName)
+      }
+      else {
+        let tempProfile = JSON.parse(localStorage.getItem(localStorageName))
+        if (!tempProfile) {
+          goto('/login')
+        }
+        //if the tempProfile does not correspond to an existing token go to login too
+        const rightToken = await getToken(tempProfile.profile, tempProfile.token)
+        if (!rightToken.ok) {
+          addMessage('Wrong token detected.', 'warning', 5000)
+          goto('/login')
+        }
+        setProfile(tempProfile)
+      }
     }
-    else {
-      console.log('dont connect with login');
-    }
 
-  }
+    checkProfile()
+  }, [location.pathname])
+
+
 
   return (
     <>
       <div>
         <Routes>
           <Route path='/' element={<ErrorPage goto={goto} />}></Route>
-          <Route path='/login' element={<LoginWebsite goto={goto} login={login}/>}></Route>
-          <Route path='/sideChoice' element={<SideChoice goto={goto} />}></Route>
+          <Route path='/login' element={<LoginWebsite goto={goto} localStorageName={localStorageName} />}></Route>
+          <Route path='/sideChoice' element={<SideChoice goto={goto} profile={profile} />}></Route>
           <Route path='/workMain' element={<WorkMain goto={goto} />}></Route>
           <Route path='/toggleService' element={<ToggleService goto={goto} />}></Route>
           <Route path='/cafeMain' element={<CafeMain goto={goto} />}></Route>
@@ -70,5 +89,7 @@ import ManagerWorkerPage from './Pages/ManagerWorkerPage.jsx'
 import ManagerProductPage from './Pages/ManagerProductPage.jsx'
 import ManagerStats from './Pages/ManagerStats.jsx'
 import ManagerSendMessageToTables from './Pages/ManagerSendMessageToTables.jsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { connectToWebsite, getToken } from './connectToDB.js'
+import { useMessageContext } from './Contexts/messageContext.jsx'
 export const socket = io("http://localhost:5500");

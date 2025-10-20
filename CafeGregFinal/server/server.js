@@ -137,6 +137,7 @@ io.on('connection', (socket) => {
     }
   })
 
+  //TODO: faire un tri dans les tokens pour eviter les repetitions
 
 
   socket.on('disconnect', () => {

@@ -354,3 +354,17 @@ export async function getEveryStatus() {
     const data = await callAPI(`status`, 'GET')
     return data
 }
+
+
+export async function setToken(profile, token) {
+    const data = await callAPI(`website/addToken`, 'POST', { profile, token })
+    return data
+}
+
+
+export async function getToken(profile, token) {
+    const data = await callAPI(`website/getToken`, 'POST', { profile, token })
+    return data
+}
+
+

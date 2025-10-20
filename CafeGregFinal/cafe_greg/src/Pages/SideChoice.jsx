@@ -1,12 +1,20 @@
 import ReturnButton from "../FComponents/ReturnButton"
 
 export default function SideChoice(props) {
+
+    const profile = props.profile
+
+    console.log(profile);
+    
     
     const returnButton = () => {
         if(confirm("Are you sure you want to return?")) {
+            //TODO: enlever le toker si je lai
             props.goto('/login')
         }
     }
+
+
 
     return (
         

@@ -1,4 +1,4 @@
-import { connectToWebsite} from './db.js';
+import { addTokenInDB, connectToWebsite, getTokenInDB} from './db.js';
 
 export default class Website{
     constructor(id, contact, name) {
@@ -10,6 +10,11 @@ export default class Website{
     static async connect(login, password){
         return await connectToWebsite(login, password);
     }
+    static async addToken(profile, token){
+        return await addTokenInDB(profile, token);
+    }
 
-    
+    static async getToken(profile, token){
+        return await getTokenInDB(profile, token);
+    }    
 }
