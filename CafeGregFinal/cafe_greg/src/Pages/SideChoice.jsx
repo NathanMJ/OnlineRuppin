@@ -4,7 +4,7 @@ export default function SideChoice(props) {
 
     const profile = props.profile
 
-    console.log(profile);
+    console.log('profile gotten in side choice',profile);
     
     
     const returnButton = () => {

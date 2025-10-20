@@ -139,7 +139,6 @@ io.on('connection', (socket) => {
   socket.on('unsubscribe:profile', (profile) => {
     socket.leave(`profile:${profile}`);
     console.log(`Client ${socket.id} désabonné au profile ${profile} pour les tokens`);
-
   })
 
   socket.on('broadcast:allTables', (message) => {

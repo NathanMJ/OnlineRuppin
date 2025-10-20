@@ -42,14 +42,14 @@ export default function WebsiteLogin(props) {
         //connect return the profile
         const token = generateToken()
         const res = await connectToWebsite(id, password, token)
-        console.log(res);
-
         if (!res.ok) {
             addMessage(res.message, 'error', 5000)
             return
         }
         const profileFound = res.profile
         localStorage.setItem(props.localStorageName, JSON.stringify({ profile: profileFound, token }))
+        console.log('login success');
+        
         props.goto('/sideChoice')
     }
 

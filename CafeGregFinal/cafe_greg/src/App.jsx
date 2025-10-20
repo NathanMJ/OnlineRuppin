@@ -1,5 +1,9 @@
-import ErrorPage from './Pages/ErrorPage.jsx'
 import { Route, Routes, useNavigate } from 'react-router-dom'
+import ErrorPage from './Pages/ErrorPage.jsx'
+import { useEffect, useState } from 'react'
+import { useMessageContext } from './Contexts/messageContext.jsx'
+import { io } from "socket.io-client";
+import { getToken } from './connectToDB.js'
 import LoginWebsite from './Pages/WebsiteLogin.jsx'
 import WorkMain from './Pages/WorkMain.jsx'
 import SideChoice from './Pages/SideChoice.jsx'
@@ -10,6 +14,14 @@ import ProductPage from './Pages/ProductPage.jsx'
 import CustomerRegisterLogin from './Pages/CustomerRegisterLogin.jsx'
 import CustomersHistory from './Pages/CustomersHistory.jsx'
 import KitchenBarPreparation from './Pages/KitchenBarPreparation.jsx'
+import ManagerPage from './Pages/ManagerPage.jsx'
+import ManagerWorkerPage from './Pages/ManagerWorkerPage.jsx'
+import ManagerProductPage from './Pages/ManagerProductPage.jsx'
+import ManagerStats from './Pages/ManagerStats.jsx'
+import ManagerSendMessageToTables from './Pages/ManagerSendMessageToTables.jsx'
+
+
+export const socket = io("http://localhost:5500");
 
 function App() {
 
@@ -22,52 +34,98 @@ function App() {
     navigate(path, { relative: true, state: states });
   }
 
+  const thisPathNeedProfile = (path) => {
+    const accessPaths = ['/', '/login']
+    return !accessPaths.some(p => p == path);
+  }
+
   const [profile, setProfile] = useState(null)
 
   //if you try to connect directly you go to login if you are not correctly connected
   useEffect(() => {
     const checkProfile = async () => {
-      const accessPaths = ['/', '/login']
       const currentPath = location.pathname;
-      const isPathWithProfil = !accessPaths.some(p => p == currentPath);
-      if (!isPathWithProfil) {
+
+      //if we dont have a profil check if we are in a page where we need a profile
+
+      //if we dont need of profil and we got a profile
+      if (!thisPathNeedProfile(currentPath)) {
+        if (profile) {
+          setProfile(null)
+        }
         localStorage.removeItem(localStorageName)
+        return
       }
-      else {
-        let tempProfile = JSON.parse(localStorage.getItem(localStorageName))
-        if (!tempProfile) {
-          goto('/login')
-        }
-        //if the tempProfile does not correspond to an existing token go to login too
-        const rightToken = await getToken(tempProfile.profile, tempProfile.token)
-        if (!rightToken.ok) {
-          addMessage('Wrong token detected.', 'warning', 5000)
-          goto('/login')
-        }
-        setProfile(tempProfile)
+
+
+      if (profile)
+        return
+
+      //check in the localStorage if you dont have a profile and check the token
+
+      let tempProfile = JSON.parse(localStorage.getItem(localStorageName))
+      console.log(`profile got from localStorage`, tempProfile);
+
+      //if no profile found go to login
+
+      if (!tempProfile) {
+        goto('/login')
+        return
       }
+
+      //check the token gotten from the localStorage
+
+      const rightToken = await getToken(tempProfile.profile, tempProfile.token)
+      if (!rightToken.ok) {
+        addMessage('Wrong token detected.', 'warning', 5000)
+        setProfile(null)
+        goto('/login')
+        return
+      }
+
+      setProfile(tempProfile)
+
     }
 
     checkProfile()
+
+
   }, [location.pathname])
 
+
   useEffect(() => {
-    const sendToken = (data) => {
-      if(data.profile == profile.profile){
-        
-      }
+    setEmit()
 
+    return () => {
+      cancelEmit()
     }
+  }, [profile?.profile])
 
+
+  const cancelEmit = () => {
     if (profile) {
-      socket.emit('subscribe:profile', profile.profile);
-      //socket.on('profile:getTokens', sendToker)
-      return () => {
-        socket.emit('unsubscribe:profile', profile.profile);
-        //socket.off
-      }
+      console.log('cancel emit for profile', profile);
+      socket.off('profile:check-token', checkToken);
+      socket.emit('unsubscribe:profile', profile.profile);
     }
-  }, [profile])
+  }
+
+  const setEmit = () => {
+    if (profile) {
+      console.log('set emit for profile', profile);
+      socket.on('profile:check-token', checkToken);
+      socket.emit('subscribe:profile', profile.profile);
+    }
+  }
+
+
+
+  const checkToken = (data) => {
+    //set the check token research
+    console.log(data);
+    
+  }
+
 
 
 
@@ -99,17 +157,3 @@ function App() {
 
 export default App
 
-
-
-import { io } from "socket.io-client";
-import ManagerPage from './Pages/ManagerPage.jsx'
-import ManagerWorkerPage from './Pages/ManagerWorkerPage.jsx'
-import ManagerProductPage from './Pages/ManagerProductPage.jsx'
-import ManagerStats from './Pages/ManagerStats.jsx'
-import ManagerSendMessageToTables from './Pages/ManagerSendMessageToTables.jsx'
-import { useEffect, useState } from 'react'
-import { connectToWebsite, getToken } from './connectToDB.js'
-import { useMessageContext } from './Contexts/messageContext.jsx'
-
-
-export const socket = io("http://localhost:5500");
