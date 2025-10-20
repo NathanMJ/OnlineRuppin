@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { connect, addToken, getToken} from './controller.js';
+import { connect, addToken, getToken } from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -9,9 +9,12 @@ function logger(req, res, next) {
 
 const websiteRouter = Router();
 
+//TODO: quand on ferme le restaurant tous les token se suppriment
+
+
 websiteRouter
-    .post('/connect', logger, connect) 
-    .post('/addToken', logger, addToken) 
-    .post('/getToken', logger, getToken) 
+    .post('/connect', logger, connect)
+    .post('/addToken', logger, addToken)
+    .post('/getToken', logger, getToken)
 
 export default websiteRouter;

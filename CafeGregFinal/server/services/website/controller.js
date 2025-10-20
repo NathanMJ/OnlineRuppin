@@ -1,8 +1,8 @@
 import Website from "./model.js";
 
 export async function connect(req, res) {
-    const { login, password } = req.body;
-    const response = await Website.connect(login, password);
+    const { login, password, token} = req.body;
+    const response = await Website.connect(login, password, token);
     if (!response.profile) {
         return res.status(404).json({ message: response.message })
     }
@@ -17,6 +17,13 @@ export async function addToken(req, res) {
     const response = await Website.addToken(profile, token)
     if (!response.ok) {
         return res.status(404).json({ message: response.message })
+    }
+    //TODO: quand un restaurant rajoute un token et qu'il est un multiple de 20 alors il "nettoie les tokens"
+
+    if (response.totalTokens % 20 == 0 || true) {
+        console.log('Throw a clean of tokens');
+
+
     }
     return res.status(200).json({ ok: true })
 }

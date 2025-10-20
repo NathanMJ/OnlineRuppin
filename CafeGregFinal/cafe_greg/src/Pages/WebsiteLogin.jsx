@@ -5,8 +5,8 @@ import { connectToWebsite, setToken } from "../connectToDB";
 
 export default function WebsiteLogin(props) {
     const [counter, setCounter] = useState(0)
-    const [id, setId] = useState("")
-    const [password, setPassword] = useState("")
+    const [id, setId] = useState("CafeGreg")
+    const [password, setPassword] = useState("123")
     const { addMessage } = useMessageContext();
 
     const tokenLength = 16
@@ -39,7 +39,9 @@ export default function WebsiteLogin(props) {
 
 
     const clickOnLogin = async () => {
-        const res = await connectToWebsite(id, password)
+        //connect return the profile
+        const token = generateToken()
+        const res = await connectToWebsite(id, password, token)
         console.log(res);
 
         if (!res.ok) {
@@ -47,12 +49,6 @@ export default function WebsiteLogin(props) {
             return
         }
         const profileFound = res.profile
-        const token = generateToken()
-        const res2 = await setToken(profileFound, token)
-        console.log(res2);        
-        if(!res2.ok){
-            addMessage(res2.message, 'error', 5000)
-        }
         localStorage.setItem(props.localStorageName, JSON.stringify({ profile: profileFound, token }))
         props.goto('/sideChoice')
     }
@@ -77,10 +73,12 @@ export default function WebsiteLogin(props) {
                     type="text"
                     className="id"
                     placeholder="Identifiant"
+                    value={id}
                     onChange={(e) => setId(e.target.value)} />
                 <h4>Password : </h4>
                 <input type="password"
                     className="password"
+                    value={password}
                     placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)} />
             </div>

@@ -129,6 +129,19 @@ io.on('connection', (socket) => {
     console.log(`Client ${socket.id} désabonné des changements des entrees des worker`);
   });
 
+  //S'abonner aux profile pour les tokens
+  socket.on('subscribe:profile', (profile) => {
+    socket.join(`profile:${profile}`);
+    console.log(`Client ${socket.id} abonné aux profile ${profile} pour les tokens`);
+  })
+
+  //Se desabonner aux profile pour les tokens
+  socket.on('unsubscribe:profile', (profile) => {
+    socket.leave(`profile:${profile}`);
+    console.log(`Client ${socket.id} désabonné au profile ${profile} pour les tokens`);
+
+  })
+
   socket.on('broadcast:allTables', (message) => {
     for (const [id, room] of io.sockets.adapter.rooms) {
       if (id.startsWith("table:")) {
@@ -136,9 +149,6 @@ io.on('connection', (socket) => {
       }
     }
   })
-
-  //TODO: faire un tri dans les tokens pour eviter les repetitions
-
 
   socket.on('disconnect', () => {
     console.log('Client déconnecté:', socket.id);

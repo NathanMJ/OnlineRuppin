@@ -7,8 +7,8 @@ export default class Website{
         this.name = name;
     }
 
-    static async connect(login, password){
-        return await connectToWebsite(login, password);
+    static async connect(login, password, token){
+        return await connectToWebsite(login, password, token);
     }
     static async addToken(profile, token){
         return await addTokenInDB(profile, token);

@@ -51,6 +51,24 @@ function App() {
     checkProfile()
   }, [location.pathname])
 
+  useEffect(() => {
+    const sendToken = (data) => {
+      if(data.profile == profile.profile){
+        
+      }
+
+    }
+
+    if (profile) {
+      socket.emit('subscribe:profile', profile.profile);
+      //socket.on('profile:getTokens', sendToker)
+      return () => {
+        socket.emit('unsubscribe:profile', profile.profile);
+        //socket.off
+      }
+    }
+  }, [profile])
+
 
 
   return (
@@ -92,4 +110,6 @@ import ManagerSendMessageToTables from './Pages/ManagerSendMessageToTables.jsx'
 import { useEffect, useState } from 'react'
 import { connectToWebsite, getToken } from './connectToDB.js'
 import { useMessageContext } from './Contexts/messageContext.jsx'
+
+
 export const socket = io("http://localhost:5500");

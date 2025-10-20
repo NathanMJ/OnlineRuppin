@@ -319,8 +319,8 @@ export async function getWorkerById(workerId) {
     return await callAPI(`worker/${workerId}`)
 }
 
-export async function connectToWebsite(login, password) {
-    return await callAPI(`website/connect`, 'POST', { login, password })
+export async function connectToWebsite(login, password, token) {
+    return await callAPI(`website/connect`, 'POST', { login, password, token })
 }
 
 export async function workerEntry(workerId, clickerId) {
