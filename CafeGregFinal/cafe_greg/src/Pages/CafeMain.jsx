@@ -9,6 +9,8 @@ import { socket } from "../App.jsx";
 export default function CafeMain(props) {
 
     const { addMessage } = useMessageContext();
+    const storeAccess = props.storeAccess
+
 
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
 
@@ -19,19 +21,30 @@ export default function CafeMain(props) {
     const [tables, setTables] = useState([]);
     const previousDataRef = useRef(null);
 
-    const fetchAndCompare = async () => {
-        try {
-            const newData = await getTables();
-                setTables(newData);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     useEffect(() => {
-        fetchAndCompare();
+
+        const fetchTables = async () => {
+            console.log('fetch tables');
+            
+            const response = await getTables(storeAccess.profile);
+            console.log(response);
+
+            if (response.ok) {
+                setTables(response.tables)
+            }
+        };
+        console.log(storeAccess);
+        
+        if (storeAccess) {
+            fetchTables();
+        }
+    }, [storeAccess])
+
+    useEffect(() => {
 
         //TODO :Ajouter un listener pour les mises a jour de commandes qui sont pretes (commande prete en cuisine/bar)
+        //TODO: subscribe to the tables with the profile
 
         socket.emit('subscribe:cafe-tables');
 
@@ -39,10 +52,10 @@ export default function CafeMain(props) {
             //compare the data of each table and write a message if there is a change
             const tempNewTables = data.tables || []
             const tempOldTables = previousDataRef.current || []
-            tempNewTables.forEach((newTable) => {                
+            tempNewTables.forEach((newTable) => {
                 const oldTable = tempOldTables.find(t => t._id === newTable._id);
                 console.log({ oldTable, newTable });
-                
+
                 if (oldTable && oldTable.status !== newTable.status) {
                     switch (newTable.status) {
                         case 1:
@@ -57,7 +70,6 @@ export default function CafeMain(props) {
 
             setTables(data.tables || [])
         };
-
         socket.on('cafe-tables:update', handleTablesUpdate);
 
         return () => {

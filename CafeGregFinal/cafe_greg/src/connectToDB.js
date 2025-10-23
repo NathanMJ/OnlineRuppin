@@ -1,23 +1,23 @@
 const serverUrl = 'http://localhost:5500/api'
 
-export async function getTables() {
-
-    try {
-        const response = await fetch(`${serverUrl}/table`)
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const tables = await response.json()
-        console.log(tables);
-
-        return tables
-    } catch (error) {
-        console.error('Error fetching tables:', error)
-        throw error
-    }
+export async function getTables(profile) {
+    const data = await callAPI(`table`, 'POST', { profile })
+    return data
 }
+
+export async function getOrderOfTable(tableId, profile) {
+    const data = await callAPI(`table/getOrders`, 'POST', { profile, tableId })   
+    return data
+}
+
+
+export async function getFromSection(sectionId, profile) {
+    const data = await callAPI(`section`, 'POST', { sectionId, profile })   
+    return data
+}
+
+
+
 
 export async function addTableById(id) {
     try {
@@ -70,22 +70,6 @@ export async function sendOrder(tableId, order) {
     }
 }
 
-export async function getOrderOfTable(tableId) {
-
-    try {
-        const response = await fetch(`${serverUrl}/table/${Number(tableId)}/getOrders`);
-
-        const data = await response.json();
-
-        if (!data.success) {
-            console.error("Erreur :", data.message);
-        }
-        return data.orders
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
-
 export async function getProduct(productId) {
 
     try {
@@ -98,18 +82,6 @@ export async function getProduct(productId) {
     }
 }
 
-export async function getFromSection(sectionId) {
-
-    try {
-
-        const response = await fetch(`${serverUrl}/section/${sectionId}`);
-
-        const data = await response.json();
-        return data
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
 
 export async function getPreviousSection(sectionId) {
 
@@ -364,6 +336,11 @@ export async function setToken(profile, token) {
 
 export async function getToken(profile, token) {
     const data = await callAPI(`website/getToken`, 'POST', { profile, token })
+    return data
+}
+
+export async function removeToken(profile, token) {
+    const data = await callAPI(`website/removeToken`, 'POST', { profile, token })
     return data
 }
 

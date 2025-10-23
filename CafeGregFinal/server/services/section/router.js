@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getBySections, getPreviousSections } from './controller.js';
+import { getBySection, getPreviousSections } from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -10,7 +10,7 @@ function logger(req, res, next) {
 const sectionRouter = Router();
 
 sectionRouter
-    .get('/:id', logger, getBySections) 
+    .post('/', logger, getBySection) 
     .get('/previous/:id', logger, getPreviousSections) 
 
 export default sectionRouter;

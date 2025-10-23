@@ -5,8 +5,8 @@ export default class Section{
         this._id = id;
     }
 
-    static async getBySections(id){
-        return await getFromTheSectionId(id)
+    static async getBySection(sectionId, profile){
+        return await getFromTheSectionId(sectionId, profile)
     }
     
     static async getPreviousSections(id){

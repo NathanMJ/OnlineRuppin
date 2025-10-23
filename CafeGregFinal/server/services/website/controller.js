@@ -6,7 +6,7 @@ export async function connect(req, res) {
     if (!response.profile) {
         return res.status(404).json({ message: response.message })
     }
-
+    //TODO: quand un restaurant rajoute un token et qu'il est un multiple de 20 alors il "nettoie les tokens"
     if (response.totalTokens % 20 == 0 || true) {
         emitCleanToken(req.io, response.profile)
     }
@@ -22,7 +22,6 @@ export async function addToken(req, res) {
     if (!response.ok) {
         return res.status(404).json({ message: response.message })
     }
-    //TODO: quand un restaurant rajoute un token et qu'il est un multiple de 20 alors il "nettoie les tokens"
 
     return res.status(200).json({ ok: true })
 }
@@ -37,6 +36,22 @@ export async function getToken(req, res) {
     }
     return res.status(200).json({ ok: true })
 }
+
+export async function removeToken(req, res) {
+    const { profile, token } = req.body
+    const response = await Website.removeToken(profile, token)
+    if (!response.ok) {
+        return res.status(404).json({ message: response.message })
+    }
+    return res.status(200).json({ ok: true })
+}
+
+export async function cleanNonUsedTokens(req, res) {
+    const { profile } = req.body
+    emitCleanToken(req.io, profile)
+    return res.status(200).json({ ok: true })
+}
+
 
 
 function emitCleanToken(io, profile) {

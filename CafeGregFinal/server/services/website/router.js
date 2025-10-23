@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { connect, addToken, getToken } from './controller.js';
+import { connect, addToken, getToken, removeToken, cleanNonUsedTokens} from './controller.js';
 
 function logger(req, res, next) {
     console.log('Request URL:', req.originalUrl);
@@ -16,5 +16,7 @@ websiteRouter
     .post('/connect', logger, connect)
     .post('/addToken', logger, addToken)
     .post('/getToken', logger, getToken)
+    .post('/removeToken', logger, removeToken)
+    .post('/cleanNonUsedTokens', logger, cleanNonUsedTokens)
 
 export default websiteRouter;

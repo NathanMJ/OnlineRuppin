@@ -12,11 +12,11 @@ export async function connectToWebsite(login, password, token) {
         const found = await db.collection("website").findOne({ login: login, password: password })
         if (!found)
             return { message: "Not found" }
-        const res = await(addTokenInDB(found.profile, token))
-        if(!res.ok){
-            return {message : res.message}
+        const res = await (addTokenInDB(found.profile, token))
+        if (!res.ok) {
+            return { message: res.message }
         }
-        return { profile: found.profile, message: 'Connecting', totalTokens: res.totalTokens};
+        return { profile: found.profile, message: 'Connecting', totalTokens: res.totalTokens };
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;
@@ -34,21 +34,15 @@ export async function addTokenInDB(profile, token) {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
 
-        //check if the profile exist
-        const profileExist = await db.collection('profiles').findOne({ profile })
-        if (!profileExist) {
-            return { message: 'The profile does not exist.' }
-        }
-
         //check if the token exist
-        const tokenExist = await db.collection("tokens").findOne({ profile, tokens: token })
+        const tokenExist = await db.collection("website").findOne({ profile, tokens: token })
         console.log(tokenExist);
 
         if (tokenExist) {
             return { message: 'Token already exist.' }
         }
 
-        await db.collection("tokens").updateOne(
+        await db.collection("website").updateOne(
             { profile: profile },
             {
                 $addToSet: {
@@ -64,7 +58,7 @@ export async function addTokenInDB(profile, token) {
 
         );
 
-        const res = await db.collection("tokens").aggregate([
+        const res = await db.collection("website").aggregate([
             { $match: { profile } },
             {
                 $project: {
@@ -77,7 +71,7 @@ export async function addTokenInDB(profile, token) {
         console.log(quantityOfToken);
 
 
-        return { ok: true, message: 'Token inserted', totalTokens : quantityOfToken};
+        return { ok: true, message: 'Token inserted', totalTokens: quantityOfToken };
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;
@@ -97,12 +91,36 @@ export async function getTokenInDB(profile, token) {
         const db = client.db(process.env.DB_NAME);
 
         //check if the token exist
-        const tokenExist = await db.collection("tokens").findOne({ profile, tokens: token })
+        const tokenExist = await db.collection("website").findOne({ profile, tokens: token })
 
         if (!tokenExist) {
             return { message: 'Token does not exist.' }
         }
         return { ok: true, message: 'Token exist' };
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
+    }
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
+}
+
+export async function removeTokenInDB(profile, token) {
+    let client = null
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
+
+        //check if the token exist
+        await db.collection("website").updateOne(
+            { profile: profile }, // Critère de recherche du document (par exemple, l'ID du profil)
+            { $pull: { tokens: token } } // Opérateur $pull pour retirer la valeur 'token' du tableau 'tokens'
+        );
+
+        return { ok: true, message: 'Token has been removed' };
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;

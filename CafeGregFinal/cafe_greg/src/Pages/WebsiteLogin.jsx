@@ -47,9 +47,7 @@ export default function WebsiteLogin(props) {
             return
         }
         const profileFound = res.profile
-        localStorage.setItem(props.localStorageName, JSON.stringify({ profile: profileFound, token }))
-        console.log('login success');
-        
+        localStorage.setItem(props.localStorageName, JSON.stringify({ profile: profileFound, token }))      
         props.goto('/sideChoice')
     }
 

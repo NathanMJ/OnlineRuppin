@@ -3,7 +3,7 @@ import ErrorPage from './Pages/ErrorPage.jsx'
 import { useEffect, useState } from 'react'
 import { useMessageContext } from './Contexts/messageContext.jsx'
 import { io } from "socket.io-client";
-import { getToken } from './connectToDB.js'
+import { getToken, removeToken } from './connectToDB.js'
 import LoginWebsite from './Pages/WebsiteLogin.jsx'
 import WorkMain from './Pages/WorkMain.jsx'
 import SideChoice from './Pages/SideChoice.jsx'
@@ -39,7 +39,7 @@ function App() {
     return !accessPaths.some(p => p == path);
   }
 
-  const [profile, setProfile] = useState(null)
+  const [storeAccess, setStoreAccess] = useState(null)
 
   //if you try to connect directly you go to login if you are not correctly connected
   useEffect(() => {
@@ -50,40 +50,41 @@ function App() {
 
       //if we dont need of profil and we got a profile
       if (!thisPathNeedProfile(currentPath)) {
-        if (profile) {
-          setProfile(null)
+        if (storeAccess) {
+          cancelEmit()
+          setStoreAccess(null)
         }
         localStorage.removeItem(localStorageName)
         return
       }
 
 
-      if (profile)
+      if (storeAccess)
         return
 
       //check in the localStorage if you dont have a profile and check the token
 
-      let tempProfile = JSON.parse(localStorage.getItem(localStorageName))
-      console.log(`profile got from localStorage`, tempProfile);
+      let tempStoreAccess = JSON.parse(localStorage.getItem(localStorageName))
+      console.log(`profile got from localStorage`, tempStoreAccess);
 
       //if no profile found go to login
 
-      if (!tempProfile) {
+      if (!tempStoreAccess) {
         goto('/login')
         return
       }
 
       //check the token gotten from the localStorage
 
-      const rightToken = await getToken(tempProfile.profile, tempProfile.token)
+      const rightToken = await getToken(tempStoreAccess.profile, tempStoreAccess.token)
       if (!rightToken.ok) {
         addMessage('Wrong token detected.', 'warning', 5000)
-        setProfile(null)
+        setStoreAccess(null)
         goto('/login')
         return
       }
 
-      setProfile(tempProfile)
+      setStoreAccess(tempStoreAccess)
 
     }
 
@@ -96,25 +97,26 @@ function App() {
   useEffect(() => {
     setEmit()
 
-    return () => {
-      cancelEmit()
-    }
-  }, [profile?.profile])
+    // return () => {
+    //   cancelEmit()
+    // }
+  }, [storeAccess?.profile])
 
 
   const cancelEmit = () => {
-    if (profile) {
-      console.log('cancel emit for profile', profile);
+    if (storeAccess) {
+      console.log('cancel emit for profile', storeAccess);
       socket.off('profile:check-token', checkToken);
-      socket.emit('unsubscribe:profile', profile.profile);
+      socket.emit('unsubscribe:profile', storeAccess.profile);
+      removeToken(storeAccess.profile, storeAccess.token)
     }
   }
 
   const setEmit = () => {
-    if (profile) {
-      console.log('set emit for profile', profile);
+    if (storeAccess) {
+      console.log('set emit for profile', storeAccess);
       socket.on('profile:check-token', checkToken);
-      socket.emit('subscribe:profile', profile.profile);
+      socket.emit('subscribe:profile', storeAccess.profile);
     }
   }
 
@@ -122,8 +124,8 @@ function App() {
 
   const checkToken = (data) => {
     //set the check token research
-    console.log(data);
-    
+    console.log('check token', data);
+
   }
 
 
@@ -135,11 +137,11 @@ function App() {
         <Routes>
           <Route path='/' element={<ErrorPage goto={goto} />}></Route>
           <Route path='/login' element={<LoginWebsite goto={goto} localStorageName={localStorageName} />}></Route>
-          <Route path='/sideChoice' element={<SideChoice goto={goto} profile={profile} />}></Route>
+          <Route path='/sideChoice' element={<SideChoice goto={goto} storeAccess={storeAccess} />}></Route>
           <Route path='/workMain' element={<WorkMain goto={goto} />}></Route>
           <Route path='/toggleService' element={<ToggleService goto={goto} />}></Route>
-          <Route path='/cafeMain' element={<CafeMain goto={goto} />}></Route>
-          <Route path='/menu' element={<Menu goto={goto} />}></Route>
+          <Route path='/cafeMain' element={<CafeMain goto={goto} storeAccess={storeAccess} />}></Route>
+          <Route path='/menu' element={<Menu goto={goto} storeAccess={storeAccess} />}></Route>
           <Route path='/productPage' element={<ProductPage goto={goto} />}></Route>
           <Route path='/customerRegisterLogin' element={<CustomerRegisterLogin goto={goto} />}></Route>
           <Route path='/customerHistory' element={<CustomersHistory goto={goto} />}></Route>

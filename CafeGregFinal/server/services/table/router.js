@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-    addTable, getAllTables, getTable, addOrder, getOrders,
+    addTable, getAllTables,  addOrder, getOrders,
     getCustomersOfTable, getPriceOfTable, removeTable, changeStatus,
     payTable,
     switchTables
@@ -15,10 +15,18 @@ function logger(req, res, next) {
 
 const tableRouter = Router();
 
+/*
+Changed :
+    getAllTables
+In change
+    getOrders
+
+*/
+
+
 tableRouter
-    .get('/', logger, getAllTables)
-    .get('/:id', logger, getTable)
-    .get('/:id/getOrders', logger, getOrders)
+    .post('/', logger, getAllTables)
+    .post('/getOrders', logger, getOrders)
     .get('/:id/customers', logger, getCustomersOfTable)
     .get('/:id/priceOfTable', logger, getPriceOfTable)
     .post('/:id/addTable', logger, addTable)

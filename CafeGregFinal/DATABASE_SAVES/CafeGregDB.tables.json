@@ -1,15 +1,22 @@
 [{
-  "_id": 3,
-  "orders": [
-    11,
-    12,
-    13
+  "_id": {
+    "$oid": "68f7a1310d7f87155dc291fd"
+  },
+  "profile": "cafe-greg-hadera",
+  "tables": [
+    {
+      "_id": 10
+    }
   ]
 },
 {
-  "_id": 4,
-  "orders": [],
-  "customers": [
-    "345538268"
+  "_id": {
+    "$oid": "68f7a5e70d7f87155dc29205"
+  },
+  "profile": "cafe-greg-ashkelon",
+  "tables": [
+    {
+      "_id": 25
+    }
   ]
 }]

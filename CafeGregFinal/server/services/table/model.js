@@ -1,27 +1,26 @@
 import {
-    addTableById, findAllTables, findTableById, addOrderToTable, getOrdersOfTable,
+    addTableById, findAllTables,  addOrderToTable, getOrdersOfTable,
     changeStatusInDB, getCustomersOfTableInDB, deleteInDB
     , getPriceOfTableInDB, payInDB,
     switchTablesInDB
 } from './db.js';
 
 export default class Table {
-    static async allTables() {
-        return await findAllTables();
+    static async allTables(profile) {
+        return await findAllTables(profile);
     }
 
-    static async tableById(id) {
-        return await findTableById(id)
+    static async getOrders(tableId, profile) {
+        return await getOrdersOfTable(tableId, profile)
     }
+
+
     static async addTable(id) {
         return await addTableById(id)
     }
 
     static async order(tableId, order) {
         return await addOrderToTable(tableId, order)
-    }
-    static async getOrders(tableId) {
-        return await getOrdersOfTable(tableId)
     }
     static async getCustomers(tableId) {
         return await getCustomersOfTableInDB(tableId)

@@ -1,14 +1,14 @@
 import Section from "./model.js";
 
-export async function getBySections(req, res) {
-    const id = req.params.id
+export async function getBySection(req, res) {
+    const { sectionId, profile} = req.body
     //receive section or products
-    let data = await Section.getBySections(id);
+    const response = await Section.getBySection(sectionId, profile);
 
-    if (!data) {
-        return res.status(404).json({ message: "Nothing were found" });
+    if (!response.ok) {
+        return res.status(404).json({ message: response.message });
     }
-    return res.status(200).json(data);
+    return res.status(200).json(response);
 }
 
 

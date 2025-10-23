@@ -11,21 +11,30 @@ import { socket } from '../App.jsx';
 export default function Menu(props) {
 
     const { addMessage } = useMessageContext();
-
     const { getWorkerId } = useIdContext();
+
+    const storeAccess = props.storeAccess
+
+
     const location = useLocation();
     const tableId = location.state?.tableId ?? null;
 
     const [orders, setOrders] = useState([])
 
     const fetchOrders = async () => {
-        const tempOrders = await getOrderOfTable(tableId)
-        console.log('orders found from DB', tempOrders);
-        setOrders([...tempOrders])
+
+        const data = await getOrderOfTable(tableId, storeAccess.profile)
+        console.log(data);
+
+        if (!data.ok) {
+            addMessage(data.message)
+        }
+        console.log('orders found from DB', data.orders);
+        setOrders([...data.orders])
     }
 
     useEffect(() => {
-        if (tableId != undefined && tableId != null) {
+        if (tableId != undefined && tableId != null && storeAccess) {
             fetchOrders()
 
             // S'abonner aux mises à jour de cette table
@@ -42,8 +51,8 @@ export default function Menu(props) {
             socket.on('table:orders:updated', handleOrdersUpdate);
 
             socket.on("every-table:update", (data) => {
-                const {message }= data
-                addMessage(message.text, message.type, message.duration)                
+                const { message } = data
+                addMessage(message.text, message.type, message.duration)
             })
 
             // Nettoyage lors du démontage
@@ -52,7 +61,7 @@ export default function Menu(props) {
                 socket.off('table:orders:updated', handleOrdersUpdate);
             };
         }
-    }, [tableId])
+    }, [tableId, storeAccess])
 
 
     const [showQRcode, setShowQRcode] = useState(false)
@@ -111,15 +120,17 @@ export default function Menu(props) {
 
 
     const fetchSection = async () => {
-        if (sectionId != null && sectionId != undefined) {
-            let res = await getFromSection(sectionId)
+        if (sectionId != null && sectionId != undefined && storeAccess) {
+            let res = await getFromSection(sectionId, storeAccess.profile)
+            console.log(res);
+            
             setMainContent(res);
         }
     }
 
     useEffect(() => {
         fetchSection()
-    }, [sectionId])
+    }, [sectionId, storeAccess])
 
     const backInTheMenu = async () => {
         const previousSectionId = await getPreviousSection(sectionId);

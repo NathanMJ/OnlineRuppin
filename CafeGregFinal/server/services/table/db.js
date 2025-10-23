@@ -3,13 +3,13 @@ import { MongoClient, ObjectId } from 'mongodb';
 import { findProductById } from '../product/db.js';
 import { getOrderById, getPriceByOrderId } from '../order/db.js';
 
-export async function findAllTables() {
+export async function findAllTables(profile) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
-        const tables = await db.collection("tables").find({}).toArray()
-        return tables;
+        const res = await db.collection("tables").findOne({ profile })
+        return { ok: true, tables: res.tables || [] };
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;
@@ -21,24 +21,34 @@ export async function findAllTables() {
     }
 }
 
-export async function findTableById(id) {
-    let client = null
+
+export async function getOrdersOfTable(tableId, profile) {
+    let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
-        const table = await db.collection("tables").findOne({ _id: id })
 
-        return table;
-    } catch (error) {
-        console.error('Error connecting to MongoDB:', error);
-        throw error;
-    }
-    finally {
-        if (client) {
-            client.close();
-        }
+        const table = await db.collection("tables").findOne({ tables: {_id: Number(tableId) }, profile })
+
+    if (!table.orders)
+        return { ok: true, orders: [] }
+
+    const ordersId = table.orders
+    const orders = await Promise.all(
+        ordersId.map(async (o) => { return await getOrderById(o) })
+    )
+
+    return { success: true, orders };
+
+} catch (error) {
+    return { success: false, message: error.message };
+} finally {
+    if (client) {
+        await client.close();
     }
 }
+}
+
 
 export async function addTableById(id) {
     let client = null;
@@ -74,8 +84,6 @@ export async function addTableById(id) {
 }
 
 export async function addOrderToTable(tableId, order) {
-    console.log('Adding order to table:', tableId, order);
-    
     let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -128,34 +136,6 @@ export async function addOrderToTable(tableId, order) {
         return { success: false, message: error.message };
     } finally {
         if (client) await client.close();
-    }
-}
-
-export async function getOrdersOfTable(tableId) {
-    let client = null;
-    try {
-        client = await MongoClient.connect(process.env.CONNECTION_STRING);
-        const db = client.db(process.env.DB_NAME);
-
-        const table = await db.collection("tables").findOne({ _id: Number(tableId) })
-
-
-        if (!table.orders)
-            return { success: true, orders: [] }
-
-        const ordersId = table.orders
-        const orders = await Promise.all(
-            ordersId.map(async (o) => { return await getOrderById(o) })
-        )
-
-        return { success: true, orders };
-
-    } catch (error) {
-        return { success: false, message: error.message };
-    } finally {
-        if (client) {
-            await client.close();
-        }
     }
 }
 

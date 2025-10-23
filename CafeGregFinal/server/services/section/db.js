@@ -3,11 +3,12 @@ import path from 'path';
 import { __dirname } from '../../globals.js';
 import { MongoClient } from 'mongodb';
 import { findProductById } from '../product/db.js';
+import { ok } from 'assert';
 
 
 
 
-export async function getFromTheSectionId(id) {
+export async function getFromTheSectionId(sectionId, profile, withChild = true) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -15,16 +16,54 @@ export async function getFromTheSectionId(id) {
 
         //test if the id we got child_section if not get products
 
-        const currentSection = await db.collection("sections").findOne({ _id: Number(id) })
+        const currentSection = await db.collection("sections").aggregate([
+            {
+                // 1. Trouver le document parent (sections)
+                $match: {
+                    profile, // Utilisez votre variable `profile`
+                    "sections._id": Number(sectionId) // Utilisez votre variable `sectionId`
+                }
+            },
+            {
+                // 2. Filtrer le tableau 'sections' pour ne conserver que l'élément correspondant
+                $project: {
+                    _id: 0, // Optionnel : exclure l'ID du document parent
+                    // Utilisation de $filter pour ne garder que l'objet du tableau 'sections' dont l'id correspond
+                    section: {
+                        $filter: {
+                            input: "$sections", // Le tableau à filtrer
+                            as: "section", // Nom temporaire pour l'élément du tableau
+                            cond: { $eq: ["$$section._id", Number(sectionId)] } // La condition de filtrage
+                        }
+                    }
+                }
+            },
+            {
+                // 3. 'Dérouler' le tableau de section pour obtenir l'objet directement
+                $unwind: "$section"
+            },
+            {
+                // 4. Mettre en forme le résultat final pour qu'il soit juste l'objet de la section
+                $replaceRoot: { newRoot: "$section" }
+            }
+        ]).next()
+
+
+        if (!withChild) {
+            return { section: currentSection, ok: true }
+        }
 
         if (currentSection.child_sections) {
             const fullChildSections = await Promise.all(
-                currentSection.child_sections.map(async (sectionId) => {
-                    const section = await db.collection("sections").findOne({ _id: sectionId })
+                currentSection.child_sections.map(async (id) => {
+                    const {section} = await getFromTheSectionId(id, profile, false)
                     return section
                 })
             )
-            return { sections: fullChildSections, type: 'section' }
+
+            console.log(fullChildSections);
+
+            return { sections: fullChildSections, type: 'section', ok: true }
         }
         else if (currentSection.products) {
             const fullProducts = await Promise.all(
@@ -34,10 +73,10 @@ export async function getFromTheSectionId(id) {
                     return { img, price, name, _id }
                 })
             )
-            return { products: fullProducts, type: 'product' }
+            return { products: fullProducts, type: 'product', ok: true }
         }
 
-        return []
+        return { message: 'Error getting sections' }
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;
