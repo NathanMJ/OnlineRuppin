@@ -1,7 +1,7 @@
 import Section from "./model.js";
 
 export async function getBySection(req, res) {
-    const { sectionId, profile} = req.body
+    const { sectionId, profile } = req.body
     //receive section or products
     const response = await Section.getBySection(sectionId, profile);
 
@@ -12,14 +12,16 @@ export async function getBySection(req, res) {
 }
 
 
-export async function getPreviousSections(req, res) {
-    const id = req.params.id
-    let data = await Section.getPreviousSections(id);
+export async function getPreviousIdSectionsById(req, res) {
+    const { sectionId, profile } = req.body
+    console.log({sectionId, profile});
+    
+    let response = await Section.getPreviousSections(sectionId, profile);
 
-    if (data === null || data === undefined) {
-        return res.status(404).json({ message: "Nothing were found" });
+    if (!response.ok) {
+        return res.status(404).json({ message: response.message });
     }
-    return res.status(200).json(data);
+    return res.status(200).json(response);
 }
 
 

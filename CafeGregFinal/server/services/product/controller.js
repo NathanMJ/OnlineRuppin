@@ -11,11 +11,13 @@ export async function getAllProducts(req, res) {
 
 
 export async function getProduct(req, res) {
-    let product = await Product.productById(Number(req.params.id));
-    if (!product) {
-        return res.status(404).json({ message: "No product found" });
+    const { productId, profile, details = [] } = req.body
+   
+    let response = await Product.productById(productId, profile, details);
+    if (!response.ok) {
+        return res.status(404).json({ message: response.message });
     }
-    return res.status(200).json(product);
+    return res.status(200).json(response);
 }
 
 export async function getProductsByName(req, res) {
@@ -29,10 +31,10 @@ export async function getProductsByName(req, res) {
 
 export async function changeProduct(req, res) {
     const { newProduct } = req.body
-   
+
     let response = await Product.changeProduct(newProduct)
     if (!response.ok) {
-        return res.status(404).json({message: response.message })
+        return res.status(404).json({ message: response.message })
     }
-    return res.status(200).json({ok: true, message: response.message })
+    return res.status(200).json({ ok: true, message: response.message })
 }

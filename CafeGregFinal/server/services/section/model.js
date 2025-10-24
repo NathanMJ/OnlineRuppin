@@ -1,4 +1,4 @@
-import { getFromTheSectionId, getPreviousIdSectionsById } from './db.js';
+import { getFromTheSectionId, getPreviousIdSectionsByIdInDB } from './db.js';
 
 export default class Section{
     constructor(id) {
@@ -9,8 +9,8 @@ export default class Section{
         return await getFromTheSectionId(sectionId, profile)
     }
     
-    static async getPreviousSections(id){
-        return await getPreviousIdSectionsById(id)
+    static async getPreviousSections(sectionId, profile){
+        return await getPreviousIdSectionsByIdInDB(sectionId, profile)
     }
 
 }

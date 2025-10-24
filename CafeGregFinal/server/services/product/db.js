@@ -27,16 +27,49 @@ export async function findAllProducts() {
 }
 
 
-export async function findProductById(id) {
+export async function findProductById(productId, profile, detailsToKeep) {
+
+  //TODO: finish the function with and without base
+
   let client = null
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
-
-
     const db = client.db(process.env.DB_NAME);
-    const product = (await db.collection("products")
+    const product = await db.collection("products")
       .aggregate([
-        { $match: { _id: id } },
+        {
+          $match: { profile }
+        },
+        {
+          $unwind: "$products"
+        },
+        {
+          $match: { "products._id": Number(productId) }
+        },
+        {
+          $replaceRoot: { newRoot: "$products" }
+        }
+      ])
+      .next();
+    console.log(product);
+
+
+    if (detailsToKeep.length > 0) {
+      //keep only the details
+      const everyDetails = Object.keys(product)
+      for (const detail of everyDetails) {
+        if (detailsToKeep.some(d => d != detail)) {
+          delete product[detail]
+        }
+      }
+    }
+
+    return { product, ok: true }
+
+    //get the sauces
+
+    /**
+     * ,
         {
           $lookup: {
             from: "sauces",
@@ -45,18 +78,20 @@ export async function findProductById(id) {
             as: "sauces"
           }
         }
-      ])
-      .toArray())[0];
+     */
 
-    const tempIngredients = product.ingredients || []
-    const ingredients = await Promise.all(
-      tempIngredients.map(async (i) => {
-        const id = i._id ?? i
-        const ingredient = await getIngredientById(id)
-        const selected = i.selected ?? 1
-        return { ...ingredient, selected }
-      })
-    )
+    if (product.ingredient) {
+
+      const tempIngredients = product.ingredients || []
+      const ingredients = await Promise.all(
+        tempIngredients.map(async (i) => {
+          const id = i._id ?? i
+          const ingredient = await getIngredientById(id)
+          const selected = i.selected ?? 1
+          return { ...ingredient, selected }
+        })
+      )
+    }
 
     if (product.adds) {
       const adds = await Promise.all(
@@ -142,7 +177,7 @@ export async function changeProductInDB(newProduct) {
     const test = await db.collection('products').findOne({ _id: newProduct._id })
     console.log('test', test);
 
-    return { message: 'Did change', ok: true}
+    return { message: 'Did change', ok: true }
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error

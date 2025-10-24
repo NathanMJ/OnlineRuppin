@@ -5,8 +5,8 @@ export default class Product{
         return await findAllProducts();
     }
 
-    static async productById(id){
-        return await findProductById(id)
+    static async productById(productId, profile, details){
+        return await findProductById(productId, profile, details)
     }
 
     static async productsByName(name){

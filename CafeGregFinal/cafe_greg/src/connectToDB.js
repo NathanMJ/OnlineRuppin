@@ -1,3 +1,4 @@
+
 const serverUrl = 'http://localhost:5500/api'
 
 export async function getTables(profile) {
@@ -6,16 +7,22 @@ export async function getTables(profile) {
 }
 
 export async function getOrderOfTable(tableId, profile) {
-    const data = await callAPI(`table/getOrders`, 'POST', { profile, tableId })   
+    const data = await callAPI(`table/getOrders`, 'POST', { profile, tableId })
     return data
 }
 
 
 export async function getFromSection(sectionId, profile) {
-    const data = await callAPI(`section`, 'POST', { sectionId, profile })   
+    const data = await callAPI(`section`, 'POST', { sectionId, profile })
     return data
 }
 
+
+
+export async function getPreviousSectionId(sectionId, profile) {
+    const data = await callAPI(`section/previousId`, 'POST', { sectionId, profile })
+    return data
+}
 
 
 
@@ -74,20 +81,6 @@ export async function getProduct(productId) {
 
     try {
         const response = await fetch(`${serverUrl}/product/${Number(productId)}`);
-
-        const data = await response.json();
-        return data
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
-
-
-export async function getPreviousSection(sectionId) {
-
-    try {
-
-        const response = await fetch(`${serverUrl}/section/previous/${sectionId}`);
 
         const data = await response.json();
         return data

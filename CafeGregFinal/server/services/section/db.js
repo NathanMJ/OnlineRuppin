@@ -56,7 +56,7 @@ export async function getFromTheSectionId(sectionId, profile, withChild = true) 
         if (currentSection.child_sections) {
             const fullChildSections = await Promise.all(
                 currentSection.child_sections.map(async (id) => {
-                    const {section} = await getFromTheSectionId(id, profile, false)
+                    const { section } = await getFromTheSectionId(id, profile, false)
                     return section
                 })
             )
@@ -89,16 +89,36 @@ export async function getFromTheSectionId(sectionId, profile, withChild = true) 
 }
 
 
-export async function getPreviousIdSectionsById(id) {
+export async function getPreviousIdSectionsByIdInDB(sectionId, profile) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
-        const previousSection = await db.collection("sections").findOne({ child_sections: Number(id) })
+
+        const previousSection = await db.collection("sections").aggregate([
+            {
+                $match: {
+                    profile
+                }
+            },
+            {
+                $unwind: "$sections"
+            },
+            {
+                $match: {
+                    "sections.child_sections": Number(sectionId)
+                }
+            },
+            {
+                $replaceRoot: { newRoot: "$sections" }
+            }
+        ]).next()
 
         if (!previousSection)
-            throw new Error('No previous section found')
-        return previousSection._id
+            return { message: "No previous sections found." }
+        if (previousSection._id === undefined)
+            return { message: "No _id in the section" }
+        return { prevId: previousSection._id, ok: true }
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;

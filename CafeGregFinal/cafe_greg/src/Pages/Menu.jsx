@@ -4,7 +4,7 @@ import FCOrders from '../FComponents/FCOrders';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
 import { useIdContext } from '../Contexts/askIdContext.jsx';
-import { changeStatusOfOrder, changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSection, getProductByName } from '../connectToDB.js';
+import { changeStatusOfOrder, changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSectionId, getProductByName } from '../connectToDB.js';
 import { useMessageContext } from '../Contexts/messageContext.jsx';
 import { socket } from '../App.jsx';
 
@@ -23,14 +23,16 @@ export default function Menu(props) {
 
     const fetchOrders = async () => {
 
-        const data = await getOrderOfTable(tableId, storeAccess.profile)
-        console.log(data);
+        const response = await getOrderOfTable(tableId, storeAccess.profile)
+        console.log(response);
 
-        if (!data.ok) {
-            addMessage(data.message)
+        if (response.ok) {
+            console.log('orders found from DB', response.orders);
+            setOrders([...response.orders])
         }
-        console.log('orders found from DB', data.orders);
-        setOrders([...data.orders])
+        else {
+            addMessage(response.message, 'error', 5000)
+        }
     }
 
     useEffect(() => {
@@ -123,7 +125,7 @@ export default function Menu(props) {
         if (sectionId != null && sectionId != undefined && storeAccess) {
             let res = await getFromSection(sectionId, storeAccess.profile)
             console.log(res);
-            
+
             setMainContent(res);
         }
     }
@@ -133,8 +135,15 @@ export default function Menu(props) {
     }, [sectionId, storeAccess])
 
     const backInTheMenu = async () => {
-        const previousSectionId = await getPreviousSection(sectionId);
-        setSectionId(previousSectionId);
+        const response = await getPreviousSectionId(sectionId, storeAccess.profile);
+        console.log(response);
+        
+        if (response.ok) {
+            setSectionId(response.prevId);
+        }
+        else {
+            addMessage(response.message)
+        }
     }
 
 
