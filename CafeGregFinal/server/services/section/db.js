@@ -8,7 +8,7 @@ import { ok } from 'assert';
 
 
 
-export async function getFromTheSectionId(sectionId, profile, withChild = true) {
+export async function getFromTheSectionId(profile, sectionId, withChild = true) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
@@ -48,6 +48,10 @@ export async function getFromTheSectionId(sectionId, profile, withChild = true) 
             }
         ]).next()
 
+        if(!currentSection) {
+            return { message: 'Section not found' }
+        }
+
 
         if (!withChild) {
             return { section: currentSection, ok: true }
@@ -56,23 +60,21 @@ export async function getFromTheSectionId(sectionId, profile, withChild = true) 
         if (currentSection.child_sections) {
             const fullChildSections = await Promise.all(
                 currentSection.child_sections.map(async (id) => {
-                    const { section } = await getFromTheSectionId(id, profile, false)
+                    const { section } = await getFromTheSectionId(profile, id, false)
                     return section
                 })
             )
-
-            console.log(fullChildSections);
-
             return { sections: fullChildSections, type: 'section', ok: true }
         }
         else if (currentSection.products) {
             const fullProducts = await Promise.all(
                 currentSection.products.map(async (p) => {
-                    const product = await findProductById(p)
-                    const { img, price, name, _id } = product
-                    return { img, price, name, _id }
+                    const product = await findProductById(profile, p, ["_id", "price", "img", "name"])
+                    console.log('produit', product);
+                    return product
                 })
             )
+
             return { products: fullProducts, type: 'product', ok: true }
         }
 
@@ -89,7 +91,7 @@ export async function getFromTheSectionId(sectionId, profile, withChild = true) 
 }
 
 
-export async function getPreviousIdSectionsByIdInDB(sectionId, profile) {
+export async function getPreviousIdSectionsByIdInDB(profile, sectionId) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);

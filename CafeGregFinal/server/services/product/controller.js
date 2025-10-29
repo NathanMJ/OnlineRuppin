@@ -11,22 +11,26 @@ export async function getAllProducts(req, res) {
 
 
 export async function getProduct(req, res) {
-    const { productId, profile, details = [] } = req.body
-   
-    let response = await Product.productById(productId, profile, details);
-    if (!response.ok) {
+    const { productId, profile, detailsToKeep } = req.body
+
+    let product = await Product.productById(profile, productId, detailsToKeep);
+    if (!product) {
         return res.status(404).json({ message: response.message });
     }
-    return res.status(200).json(response);
+    return res.status(200).json({ product, ok: true });
 }
 
 export async function getProductsByName(req, res) {
-    const research = req.params.research
-    let product = await Product.productsByName(research);
-    if (!product) {
+
+    const { research, profile } = req.body
+    console.log({ research, profile });
+    let products = await Product.productsByName(profile, research);
+    if (!products) {
         return res.status(404).json({ message: "No products found" });
     }
-    return res.status(200).json(product);
+    console.log(products);
+
+    return res.status(200).json({ products, ok: true });
 }
 
 export async function changeProduct(req, res) {

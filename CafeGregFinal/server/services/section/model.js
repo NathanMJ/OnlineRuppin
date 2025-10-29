@@ -1,16 +1,16 @@
 import { getFromTheSectionId, getPreviousIdSectionsByIdInDB } from './db.js';
 
-export default class Section{
+export default class Section {
     constructor(id) {
         this._id = id;
     }
 
-    static async getBySection(sectionId, profile){
-        return await getFromTheSectionId(sectionId, profile)
+    static async getBySection(profile, sectionId) {
+        return await getFromTheSectionId(profile, sectionId)
     }
-    
-    static async getPreviousSections(sectionId, profile){
-        return await getPreviousIdSectionsByIdInDB(sectionId, profile)
+
+    static async getPreviousSections(profile, sectionId) {
+        return await getPreviousIdSectionsByIdInDB(profile, sectionId)
     }
 
 }

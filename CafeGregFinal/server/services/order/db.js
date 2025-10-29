@@ -11,19 +11,36 @@ import { getOrdersOfTable } from '../table/db.js';
 
 
 
-export async function getOrderById(id) {
+export async function getOrderById(profile, orderId) {
   let client = null
+  //TODO 
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
 
     const db = client.db(process.env.DB_NAME);
-    let order = await db.collection("orders").findOne({ _id: id })
+    let order = await db.collection("orders").aggregate([
+      { $match: { profile } },
+      { $unwind: "$orders" },
+      { $match: { "orders._id": orderId } },
+      { $replaceRoot: { newRoot: "$orders" } }
+    ]).next()
 
-    const product = await findProductById(order.productId)
+    if (!order) {
+      return null
+    }
+
+
+    const product = await findProductById(profile, order.productId)
 
     //of product we need just img, name, price
 
-    const { img, name, price, destination } = product
+    order = {
+      ...order,
+      img: product.img,
+      name: product.name,
+      price: product.price,
+      destination: product.destination
+    }
 
 
 
@@ -31,8 +48,13 @@ export async function getOrderById(id) {
       //get sauces with quantityconst sauces = [];
       let sauces = []
       for (const s of order.sauces) {
-        const { id, quantity } = s;
-        const sauce = await db.collection('sauces').findOne({ _id: id });
+        const { _id, quantity } = s;
+        const sauce = await db.collection('sauces').aggregate([
+          { $match: { profile } },
+          { $unwind: "$sauces" },
+          { $match: { "sauces._id": _id } },
+          { $replaceRoot: { newRoot: "$sauces" } }
+        ]).next();
         if (sauce) {
           sauces.push({ ...sauce, quantity });
         }
@@ -40,21 +62,28 @@ export async function getOrderById(id) {
       order.sauces = sauces
     }
 
-
     //get the choosen salads 
     if (order.salad) {
       const id = order.salad._id ?? order.salad
-      const salad = await db.collection('salads').findOne({ _id: id })
+      const salad = await db.collection('salads').aggregate([
+        { $match: { profile } },
+        { $unwind: "$salads" },
+        { $match: { "salads._id": id } },
+        { $replaceRoot: { newRoot: '$salads' } }
+      ]).next()
+
       const price = product.salads.find((s) => (s._id ?? s) == id).price ?? 0
-      order = { ...order, salad: { ...salad, price } }
+      order = { ...order, salad: { name: salad.name, price } }
     }
+
+    //
 
     //get changes
     if (order.changes) {
       const tempChanges = []
       for (const c of order.changes) {
         const { ingredientId, change } = c;
-        const ingredient = await getIngredientById(ingredientId)
+        const ingredient = await getIngredientById(profile, ingredientId)
         const realChange = await db.collection('ingredient_changes').findOne({ _id: change })
         //get the price of the change or 0 if not exist
         const price = ingredient.changes.find(ch => ch._id == change)?.price || 0
@@ -71,23 +100,27 @@ export async function getOrderById(id) {
 
     let tempIngredients = []
     if (order.changes) {
-      tempIngredients = product.ingredients.filter(i => !order.changes.some(c => {
-        const ingredientId = i._id || i
-        return ingredientId == c._id
-      }))
+      tempIngredients = product.ingredients
+        .filter(i => !order.changes.some(c => i._id == c._id))
+        .map((i) => ({ name: i.name, _id: i._id }))
     }
     else {
-      tempIngredients = product.ingredients
+      tempIngredients = product.ingredients.map(i => {
+        return { name: i.name, _id: i._id }
+      })
     }
+
     order.ingredients = tempIngredients
 
+
+    //TODO
 
     //get adds    
 
     if (order.adds) {
       const tempAdds = await Promise.all(
         order.adds.map(async (add) => {
-          const ingredient = await getIngredientById(add)
+          const ingredient = await getIngredientById(profile, add)
           const price = product.adds.find(a => a._id == add).price
           const ingredientAdded = { name: ingredient.name, price, _id: add }
           return ingredientAdded
@@ -97,10 +130,9 @@ export async function getOrderById(id) {
     }
 
 
-    const status = await getStatusByOrderId(id)
+    const status = await getStatusByOrderId(profile, order._id)
 
-
-    return { ...order, img, name, price, status, destination };
+    return { ...order, status };
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
     throw error;
@@ -112,23 +144,62 @@ export async function getOrderById(id) {
   }
 }
 
-export async function removeOrderById(orderId) {
+export async function removeOrderById(profile, orderId) {
   let client = null;
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
     const db = client.db(process.env.DB_NAME);
 
-    await db.collection("tables").updateMany(
-      { orders: orderId },
-      { $pull: { orders: orderId } }
+    //remove from tables
+
+    const tableId = (await db.collection("tables").aggregate([
+      { $match: { profile } },
+      { $unwind: "$tables" },
+      { $match: { "tables.orders": orderId }}
+    ]).next()).tables._id;
+
+
+    let res = await db.collection("tables").updateOne(
+      {
+        profile,
+        'tables.orders': orderId
+      },
+      {
+        $pull: { "tables.$.orders": orderId }
+      }
     );
 
+    //remove from orders
 
-    await db.collection("orders").deleteOne({ _id: orderId });
+    res = await db.collection("orders").updateOne(
+      {
+        profile, 'orders._id': orderId
+      },
+      {
+        $pull: {
+          orders: {
+            _id: orderId
+          }
+        }
+      }
+    );
 
-    await db.collection("order_status_history").deleteMany({ orderId: orderId });
+    //remove from order_status_history
 
-    return { success: true, message: `Order ${orderId} supprimée avec succès` };
+    res = await db.collection("order_status_history").updateOne(
+      {
+        profile
+      },
+      {
+        $pull: {
+          order_change_status: {
+            orderId
+          }
+        }
+      }
+    );
+
+    return { ok: true, message: `Order ${orderId} deleted`, tableId};
 
   } catch (error) {
     console.error('Error removing order:', error);
@@ -138,49 +209,82 @@ export async function removeOrderById(orderId) {
   }
 }
 
-export async function changeOrderStatusById(orderId, statusId) {
+export async function changeOrderStatusById(profile, orderId, status) {
   let client = null
   try {
     client = await MongoClient.connect(process.env.CONNECTION_STRING);
     const db = client.db(process.env.DB_NAME);
 
-    // Check if the order got the status
-
-    // Check if status after exist, if yes erase them
-    await db.collection('order_status_history').deleteMany({
-      orderId: orderId,
-      code: { $gt: statusId }
-    });
-
-    // For every status before if they don't exist create them with the same time by now
-
-    // Récupérer tous les codes existants pour cet orderId
-    const existingCodes = await db.collection('order_status_history')
-      .find({ orderId: orderId }, { projection: { code: 1 } })
-      .toArray();
-
-    const existingSet = new Set(existingCodes.map(doc => doc.code));
-
-    // Obtenir l'heure actuelle en format ISO (2025-10-05T09:06:56.113+00:00)
-    const currentTime = new Date()
-
-    // Créer tous les codes manquants
-    const toInsert = [];
-    for (let code = 0; code <= statusId; code++) {
-      if (!existingSet.has(code)) {
-        toInsert.push({
-          orderId: orderId,
-          code: code,
-          time: currentTime
-        });
-      }
+    //check if the order exist
+    const order = await getOrderById(profile, orderId, ["_id"])
+    if (!order) {
+      return { ok: false, message: 'Order not found' }
     }
 
-    if (toInsert.length > 0) {
-      const result = await db.collection('order_status_history').insertMany(toInsert);
-      return { success: true, insertedCount: result.insertedCount };
-    } else {
-      return { success: true, insertedCount: 0 };
+    // if it's already to the status do nothing
+    const currentStatus = await getStatusByOrderId(profile, orderId)
+
+    if (currentStatus._id === status) {
+      return { ok: true, message: 'Status is already the same', same: true }
+    }
+    else if (currentStatus._id > status) {
+
+      // Check if status after exist, if yes erase them
+      const res = await db.collection('order_status_history').updateOne({
+        profile,
+        "order_change_status.orderId": orderId
+      }, {
+        $pull: {
+          "order_change_status.$.status": {
+            code: { $gt: status }
+          }
+        }
+      });
+      return { ok: true, message: 'Status updated successfully' }
+    }
+
+    // Ajouter les statuts manquants jusqu'au statut cible
+    for (let code = currentStatus._id + 1; code <= status; code++) {
+      const res = await addStatusHistory(profile, orderId, code)
+      if (!res.ok) {
+        return res
+      }
+    }
+    return { ok: true, message: 'Status updated successfully' }
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  }
+  finally {
+    if (client) {
+      client.close();
+    }
+  }
+}
+
+async function addStatusHistory(profile, orderId, status) {
+  let client = null
+  try {
+    client = await MongoClient.connect(process.env.CONNECTION_STRING);
+    const db = client.db(process.env.DB_NAME);
+    const currentTime = new Date()
+
+    const res = await db.collection('order_status_history').updateOne({
+      profile,
+      "order_change_status.orderId": orderId
+    }, {
+      $push: {
+        "order_change_status.$.status": {
+          code: status,
+          time: currentTime
+        }
+      }
+    });
+    if (res.modifiedCount == 1) {
+      return { ok: true, message: 'Status updated successfully' }
+    }
+    else {
+      return { message: 'Failed to update status' }
     }
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);

@@ -3,7 +3,7 @@ import AskIdMsg from '../FComponents/AskIdMsg'
 import ReturnButton from "../FComponents/ReturnButton"
 import { useNavigate } from 'react-router-dom';
 import { useIdContext } from '../Contexts/askIdContext';
-import { getWorkerById } from '../connectToDB';
+import {  getWorkerByIdFromDB } from '../connectToDB';
 import { useMessageContext } from '../Contexts/messageContext';
 
 export default function WorkMain(props) {
@@ -11,13 +11,13 @@ export default function WorkMain(props) {
 
     const { addMessage } = useMessageContext();
 
-    const { getWorkerId } = useIdContext();
+    const { getWorkerById } = useIdContext();
 
 
     const goToWithId = async () => {
         const id = await getWorkerId()
 
-        const worker = await getWorkerById(id)
+        const worker = await getWorkerByIdFromDB(id)
         console.log('worker is ', worker);
 
         if (!worker) {

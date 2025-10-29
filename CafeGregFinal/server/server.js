@@ -60,25 +60,19 @@ server.use('/api/website', websiteRouter)
 // Socket.IO connection handling
 io.on('connection', (socket) => {
   console.log('Client connecté:', socket.id);
-
-  // 🧠 1️⃣ Afficher le nombre de clients connectés
   console.log("Nombre total de clients :", io.engine.clientsCount);
 
-  // 🧠 2️⃣ Lister les IDs des clients connectés
-  const clients = Array.from(io.sockets.sockets.keys());
-  console.log("Clients connectés :", clients);
-
   // Le client peut s'abonner à une table spécifique
-  socket.on('subscribe:table', (tableId) => {
-    socket.join(`table:${tableId}`);
-    console.log(`Client ${socket.id} abonné à la table ${tableId}`);
+  socket.on('subscribe:table', (profile, tableId) => {
+    socket.join(`profile:${profile}:table:${tableId}`);
+    console.log(`Client ${socket.id} du profile ${profile} est abonné à la table ${tableId}`);
   });
 
-  // Se désabonner d'une table
-  socket.on('unsubscribe:table', (tableId) => {
-    socket.leave(`table:${tableId}`);
-    console.log(`Client ${socket.id} désabonné de la table ${tableId}`);
+  socket.on('unsubscribe:table', (profile, tableId) => {
+    socket.leave(`profile:${profile}:table:${tableId}`);
+    console.log(`Client ${socket.id} du profile ${profile} est desabonné à la table ${tableId}`);
   });
+
 
   // Le client peut se connecter a la cuisine/bar
   socket.on('subscribe:preparation', (destinationId) => {
@@ -87,21 +81,21 @@ io.on('connection', (socket) => {
   });
 
 
-  // Se désabonner d'une table
+  // Se désabonner d'une cuisine/bar
   socket.on('unsubscribe:preparation', (destinationId) => {
     socket.leave(`preparationRoom:${destinationId}`);
     console.log(`Client ${socket.id} se deconnecte de la preparation ${destinationId}`);
   });
 
   // S'abonner aux changement des tables
-  socket.on('subscribe:cafe-tables', () => {
-    socket.join('cafe-tables');
+  socket.on('subscribe:main-tables', (profile) => {
+    socket.join(`main-tables:${profile}`);
     console.log(`Client ${socket.id} abonné aux changements des tables`);
   });
 
   // Se désabonner des changement des tables
-  socket.on('unsubscribe:cafe-tables', () => {
-    socket.leave('cafe-tables');
+  socket.on('unsubscribe:main-tables', (profile) => {
+    socket.leave(`main-tables:${profile}`);
     console.log(`Client ${socket.id} désabonné des changements des tables`);
   });
 

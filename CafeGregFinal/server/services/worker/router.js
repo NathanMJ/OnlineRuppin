@@ -14,7 +14,7 @@ function logger(req, res, next) {
 const workerRouter = Router();
 
 workerRouter
-    .get('/:id', logger, getWorker)
+    .post('/byId', logger, getWorker)
     .post('/getEveryEntriesWithWorkers', logger, getEveryEntriesWithWorkers)
     .post('/getEntries', logger, getEntries)
     .post('/entry', logger, entry)

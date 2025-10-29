@@ -1,14 +1,14 @@
 import { changeOrderStatusById, getOrderById, removeOrderById,getPriceByOrderId, getOrdersFromDestinationInDB} from './db.js';
 
 export default class Order {
-    static async get(id) {
-        return await getOrderById(id);
+    static async getById(profile, orderId) {
+        return await getOrderById(profile, orderId);
     } 
-    static async removeOrder(id) {
-        return await removeOrderById(id);
+    static async removeOrder(profile, orderId) {
+        return await removeOrderById(profile, Number(orderId));
     }
-    static async changeStatus(id, status) {
-        return await changeOrderStatusById(id,status);
+    static async changeStatus(profile, orderId, status) {
+        return await changeOrderStatusById(profile, orderId, status);
     }
     static async getPrice(id) {
         return await getPriceByOrderId(id);

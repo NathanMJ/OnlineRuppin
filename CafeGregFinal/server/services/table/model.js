@@ -1,5 +1,5 @@
 import {
-    addTableById, findAllTables,  addOrderToTable, getOrdersOfTable,
+    addTableById, findAllTables, addOrderToTable, getOrdersOfTable,
     changeStatusInDB, getCustomersOfTableInDB, deleteInDB
     , getPriceOfTableInDB, payInDB,
     switchTablesInDB
@@ -10,8 +10,8 @@ export default class Table {
         return await findAllTables(profile);
     }
 
-    static async getOrders(tableId, profile) {
-        return await getOrdersOfTable(tableId, profile)
+    static async getOrders(profile, tableId) {
+        return await getOrdersOfTable(profile, tableId)
     }
 
 
@@ -19,8 +19,8 @@ export default class Table {
         return await addTableById(id)
     }
 
-    static async order(tableId, order) {
-        return await addOrderToTable(tableId, order)
+    static async order(profile, tableId, order) {
+        return await addOrderToTable(profile, tableId, order)
     }
     static async getCustomers(tableId) {
         return await getCustomersOfTableInDB(tableId)
@@ -28,8 +28,8 @@ export default class Table {
     static async delete(tableId) {
         return await deleteInDB(tableId)
     }
-    static async changeStatus(tableId, statusId) {
-        return await changeStatusInDB(tableId, statusId)
+    static async changeStatus(profile, tableId, statusId) {
+        return await changeStatusInDB(profile, tableId, statusId)
     }
 
     static async getTotal(tableId) {
@@ -40,6 +40,6 @@ export default class Table {
     }
     static async switch(tableId, tableId2) {
         return await switchTablesInDB(tableId, tableId2)
-    }    
+    }
 
 }

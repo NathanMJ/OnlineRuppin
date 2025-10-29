@@ -1,6 +1,5 @@
 import { __dirname } from '../../globals.js';
 import { MongoClient, ObjectId } from 'mongodb';
-import { findProductById } from '../product/db.js';
 import { getOrderById, getPriceByOrderId } from '../order/db.js';
 
 export async function findAllTables(profile) {
@@ -9,7 +8,25 @@ export async function findAllTables(profile) {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
         const res = await db.collection("tables").findOne({ profile })
-        return { ok: true, tables: res.tables || [] };
+        let tables = res.tables || []
+        if (tables.length === 0) {
+            return tables
+        }
+        //get the orders from each table
+
+        await Promise.all(
+            tables.map(async (table) => {
+                if (table.orders?.length > 0) {
+                    const orders = await Promise.all(
+                        table.orders.map(async (o) => {
+                            return await getOrderById(profile, o)
+                        })
+                    )
+                    table.orders = orders
+                }
+            }))
+
+        return tables;
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;
@@ -22,31 +39,40 @@ export async function findAllTables(profile) {
 }
 
 
-export async function getOrdersOfTable(tableId, profile) {
+export async function getOrdersOfTable(profile, tableId) {
     let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
 
-        const table = await db.collection("tables").findOne({ tables: {_id: Number(tableId) }, profile })
+        const table = await db.collection("tables").aggregate([
+            { $match: { profile } },
+            { $unwind: "$tables" },
+            { $match: { "tables._id": tableId } },
+            { $replaceRoot: { newRoot: '$tables' } }
+        ]).next()
 
-    if (!table.orders)
-        return { ok: true, orders: [] }
+        console.log(table);
 
-    const ordersId = table.orders
-    const orders = await Promise.all(
-        ordersId.map(async (o) => { return await getOrderById(o) })
-    )
 
-    return { success: true, orders };
+        if (!table.orders)
+            return []
 
-} catch (error) {
-    return { success: false, message: error.message };
-} finally {
-    if (client) {
-        await client.close();
+        const ordersIds = table.orders
+        const orders = await Promise.all(
+            ordersIds.map(async (o) => {
+                return await getOrderById(profile, o)
+            })
+        )
+
+        return orders;
+    } catch (error) {
+        return { ok: false, message: error.message };
+    } finally {
+        if (client) {
+            await client.close();
+        }
     }
-}
 }
 
 
@@ -83,55 +109,100 @@ export async function addTableById(id) {
     }
 }
 
-export async function addOrderToTable(tableId, order) {
+export async function addOrderToTable(profile, tableId, order) {
+
     let client = null;
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
 
-        // Trouver le max orderId dans orders (collection séparée)
-        const lastOrder = await db.collection("orders")
-            .find()
-            .sort({ _id: -1 })
-            .limit(1)
-            .toArray();
+        //check if the collection exist and 
 
-        const idOrder = (lastOrder.length === 0) ? 0 : lastOrder[0]._id + 1;
-
-        // Ajouter orderId et tableId dans la commande
-        const orderWithId = { ...order, _id: idOrder };
+        const collection = await db.collection("orders").findOne({ profile },
+            { projection: { orders: 0 } })
 
 
-        // Insérer dans la collection orders
-        const insertResult = await db.collection('orders').insertOne(orderWithId);
-        if (!insertResult.acknowledged) {
-            return { success: false, message: "Échec insertion order" };
+        //if profile does not exist
+
+        if (!collection) {
+            const created = await db.collection("orders").insertOne({ profile, orders: [] },
+                { projection: { orders: 0 } })
+            if (!created.acknowledged) {
+                return { message: "Problem adding collections orders in addOrderToTable" }
+            }
         }
+
+
+        let res = await db.collection("orders").aggregate([
+            { $match: { profile } }
+            , { $unwind: "$orders" }
+            , { $sort: { "orders._id": -1 } }
+            , { $limit: 1 }
+        ]).next()
+
+        const lastOrder = res?.orders || null
+        const orderId = lastOrder?._id + 1 || 0
+        const orderWithId = { ...order, _id: orderId }
+
+
+        res = await db.collection("orders").updateOne({ profile }, { $push: { orders: orderWithId } })
+        if (!res.acknowledged) {
+            return { message: "Didn't added the order into the orders collections" }
+        }
+
 
         // Mettre à jour la table : ajouter l'id de la commande dans le tableau orders (optionnel)
 
-        const updateResult = await db.collection("tables").updateOne(
-            { _id: Number(tableId) },
-            { $push: { orders: idOrder } }
+        res = await db.collection("tables").updateOne(
+            { profile },
+            {
+                $push: {
+                    'tables.$[tableItem].orders': orderId
+
+                }
+            }, {
+            arrayFilters: [
+                { "tableItem._id": tableId }
+            ]
+        }
         );
+
+        if (!res.acknowledged) {
+            return { message: "Didn't added the order into the tables collections" }
+        }
 
         //set the status 0 to the order in order_status_history with the time
 
         const time = new Date();
 
-        const statusToAdd = { time, code: 0, orderId: idOrder }
+        const statusToAdd = { code: 0, time }
 
-        await db.collection('order_status_history').insertOne(statusToAdd)
+        //check if the collection exist 
 
+        res = await db.collection('order_status_history').findOne({ profile }, { projection: { order_change_status: 0 } })
 
+        if (!res) {
+            res = await db.collection('order_status_history').insertOne({ profile, order_change_status: [] })
 
-
-        if (updateResult.modifiedCount === 1) {
-            return { success: true, message: "Commande ajoutée", order: orderWithId };
-        } else {
-            return { success: false, message: "Échec mise à jour table" };
+            if (!res.acknowledged) {
+                return { message: "Didn't create the order status history profile" }
+            }
         }
 
+        res = await db.collection('order_status_history').updateOne({
+            profile
+        },
+            {
+                $push: {
+                    order_change_status: { orderId, status: [statusToAdd] }
+                }
+            }
+        )
+
+        if (!res.acknowledged) {
+            return { message: "Didn't added the order into the order status history collections" }
+        }
+        return { ok: true, message: "Order added", order: orderWithId };
     } catch (error) {
         return { success: false, message: error.message };
     } finally {
@@ -201,20 +272,29 @@ export async function deleteInDB(id) {
     }
 }
 
-export async function changeStatusInDB(id, statusId) {
+export async function changeStatusInDB(profile, tableId, statusId) {
     let client = null
     try {
+
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
 
-        const table = await db.collection("tables").findOne({ _id: Number(id) })
-        if (!table) {
-            return { success: false, message: `Table ${id} doesnt exist` };
-        }
 
-        await db.collection("tables").updateOne({ _id: Number(id) }, { $set: { status: statusId } })
+        //check if table exists
+        // const table = await db.collection("tables").findOne({ _id: Number(id) })
+        // if (!table) {
+        //     return { success: false, message: `Table ${id} doesnt exist` };
+        // }
 
-        return { message: `Table ${id} was changed to status ${statusId}`, success: true };
+        await db.collection("tables").updateOne(
+            {
+                profile, "tables._id": tableId
+            },
+            {
+                $set: { "tables.$.status": statusId }
+            })
+
+        return { ok: true, message: `Table ${tableId} was changed to status ${statusId}`, success: true };
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;

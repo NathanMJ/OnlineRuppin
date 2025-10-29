@@ -18,7 +18,6 @@ export const MessageProvider = ({ children }) => {
     const timeoutsRef = useRef(new Map());
 
     const addMessage = (text, type = 'info', duration = 5000) => {
-        console.log("Adding message:", text, type, duration);
         
         const id = Date.now() + Math.random();
         const newMessage = { id, text, type };
@@ -84,19 +83,3 @@ export const MessageProvider = ({ children }) => {
     );
 };
 
-// Fonction helper pour les styles
-const getMessageStyle = (type) => {
-    console.log(type);
-    
-    switch (type) {
-        case 'success':
-            return 'bg-green-50 border-green-500 text-green-800';
-        case 'error':
-            return 'bg-red-50 border-red-500 text-red-800';
-        case 'warning':
-            return 'bg-yellow-50 border-yellow-500 text-yellow-800';
-        case 'info':
-        default:
-            return 'bg-blue-50 border-blue-500 text-blue-800';
-    }
-};

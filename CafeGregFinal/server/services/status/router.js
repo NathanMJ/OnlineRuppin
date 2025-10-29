@@ -11,7 +11,7 @@ function logger(req, res, next) {
 const statusRouter = Router();
 
 statusRouter
-    .get('/:orderId', logger, getStatusOfOrder)
+    .post('/byOrderId', logger, getStatusOfOrder)
     .get('/', logger, getEveryStatus)
 
 export default statusRouter;

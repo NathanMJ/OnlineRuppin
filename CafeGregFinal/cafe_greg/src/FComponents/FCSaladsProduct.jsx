@@ -1,5 +1,7 @@
 export default function FCSaladsProduct(props) {
 
+    //TODO: when you choose a salad you can change the ingredient of the salad
+
     const writePrice = (price) => {
         if (price == 0) {
             return 'Free'

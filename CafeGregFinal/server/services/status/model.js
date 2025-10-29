@@ -1,8 +1,8 @@
-import {  getStatusByOrderId,getEveryStatusFromDB} from './db.js';
+import { getStatusByOrderId, getEveryStatusFromDB } from './db.js';
 
 export default class Status {
-    static async orderId(id) {
-        return await getStatusByOrderId(id)
+    static async byOrderId(profile, orderId) {
+        return await getStatusByOrderId(profile, orderId)
     }
     static async getEveryStatus() {
         return await getEveryStatusFromDB()

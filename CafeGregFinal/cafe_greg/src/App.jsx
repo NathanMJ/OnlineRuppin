@@ -65,7 +65,6 @@ function App() {
       //check in the localStorage if you dont have a profile and check the token
 
       let tempStoreAccess = JSON.parse(localStorage.getItem(localStorageName))
-      console.log(`profile got from localStorage`, tempStoreAccess);
 
       //if no profile found go to login
 
@@ -105,7 +104,6 @@ function App() {
 
   const cancelEmit = () => {
     if (storeAccess) {
-      console.log('cancel emit for profile', storeAccess);
       socket.off('profile:check-token', checkToken);
       socket.emit('unsubscribe:profile', storeAccess.profile);
       removeToken(storeAccess.profile, storeAccess.token)
@@ -114,7 +112,6 @@ function App() {
 
   const setEmit = () => {
     if (storeAccess) {
-      console.log('set emit for profile', storeAccess);
       socket.on('profile:check-token', checkToken);
       socket.emit('subscribe:profile', storeAccess.profile);
     }
@@ -142,7 +139,7 @@ function App() {
           <Route path='/toggleService' element={<ToggleService goto={goto} />}></Route>
           <Route path='/cafeMain' element={<CafeMain goto={goto} storeAccess={storeAccess} />}></Route>
           <Route path='/menu' element={<Menu goto={goto} storeAccess={storeAccess} />}></Route>
-          <Route path='/productPage' element={<ProductPage goto={goto} />}></Route>
+          <Route path='/productPage' element={<ProductPage goto={goto} storeAccess={storeAccess} />}></Route>
           <Route path='/customerRegisterLogin' element={<CustomerRegisterLogin goto={goto} />}></Route>
           <Route path='/customerHistory' element={<CustomersHistory goto={goto} />}></Route>
           <Route path='/kitchenBarPreparation' element={<KitchenBarPreparation goto={goto} />}></Route>

@@ -47,7 +47,6 @@ export default function FCChangeIngredient(props) {
             <div className="changesAndNotesContainer">
                 <div className="changesContainer">
                     {props.ingredient.changes.map((change, index) => {
-
                         const isSelected = props.changeChosen !== undefined ? (change._id == props.changeChosen && 'selectedChange') : props.ingredient.selected == change._id && 'selectedChange'
                         return <div
                             className={`change 
@@ -60,7 +59,7 @@ export default function FCChangeIngredient(props) {
                         </div>
                     })}
                 </div>
-                <div className={`notesContainer ${wantNote && 'selected'}`} onClick={() => {setWantNote(!wantNote), setNote('')}}>
+                <div className={`notesContainer ${wantNote && 'selected'}`} onClick={() => { setWantNote(!wantNote), setNote('') }}>
                     <p>Add notes</p>
                     <img src="../Pictures/Note-logo.png" alt="" />
                 </div>

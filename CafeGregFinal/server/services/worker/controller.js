@@ -2,12 +2,12 @@ import { error, log } from "console";
 import Worker from "./model.js";
 
 export async function getWorker(req, res) {
-    const id = req.params.id
-    let worker = await Worker.getWorker(id);
+    const {workerId, profile} = req.body
+    const worker = await Worker.getWorker(profile, workerId);
     if (!worker) {
-        return res.status(404).json(false);
+        return res.status(404).json({ message: `Worker with id ${workerId} not found` });
     }
-    return res.status(200).json(worker);
+    return res.status(200).json({worker, ok: true});
 }
 
 

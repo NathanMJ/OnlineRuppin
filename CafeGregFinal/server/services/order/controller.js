@@ -1,13 +1,13 @@
-import { emitTableOrdersUpdate } from "../table/controller.js";
+import { emitCafeTableUpdate, emitTableOrdersUpdate } from "../table/controller.js";
 import Order from "./model.js";
 
 export async function getOrder(req, res) {
-    const id = Number(req.params.id)
-    let order = await Order.get(id);
+    const { orderId, profile } = req.body
+    let order = await Order.getById(profile, orderId);
     if (!order) {
         return res.status(404).json({ message: "No order were found" });
     }
-    return res.status(200).json(order);
+    return res.status(200).json({ order, ok: true });
 }
 
 export async function getOrderPrice(req, res) {
@@ -19,23 +19,30 @@ export async function getOrderPrice(req, res) {
     return res.status(200).json(price);
 }
 
-
 export async function removeOrder(req, res) {
-    const id = Number(req.params.id)
-    let response = await Order.removeOrder(id);
+    const { orderId, profile } = req.body
+    let response = await Order.removeOrder(profile, orderId);
+    if (!response.ok) {
+        return res.status(404).json({ message: response.message })
+    }
+    emitTableOrdersUpdate(req.io, profile, response.tableId);
     return res.status(200).json(response);
 }
 
-export async function changeStatus(req, res) {
-    const id = Number(req.params.id)
-    const status = Number(req.params.status)
-    const tableId = Number(req.params.tableId)
-    const destinationId = Number(req.params.destinationId)
-    console.log('Changing status for order:', id, 'to status:', status, 'for table:', tableId);
-    emitTableOrdersUpdate(req.io, tableId);
-    emitDestinationOrderUpdate(req.io, destinationId);
 
-    let response = await Order.changeStatus(id, status);
+export async function changeStatus(req, res) {
+    const { orderId, status, tableId, destinationId, profile } = req.body
+    console.log(req.body);
+    
+    let response = await Order.changeStatus(profile, orderId, status);
+    if (!response.ok) {
+        return res.status(404).json({ message: response.message })
+    }
+    if (!response.same) {
+        emitTableOrdersUpdate(req.io, profile, tableId);
+        emitCafeTableUpdate(req.io, profile);
+        //emitDestinationOrderUpdate(req.io, destinationId);
+    }
     return res.status(200).json(response);
 }
 
@@ -51,7 +58,7 @@ export const emitDestinationOrderUpdate = (io, destinationId) => {
     Order.fromDestination(destinationId).then(data => {
         console.log('Emitting updated orders for destination:', destinationId);
         io.to(`preparationRoom:${destinationId}`).emit('preparationRoom:update', {
-             orders:data.orders || []
+            orders: data.orders || []
         });
     }).catch(err => {
         console.error('Error fetching orders for table:', tableId, err);

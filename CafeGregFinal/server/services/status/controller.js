@@ -1,12 +1,12 @@
 import Status from "./model.js";
 
 export async function getStatusOfOrder(req, res) {
-    const id = req.params.orderId
-    const response = await Status.orderId(id);
-    if (!response) {
-        return res.status(404).json(response);
+    const { orderId, profile } = req.body
+    const status = await Status.byOrderId(profile, orderId);
+    if (!status) {
+        return res.status(404).json({ message: `Error in status of order : ${orderId}` });
     }
-    return res.status(200).json(response);
+    return res.status(200).json({ status, ok: true });
 }
 
 export async function getEveryStatus(req, res) {

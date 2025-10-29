@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
 import { useMessageContext } from './messageContext.jsx';
+import { getWorkerByIdFromDB } from '../connectToDB.js';
 
 // Créer le contexte
 const IdContext = createContext();
-
-
 
 // Hook personnalisé pour utiliser le contexte
 export const useIdContext = () => {
@@ -25,9 +24,9 @@ export const IdProvider = ({ children }) => {
     id: ''
   });
 
-  const getWorkerId = async (title = "Enter your ID:") => {
+  const getWorkerById = async (profile, title = "Enter your ID:") => {
     return new Promise((resolve, reject) => {
-      setAskIdContainer((prevS) => ({ ...prevS, show: true, id: '', title }));
+      setAskIdContainer((prevS) => ({ ...prevS, show: true, id: '', title, profile }));
       askIdRef.current = { resolve, reject };
     });
   };
@@ -35,17 +34,20 @@ export const IdProvider = ({ children }) => {
   const validateId = async () => {
     if (askIdRef.current && askIdContainer.id.trim()) {
       const id = askIdContainer.id.trim();
-      askIdRef.current.resolve(id);
       setAskIdContainer({ show: false, id: '', title: '' });
-      askIdRef.current = null;
-      return id;
+      const res = await getWorkerByIdFromDB(askIdContainer.profile, id);
+      if (!res.ok) {
+        addMessage("Worker not found", "error", 5000);
+        askIdRef.current.reject({ message: res.message } );
+      }
+      askIdRef.current.resolve(res);
     }
+    askIdRef.current = null;
   };
 
   const cancel = async () => {
     if (askIdRef.current) {
-      addMessage("ID entry cancelled", "info", 3000);
-      askIdRef.current.reject(new Error('User cancelled ID entry'));
+      askIdRef.current.reject({ message: 'User cancelled the ID input' });
       setAskIdContainer({ show: false, id: '', title: '' });
       askIdRef.current = null;
     }
@@ -60,7 +62,7 @@ export const IdProvider = ({ children }) => {
   };
 
   const value = {
-    getWorkerId,
+    getWorkerById,
     validateId,
     cancel,
     handleKeyPress,

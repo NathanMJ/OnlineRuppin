@@ -1,25 +1,25 @@
 import { __dirname } from '../../globals.js';
 import { MongoClient } from 'mongodb';
 
-export async function getStatusByOrderId(id) {
+export async function getStatusByOrderId(profile, orderId) {
+
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
         let lastStatus = await db.collection("order_status_history").aggregate([
-            { $match: { orderId: Number(id) } },
-            { $sort: { time: -1, code: -1 } },
-            { $limit: 1 }
-        ]).toArray();
-        lastStatus = lastStatus[0]
+            { $match: { profile } },
+            { $unwind: '$order_change_status' },
+            { $match: { 'order_change_status.orderId': Number(orderId) } },
+            { $limit: 1 },
+            { $unwind: "$order_change_status.status" },
+            { $replaceRoot: { newRoot: "$order_change_status.status" } },
+            { $sort: { code: -1, time: -1 } }
+        ]).next();
 
         const fullStatus = await db.collection('order_status').findOne({ _id: Number(lastStatus.code) })
 
-        if (lastStatus) {
-            return { ...lastStatus, ...fullStatus };
-        } else {
-            return null;
-        }
+        return { time: lastStatus.time, ...fullStatus };
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
         throw error;
@@ -97,36 +97,36 @@ export async function getEveryStatusFromDB() {
                     code: 1,
 
                     // CONDITIONNEL : Afficher previousTime UNIQUEMENT si code est 2
-                    previousTime: {$arrayElemAt: ["$previousStatusTime.time", 0 ]},
+                    previousTime: { $arrayElemAt: ["$previousStatusTime.time", 0] },
 
-                // Extraction des infos produit
-                productName: { $arrayElemAt: ["$product.name", 0] },
-                productId: { $arrayElemAt: ["$product._id", 0] },
-                productImage: { $arrayElemAt: ["$product.img", 0] },
-                productDestination: { $arrayElemAt: ["$product.destination", 0] }
-            }
+                    // Extraction des infos produit
+                    productName: { $arrayElemAt: ["$product.name", 0] },
+                    productId: { $arrayElemAt: ["$product._id", 0] },
+                    productImage: { $arrayElemAt: ["$product.img", 0] },
+                    productDestination: { $arrayElemAt: ["$product.destination", 0] }
+                }
             }
         ]).toArray();
 
-    let statusDetails = await db.collection('order_status').aggregate([
-        // NOUVELLE ÉTAPE 0 : Filtrer les documents de statut (code >= 1)
-        {
-            $match: {
-                _id: { $gte: 1 }
-            }
-        }]).toArray()
+        let statusDetails = await db.collection('order_status').aggregate([
+            // NOUVELLE ÉTAPE 0 : Filtrer les documents de statut (code >= 1)
+            {
+                $match: {
+                    _id: { $gte: 1 }
+                }
+            }]).toArray()
 
-    return { everyStatus, statusDetails, ok: true };
+        return { everyStatus, statusDetails, ok: true };
 
-} catch (error) {
-    console.error('Error connecting to MongoDB:', error);
-    throw error;
-}
-finally {
-    if (client) {
-        client.close();
+    } catch (error) {
+        console.error('Error connecting to MongoDB:', error);
+        throw error;
     }
-}
+    finally {
+        if (client) {
+            client.close();
+        }
+    }
 }
 
 

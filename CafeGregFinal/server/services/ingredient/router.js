@@ -5,7 +5,7 @@ import { logger } from '../../middlewares/logger.js'
 const ingredientRouter = Router();
 
 ingredientRouter
-    .get('/:id', logger, getIngredient) 
+    .post('/byId', logger, getIngredient) 
 
 export default ingredientRouter;
 

@@ -3,11 +3,11 @@ import Table from "./model.js";
 
 export async function getAllTables(req, res) {
     const { profile } = req.body
-    let response = await Table.allTables(profile);
-    if (!response.ok) {
-        return res.status(404).json({ message: "No tables found" });
+    let tables = await Table.allTables(profile);
+    if (!tables) {
+        return res.status(404).json({ message: "Error in research of tables" });
     }
-    return res.status(200).json(response);
+    return res.status(200).json({tables, ok: true});
 }
 
 
@@ -15,11 +15,11 @@ export async function getAllTables(req, res) {
 
 export async function getOrders(req, res) {
     const { tableId, profile } = req.body
-    const reponse = await Table.getOrders(tableId, profile)
-    if (!reponse.ok) {
-        return res.status(404).json({ message: response.message })
+    const orders = await Table.getOrders(profile, tableId)
+    if (!orders) {
+        return res.status(404).json({ message: "Error in finding the orders" })
     }
-    return res.status(200).json(reponse)
+    return res.status(200).json({ orders, ok: true })
 }
 
 
@@ -27,18 +27,31 @@ export async function getOrders(req, res) {
 
 export async function addTable(req, res) {
     let table = await Table.addTable(Number(req.params.id));
-
     return res.status(200).json(table);
 }
 
 export async function addOrder(req, res) {
-    const tableId = req.params.id
-    const order = req.body.order
-    console.log('Adding order to table:', tableId, order);
+    const { profile, order, tableId } = req.body
+    const orderAdded = await Table.order(profile, tableId, order)
+    if (!orderAdded) {
+        res.status(404).json({ message: "Problem in addition of the order" })
+    }
+    emitTableOrdersUpdate(req.io, profile, tableId);
+    return res.status(200).json({ orderAdded, ok: true });
+}
 
-    const tableUpdated = await Table.order(tableId, order)
 
-    return res.status(200).json(tableUpdated);
+
+export async function changeStatus(req, res) {
+    const {tableId, profile, statusId} = req.body
+    const response = await Table.changeStatus(profile, tableId, statusId)
+    if(!response.ok){
+        return res.status(404).json({message: response.message})
+    }
+    emitCafeTableUpdate(req.io, profile);
+    console.log('changestatus');
+    
+    return res.status(200).json(response)
 }
 
 
@@ -51,14 +64,6 @@ export async function getCustomersOfTable(req, res) {
 export async function removeTable(req, res) {
     const tableId = Number(req.params.id)
     const response = await Table.delete(tableId)
-    emitCafeTableUpdate(req.io);
-    return res.status(200).json(response)
-}
-
-export async function changeStatus(req, res) {
-    const tableId = Number(req.params.id)
-    const statusId = Number(req.params.statusId)
-    const response = await Table.changeStatus(tableId, statusId)
     emitCafeTableUpdate(req.io);
     return res.status(200).json(response)
 }
@@ -77,7 +82,6 @@ export async function payTable(req, res) {
 }
 
 
-
 export async function switchTables(req, res) {
     const tableId = Number(req.params.id)
     const tableId2 = Number(req.params.id2)
@@ -88,13 +92,13 @@ export async function switchTables(req, res) {
 
 
 
-export const emitTableOrdersUpdate = (io, tableId) => {
+export const emitTableOrdersUpdate = (io, profile, tableId) => {
     //fetch the order for the table and emit to table
-    Table.getOrders(tableId).then(data => {
-        console.log('Emitting updated orders for table:', tableId);
-        io.to(`table:${tableId}`).emit('table:orders:updated', {
-            tableId,
-            orders: data.orders || []
+    console.log('emit changes to table', tableId);
+
+    Table.getOrders(profile, tableId).then(orders => {
+        io.to(`profile:${profile}:table:${tableId}`).emit('table:orders:updated', {
+            orders: orders || []
         });
     }).catch(err => {
         console.error('Error fetching orders for table:', tableId, err);
@@ -102,11 +106,11 @@ export const emitTableOrdersUpdate = (io, tableId) => {
 };
 
 
-export const emitCafeTableUpdate = (io) => {
+export const emitCafeTableUpdate = (io, profile) => {
     //fetch all the tables and emit to cafe
-    Table.allTables().then(data => {
-        console.log('Emitting updated cafe tables');
-        io.to('cafe-tables').emit('cafe-tables:update', {
+    Table.allTables(profile).then(data => {
+        console.log('Emitting updated tables');
+        io.to(`main-tables:${profile}`).emit('main-tables:update', {
             tables: data || []
         });
     }).catch(err => {

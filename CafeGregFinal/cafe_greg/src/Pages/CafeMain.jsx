@@ -2,19 +2,30 @@ import { useEffect, useRef, useState } from "react";
 import ReturnButton from "../FComponents/ReturnButton";
 import SettingsCafeMain from "../FComponents/SettingsCafeMain";
 import { useIdContext } from "../Contexts/askIdContext";
-import { addTableById, changeStatusOfTable, deleteTableDB, getPriceOfTable, getTables, getWorkerById, payTableInDB, switchTables } from "../connectToDB.js"
+import {
+    addTableById, changeStatusOfTable, deleteTableDB,
+    getPriceOfTable, getTables, getWorkerByIdFromDB, payTableInDB, switchTables
+} from "../connectToDB.js"
 import { useMessageContext } from "../Contexts/messageContext.jsx";
 import { socket } from "../App.jsx";
+import FCTable from "../FComponents/FCTable.jsx";
 
 export default function CafeMain(props) {
 
     const { addMessage } = useMessageContext();
     const storeAccess = props.storeAccess
+    const profile = storeAccess?.profile || null
+
+
+    const destinations = [
+        { name: "kitchen", _id: 0 },
+        { name: "bar", _id: 1 },
+    ]
 
 
     const [showSettings, setShowSettings] = useState({ show: false, isManager: false });
 
-    const { getWorkerId } = useIdContext();
+    const { getWorkerById } = useIdContext();
 
     const [clickOnTableMode, setClickOnTableMode] = useState('goto')
 
@@ -25,74 +36,72 @@ export default function CafeMain(props) {
     useEffect(() => {
 
         const fetchTables = async () => {
-            console.log('fetch tables');
-            
-            const response = await getTables(storeAccess.profile);
-            console.log(response);
+            const response = await getTables(profile);
 
             if (response.ok) {
                 setTables(response.tables)
             }
         };
-        console.log(storeAccess);
-        
-        if (storeAccess) {
+
+        if (profile) {
             fetchTables();
-        }
-    }, [storeAccess])
 
-    useEffect(() => {
+            socket.emit('subscribe:main-tables', profile);
 
-        //TODO :Ajouter un listener pour les mises a jour de commandes qui sont pretes (commande prete en cuisine/bar)
-        //TODO: subscribe to the tables with the profile
-
-        socket.emit('subscribe:cafe-tables');
-
-        const handleTablesUpdate = (data) => {
-            //compare the data of each table and write a message if there is a change
-            const tempNewTables = data.tables || []
-            const tempOldTables = previousDataRef.current || []
-            tempNewTables.forEach((newTable) => {
-                const oldTable = tempOldTables.find(t => t._id === newTable._id);
-                console.log({ oldTable, newTable });
-
-                if (oldTable && oldTable.status !== newTable.status) {
-                    switch (newTable.status) {
-                        case 1:
-                            addMessage(`Table ${newTable._id} has requested service.`, "info", 5000);
-                            break;
-                        case 2:
-                            addMessage(`Table ${newTable._id} has requested to pay.`, "info", 5000);
-                            break;
+            const handleTablesUpdate = (data) => {
+                //compare the data of each table and write a message if there is a change
+                const tempNewTables = data.tables || []
+                const tempOldTables = previousDataRef.current || []
+                tempNewTables.forEach((newTable) => {
+                    const oldTable = tempOldTables.find(t => t._id === newTable._id);
+                    //check if the status of the table changed
+                    if (oldTable && oldTable.status !== newTable.status) {
+                        switch (newTable.status) {
+                            case 0:
+                                if (oldTable.status === 1) {
+                                    addMessage(`Table ${newTable._id} status has been checked.`, "info", 5000);
+                                }
+                                break;
+                            case 1:
+                                addMessage(`Table ${newTable._id} has requested service.`, "info", 5000);
+                                break;
+                            case 2:
+                                addMessage(`Table ${newTable._id} has requested to pay.`, "info", 5000);
+                                break;
+                        }
                     }
-                }
-            })
 
-            setTables(data.tables || [])
-        };
-        socket.on('cafe-tables:update', handleTablesUpdate);
+                    //check the status of each order of the table and write a message if a order is ready
+                    newTable.orders?.forEach((newOrder) => {
+                        const oldOrder = oldTable ? oldTable.orders.find(o => o._id === newOrder._id) : null;
+                        if (oldOrder && oldOrder.status._id !== newOrder.status._id) {
+                            if (newOrder.status._id === 3) { 
+                                addMessage(`An order for table ${newTable._id} is ready in the ${destinations.find(d => d._id == newOrder.destination).name}.`, "info", 5000);
+                                //TODO: add sound of ringing bell
+                                //TODO: be able of disabling this message/sound in settings
+                                //TODO: be able of change the sound in settings
+                            }
+                        }
+                    });
+                })
 
-        return () => {
-            socket.emit('unsubscribe:cafe-tables');
-            socket.off('cafe:tables:updated');
-        };
+                setTables(tempNewTables)
+            };
+            socket.on(`main-tables:update`, handleTablesUpdate);
 
-    }, []);
+            return () => {
+                socket.emit('subscribe:main-tables', profile);
+                socket.off(`main-tables:update`, handleTablesUpdate);
+            };
+        }
+
+    }, [profile]);
 
     useEffect(() => {
         previousDataRef.current = tables;
     }, [tables]);
 
 
-    const getAskLogo = (statusCode) => {
-        //if no status code is here maybe think the status like thinking, waiting for order, etc...     
-        switch (statusCode) {
-            case 1:
-                return <img className="askLogo" src="/Pictures/Hand-up.png" />
-            case 2:
-                return <img className="askLogo" src="/Pictures/Pay-logo.png" />
-        }
-    }
 
     const [tableSwitch, setTableSwitch] = useState()
 
@@ -137,21 +146,16 @@ export default function CafeMain(props) {
                 return
             case 'switchTable2':
                 await switchTables(tableSwitch, id)
-                fetchAndCompare()
                 addMessage(`Tables have been switched`, "success", 5000)
                 break
             case 'removeATable':
                 await deleteTableDB(id)
-                fetchAndCompare()
                 break
             case 'removeAnOrder':
                 console.log('open the orders of table ', id);
                 break
             case 'checkTable':
-                await changeStatusOfTable(id, 0)
-                addMessage("The table has been checked", "success", 5000)
-
-                fetchAndCompare()
+                await changeStatusOfTable(profile, id, 0)
                 break
             case 'reduction':
                 //TODO: make a reduction on the total price of the table
@@ -173,12 +177,13 @@ export default function CafeMain(props) {
 
 
     const openSetting = async () => {
-        addMessage("Enter your ID to access settings", "info", 3000)
-        const id = await getWorkerId("Enter your ID:");
-
-        if (id) {
-            const worker = await getWorkerById(id);
-
+        try {
+            const res = await getWorkerById(profile, "Enter your ID:");
+            if (!res.ok) {
+                addMessage(res.message, "error", 5000);
+                return;
+            }
+            const worker = res.worker;
             const isManager = worker?.isManager || false;
             const isWaiter = worker?.isWaiter || false;
 
@@ -188,6 +193,9 @@ export default function CafeMain(props) {
             else {
                 addMessage("You are not authorized to access settings", "warning", 5000);
             }
+        }
+        catch (error) {
+            console.log(error);
         }
     };
 
@@ -200,12 +208,28 @@ export default function CafeMain(props) {
     })
 
     const startOpenTable = async () => {
-        //Ask id, if id is waiter or manager continue
-        const id = await getWorkerId("Enter your ID:");
-        //if id is correct set the value of the table to next value free
-        //TODO: take the value from the database
-        const nextValue = 1
-        setAddTablePannel({ show: true, value: nextValue })
+        try {
+            const res = await getWorkerById(profile, "Enter your ID:");
+            if (!res.ok) {
+                addMessage(res.message, "error", 5000);
+                return;
+            }
+            const worker = res.worker;
+            const isManager = worker?.isManager || false;
+            const isWaiter = worker?.isWaiter || false;
+
+            if (isManager || isWaiter) {
+                //TODO : get the next id available for a table
+                const nextValue = 1
+                setAddTablePannel({ show: true, value: nextValue })
+            }
+            else {
+                addMessage("You are not authorized to open a new table", "warning", 5000);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 
 
@@ -226,13 +250,14 @@ export default function CafeMain(props) {
             }
         }
         else {
-            console.log('table already exist');
-
+            addMessage('table already exist', 'error', 5000);
         }
         setAddTablePannel({ show: false })
 
     }
 
+
+    //TODO: set in a functionnal component
 
     //Here concern the tip/payment
 
@@ -308,7 +333,6 @@ export default function CafeMain(props) {
             tipValue = Number(tip.value)
         }
         await payTableInDB(tip.tableId, tipValue)
-        fetchAndCompare()
     }
 
     const simulateCardPayment = () => {
@@ -329,12 +353,7 @@ export default function CafeMain(props) {
     }
 
 
-    return (
-        <div className="cafeMain">
-            <div className="tables">
-                {tables.map((table) => {
-                    return (
-                        <div key={table._id} className="table" onClick={() => clickOnTable(table._id)}>
+    /**<div key={table._id} className="table" onClick={() => clickOnTable(table._id)}>
                             <div className="customersCount">
                                 <p> {table.customers?.length > 0 ? table.customers.length : '0'} </p>
                                 <img src="/Pictures/Person-logo.png" alt="person-logo" className="personLogo" />
@@ -345,7 +364,25 @@ export default function CafeMain(props) {
                             <div className="shadow"></div>
                             <p className="tableId">{table._id}</p>
                             {table.status ? getAskLogo(table.status) : ''}
-                        </div>
+                        </div> */
+
+    const [tableIdshowOrdersIcon, setTableIdshowOrdersIcon] = useState(false);
+
+    return (
+        <div className="cafeMain">
+            <div className="tables">
+                {tables.map((table) => {
+                    return (<FCTable key={table._id}
+                        table={table}
+                        clickOnTable={clickOnTable}
+                        showOrdersIcon={tableIdshowOrdersIcon == table._id}
+                        setShowOrdersIcon={(boolean) => {
+                            if (boolean) {
+                                setTableIdshowOrdersIcon(table._id)
+                            } else {
+                                setTableIdshowOrdersIcon(null)
+                            }
+                        }}></FCTable>
                     )
                 })}
             </div>

@@ -1,20 +1,20 @@
-import { changeProductInDB, findAllProducts, findProductById, findProductByName} from './db.js';
+import { changeProductInDB, findAllProducts, findProductById, findProductByName } from './db.js';
 
-export default class Product{
-    static async allProducts(){
+export default class Product {
+    static async allProducts() {
         return await findAllProducts();
     }
 
-    static async productById(productId, profile, details){
-        return await findProductById(productId, profile, details)
+    static async productById(profile, productId, detailsToKeep) {
+        return await findProductById(profile, productId, detailsToKeep)
     }
 
-    static async productsByName(name){
-        return await findProductByName(name)
+    static async productsByName(profile, research) {
+        return await findProductByName(profile, research)
     }
-    static async changeProduct(newProduct){
+    static async changeProduct(newProduct) {
         return await changeProductInDB(newProduct)
     }
 
-    
+
 }

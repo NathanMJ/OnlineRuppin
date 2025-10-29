@@ -18,10 +18,19 @@ export default function FCTimer({ start }) {
         return;
       }
 
-      const diffMinutes = Math.floor(diff / 60);
+      const diffHours = Math.floor(diff / 3600);
+      const diffMinutes = Math.floor((diff % 3600) / 60);
       const diffSeconds = diff % 60;
 
-      const formattedTime = `${diffMinutes.toString().padStart(2, '0')}:${diffSeconds.toString().padStart(2, '0')}`;
+      let formattedTime;
+      if (diffHours > 0) {
+        // Format HH:MM:SS si plus d'une heure
+        formattedTime = `${diffHours.toString().padStart(2, '0')}:${diffMinutes.toString().padStart(2, '0')}:${diffSeconds.toString().padStart(2, '0')}`;
+      } else {
+        // Format MM:SS si moins d'une heure
+        formattedTime = `${diffMinutes.toString().padStart(2, '0')}:${diffSeconds.toString().padStart(2, '0')}`;
+      }
+
       setTime(formattedTime);
     };
 

@@ -4,18 +4,18 @@ import FCChangeIngredient from "../FComponents/FCChangeIngredient.jsx";
 import FCSaladsProduct from "../FComponents/FCSaladsProduct.jsx";
 import FCSaucesProduct from "../FComponents/FCSaucesProduct.jsx";
 import FCAddIngredients from "../FComponents/FCAddIngredients.jsx";
-import { getProduct, sendOrder } from "../connectToDB.js"
+import { getProductById, sendOrder } from "../connectToDB.js"
 
 export default function ProductPage(props) {
 
     //TODO: if we are from history get the history details and return them to get same when return
 
+    const storeAccess = props.storeAccess
+
+
     const location = useLocation();
-    const { productId, tableId, sectionId, sendedOrder, researchSettings} = location.state;
+    const { productId, tableId, sectionId, sendedOrder, researchSettings } = location.state;
 
-
-    console.log('tableId received', tableId);
-    
     const [product, setProduct] = useState(null)
 
     //is the id of the salads added
@@ -31,7 +31,7 @@ export default function ProductPage(props) {
     const [notesForChanges, setNotesForChanges] = useState(sendedOrder?.notesForChanges || [])
 
     const writeNoteForChange = (ingredientId, note) => {
-        if(!note || note.trim() === ''){
+        if (!note || note.trim() === '') {
             deleteNoteForChange(ingredientId)
             return
         }
@@ -64,15 +64,16 @@ export default function ProductPage(props) {
 
 
     useEffect(() => {
-        if (productId === null || productId === undefined)
-            return;
-
-        const fetchProduct = async () => {
-            const tempProduct = await getProduct(productId);
-            setProduct(tempProduct);
-        };
-        fetchProduct();
-    }, [productId]);
+        if (productId !== null && storeAccess && storeAccess.profile) {
+            const fetchProduct = async () => {
+                const res = await getProductById(productId, storeAccess.profile);
+                if (res.ok) {
+                    setProduct(res.product);
+                }
+            };
+            fetchProduct();
+        }
+    }, [productId, storeAccess?.profile]);
 
     const returnBtn = () => {
         if (sectionId) {
@@ -80,7 +81,7 @@ export default function ProductPage(props) {
             props.goto('/menu', { tableId, sectionId })
         }
         else {
-            props.goto('/customerHistory', {researchSettings, tableId})
+            props.goto('/customerHistory', { researchSettings, tableId })
         }
 
     }
@@ -95,16 +96,18 @@ export default function ProductPage(props) {
         //TODO: add the current order to the list (in db)
         const tempOrder = {
             productId,
-            ...(changes && { changes }),
+            ...(changes?.length > 0 && { changes }),
             ...(addedIngredients.length > 0 && { adds: addedIngredients }),
             ...(product.salads && { salad: selectedSalad }),
             ...(selectedSauces.length > 0 && { sauces: selectedSauces }),
             ...(notesForChanges.length > 0 && { notesForChanges })
         };
 
-        const result = await sendOrder(tableId, tempOrder);
+        console.log(tempOrder);
 
-        if (!result.success) {
+        const result = await sendOrder(storeAccess.profile, tableId, tempOrder);
+
+        if (!result.ok) {
             alert(`Erreur: ${result.message}`);
         }
         props.goto('/menu', { tableId })
@@ -116,7 +119,6 @@ export default function ProductPage(props) {
 
 
     const addSauce = (sauceId) => {
-
         const exist = selectedSauces.find(sauce => sauce.id === sauceId)
 
         //if the sauce is already in selectedSauces use changeQuantitySauce(sauceId, '+')
@@ -194,15 +196,17 @@ export default function ProductPage(props) {
 
             <div className="rightPage">
                 <div className="contentProduct">
-
                     <h1 className="title">Changes details</h1>
-                    {product.ingredients.map(ingredient => (
-                        <FCChangeIngredient change={changeIngredient} 
-                        writeNoteForChange={writeNoteForChange} deleteNoteForChange={deleteNoteForChange} 
-                        ingredient={ingredient} changeChosen={changes.find(c => c.ingredientId == ingredient._id)?.change} key={ingredient._id} />
-                    ))}
+                    {product.ingredients.map(ingredient => {
+
+                        return (
+                            <FCChangeIngredient change={changeIngredient}
+                                writeNoteForChange={writeNoteForChange} deleteNoteForChange={deleteNoteForChange}
+                                ingredient={ingredient} changeChosen={changes.find(c => c.ingredientId == ingredient._id)?.change} key={ingredient._id} />
+                        )
+                    })}
                     {product.adds && <FCAddIngredients addedIngredients={addedIngredients} addAnIngredient={addAnIngredient} removeAnAddedIngredient={removeAnAddedIngredient} adds={product.adds} />}
-                    {product.sauces.length > 0 && <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />}
+                    {product.sauces?.length > 0 && <FCSaucesProduct selectedSauces={selectedSauces} sauces={product.sauces} addSauce={addSauce} changeQuantitySauce={changeQuantitySauce} />}
                     {product.salads?.length > 0 ? <FCSaladsProduct selectedSalad={selectedSalad} salads={product.salads} selectSalad={selectSalad} /> : ''}
 
 

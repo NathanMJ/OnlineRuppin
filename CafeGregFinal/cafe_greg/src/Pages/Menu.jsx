@@ -1,19 +1,29 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import FCOrders from '../FComponents/FCOrders';
 import FCSection from '../FComponents/FCSection.jsx';
 import FCQRcode from '../FComponents/FCQRcode.jsx';
 import { useIdContext } from '../Contexts/askIdContext.jsx';
-import { changeStatusOfOrder, changeStatusOfTable, getFromSection, getOrderOfTable, getPreviousSectionId, getProductByName } from '../connectToDB.js';
+import {
+    changeStatusOfOrder, changeStatusOfTable, getFromSection,
+    getOrderOfTable, getPreviousSectionId, getProductByName
+} from '../connectToDB.js';
 import { useMessageContext } from '../Contexts/messageContext.jsx';
 import { socket } from '../App.jsx';
 
 export default function Menu(props) {
 
-    const { addMessage } = useMessageContext();
-    const { getWorkerId } = useIdContext();
+    //TODO: add a little tutorial with pictures 
+    //TODO: prevent from user to go back to cafeMain with the back button of the browser
 
     const storeAccess = props.storeAccess
+    const profile = storeAccess?.profile || {}
+
+    const { addMessage } = useMessageContext();
+    const { getWorkerById } = useIdContext();
+
+    const ordersRef = useRef([]);
+
 
 
     const location = useLocation();
@@ -22,13 +32,10 @@ export default function Menu(props) {
     const [orders, setOrders] = useState([])
 
     const fetchOrders = async () => {
-
-        const response = await getOrderOfTable(tableId, storeAccess.profile)
-        console.log(response);
-
+        const response = await getOrderOfTable(storeAccess.profile, tableId)
         if (response.ok) {
             console.log('orders found from DB', response.orders);
-            setOrders([...response.orders])
+            setOrders(response.orders)
         }
         else {
             addMessage(response.message, 'error', 5000)
@@ -39,32 +46,67 @@ export default function Menu(props) {
         if (tableId != undefined && tableId != null && storeAccess) {
             fetchOrders()
 
-            // S'abonner aux mises à jour de cette table
-            socket.emit('subscribe:table', tableId);
+            socket.emit('subscribe:table', storeAccess.profile, tableId);
 
-            // Écouter les mises à jour en temps réel
             const handleOrdersUpdate = (data) => {
-                if (data.tableId === tableId) {
-                    console.log('Real-time orders update received:', data.orders);
-                    setOrders(data.orders);
+                const newOrders = data.orders;
+                const prevOrders = ordersRef.current; // Utiliser la ref au lieu de prevOrders du setOrders
+                ordersRef.current = newOrders; // Mettre à jour la ref avec les nouvelles commandes
+                
+                // Check for new orders
+                const addedOrders = newOrders.filter(newOrder => {
+                    return !prevOrders.some(existingOrder => existingOrder._id === newOrder._id);
+                });
+
+                if (addedOrders.length > 0) {
+                    for (let order of addedOrders) {
+                        if (order.status._id === 0) {
+                            addMessage(`${order.name} added to your orders`, 'info', 5000);
+                            break;
+                        }
+                    }
                 }
+
+                // Check for updated orders
+                const updatedOrders = newOrders.filter(newOrder => {
+                    const existingOrder = prevOrders.find(existingOrder => existingOrder._id === newOrder._id);
+                    return existingOrder && existingOrder.status._id !== newOrder.status._id;
+                });
+
+                console.log({ updatedOrders });
+
+                for (let order of updatedOrders) {
+                    addMessage(`Order ${order.name} is now ${order.status.name}`, 'info', 5000);
+                }
+
+                // Check for removed orders
+                const removedOrders = prevOrders.filter(existingOrder => {
+                    return !newOrders.some(newOrder => newOrder._id === existingOrder._id);
+                });
+
+                for (let order of removedOrders) {
+                    addMessage(`Order ${order.name} has been removed`, 'info', 5000);
+                }
+
+                // Mettre à jour le state une seule fois à la fin
+                setOrders(newOrders);
             };
 
             socket.on('table:orders:updated', handleOrdersUpdate);
 
-            socket.on("every-table:update", (data) => {
-                const { message } = data
-                addMessage(message.text, message.type, message.duration)
-            })
+            //TODO: envoyer une notification a toutes les tables pour dire que le restaurant va fermer par exemple
+            // socket.on("every-table:update", (data) => {
+            //     const { message } = data;
+            //     addMessage(message.text, message.type, message.duration);
+            // });
 
-            // Nettoyage lors du démontage
             return () => {
-                socket.emit('unsubscribe:table', tableId);
+                socket.emit('unsubscribe:table', storeAccess.profile, tableId);
                 socket.off('table:orders:updated', handleOrdersUpdate);
+                // socket.off('every-table:update');
             };
         }
     }, [tableId, storeAccess])
-
 
     const [showQRcode, setShowQRcode] = useState(false)
 
@@ -94,8 +136,8 @@ export default function Menu(props) {
 
 
     const fetchProductByName = async () => {
-        let tempProduct = await getProductByName(researchedProduct);
-        setProductsFound(tempProduct)
+        let data = await getProductByName(storeAccess.profile, researchedProduct);
+        setProductsFound(data.products)
     }
 
     useEffect(() => {
@@ -105,8 +147,7 @@ export default function Menu(props) {
             return;
         }
 
-        //research the top 4 products that match the most to the researchedProuct
-
+        //research the top 3 products that match the most to the researchedProduct
         if (researchedProduct) {
             fetchProductByName()
         }
@@ -124,9 +165,13 @@ export default function Menu(props) {
     const fetchSection = async () => {
         if (sectionId != null && sectionId != undefined && storeAccess) {
             let res = await getFromSection(sectionId, storeAccess.profile)
-            console.log(res);
+            if (res.ok) {
+                setMainContent(res);
+            }
+            else {
+                addMessage(res.message, 'error', 5000)
+            }
 
-            setMainContent(res);
         }
     }
 
@@ -137,7 +182,7 @@ export default function Menu(props) {
     const backInTheMenu = async () => {
         const response = await getPreviousSectionId(sectionId, storeAccess.profile);
         console.log(response);
-        
+
         if (response.ok) {
             setSectionId(response.prevId);
         }
@@ -150,7 +195,7 @@ export default function Menu(props) {
 
     const askWaiter = () => {
         addMessage('A waiter has been called to your table', 'info', 5000);
-        changeStatusOfTable(tableId, 1);
+        changeStatusOfTable(profile, tableId, 1);
     }
 
     const placeSections = () => {
@@ -190,9 +235,16 @@ export default function Menu(props) {
     }
 
     const clickOnCafeGreg = async () => {
-        const id = await getWorkerId()
-        if (id) {
-            props.goto('/cafeMain')
+        try {
+
+            const id = await getWorkerById(profile)
+            if (id) {
+                props.goto('/cafeMain')
+            }
+        }
+        catch (error) {
+            console.log(error);
+
         }
     }
 
@@ -251,7 +303,7 @@ export default function Menu(props) {
             return acc
         }, [])
         if (pendingOrders.length > 0) {
-            await Promise.all(pendingOrders.map(order => changeStatusOfOrder(order._id, 1, tableId, order.destination)))
+            await Promise.all(pendingOrders.map(order => changeStatusOfOrder(profile, order._id, 1, tableId, order.destination)))
             addMessage("Orders successully", "success", 5000)
             fetchOrders()
             return
@@ -303,7 +355,8 @@ export default function Menu(props) {
                 <FCOrders
                     orders={orders || []}
                     tableId={tableId}
-                    refreshOrders={fetchOrders}></FCOrders>
+                    refreshOrders={fetchOrders}
+                    profile={storeAccess?.profile}></FCOrders>
 
                 <div className='bottom'>
                     <div className='pipe'></div>
@@ -357,16 +410,19 @@ export default function Menu(props) {
                         <div className='sections'>{placeSections()}</div> :
                         mainContent.products &&
                         <div className='products'>
-                            {mainContent.products.map((product) => (
-                                <div className='product' key={product._id}
-                                    style={{ backgroundImage: `url(${product.img})` }}
-                                    onClick={() => clickOnProduct(product._id)}>
-                                    <p className='name'>{product.name}</p>
-                                    <div className='priceContainer'>
-                                        <p className='price'>{product.price}₪</p>
+                            {mainContent.products.map((product, index) => {
+                                console.log(product);
+                                return (
+                                    <div className='product' key={index}
+                                        style={{ backgroundImage: `url(${product.img})` }}
+                                        onClick={() => clickOnProduct(product._id)}>
+                                        <p className='name'>{product.name}</p>
+                                        <div className='priceContainer'>
+                                            <p className='price'>{product.price}₪</p>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>}
                 </div>
             </div>

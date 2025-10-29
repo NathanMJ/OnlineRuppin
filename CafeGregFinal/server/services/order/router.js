@@ -5,12 +5,13 @@ import { logger } from '../../middlewares/logger.js'
 const orderRouter = Router();
 
 orderRouter
-    .get('/:id', logger, getOrder) 
+    .post('/byId', logger, getOrder) 
+    .post('/removeById', logger, removeOrder) 
+    .post('/changeOrderStatus', logger, changeStatus) 
     .get('/:id/price', logger, getOrderPrice) 
     .get('/fromDestination/:destination', logger, getOrdersFromDestination) 
-    .post('/remove/:id', logger, removeOrder) 
-    .post('/changeOrderStatus/:id/:status/:tableId/:destinationId', logger, changeStatus) 
 
+    
 export default orderRouter;
 
 

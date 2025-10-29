@@ -7,35 +7,40 @@ function capitalize(word) {
 }
 
 
-export async function getWorkerFromDB(id) {
+export async function getWorkerFromDB(profile, workerId) {
     let client = null
     try {
         client = await MongoClient.connect(process.env.CONNECTION_STRING);
         const db = client.db(process.env.DB_NAME);
         let worker = await db.collection("workers").aggregate([
             {
-                $match: { _id: id }
+                $match: { profile }
             },
             {
-                $lookup: {
-                    localField: "authorizations",   // tableau d’IDs
-                    from: "worker_authorizations",
-                    foreignField: "_id",            // champ dans worker_authorizations
-                    as: "authorizations"            // ça remplace le tableau par les objets
-                }
+                $unwind: "$workers"
+            },
+            {
+                $match: { "workers._id": workerId }
+            },
+            {
+                $replaceRoot: { newRoot: "$workers" }
             }
-        ]).toArray();
+        ]).next();
+
+        if (!worker) {
+            return null;
+        }
 
 
-        if (worker.length > 0)
-            worker = worker[0]
-        else
-            return
+        //get the authorizations 
 
+        
+        const authorizations = await db.collection('worker_authorizations').find().toArray();
 
 
         worker.authorizations.forEach(auth => {
-            worker[`is${capitalize(auth.name)}`] = true
+            const authName = authorizations.find(a => a._id === auth)?.name || "unknown";
+            worker[`is${capitalize(authName)}`] = true
         });
 
         delete worker.authorizations
@@ -64,9 +69,9 @@ export async function entryWorker(workerId, clickerId) {
             startTime: { $exists: true },
             pauseTime: { $exists: false }
         })
-        
+
         if (exist) {
-            return {success : false, message: "The worker is already working, go to the manager to fix it"}
+            return { success: false, message: "The worker is already working, go to the manager to fix it" }
         }
 
         await db.collection('workers_shifts').insertOne({
@@ -187,34 +192,34 @@ export async function getEntriesFromDB(workerId) {
 }
 
 export async function getEveryEntriesWithWorkersFromDB() {
-  let client;
-  try {
-    client = await MongoClient.connect(process.env.CONNECTION_STRING);
-    const db = client.db(process.env.DB_NAME);
+    let client;
+    try {
+        client = await MongoClient.connect(process.env.CONNECTION_STRING);
+        const db = client.db(process.env.DB_NAME);
 
-    // 1️⃣ Récupérer tous les workers (juste _id et name)
-    const workers = await db.collection('workers')
-      .find({}, { projection: { _id: 1, name: 1 } })
-      .toArray();
+        // 1️⃣ Récupérer tous les workers (juste _id et name)
+        const workers = await db.collection('workers')
+            .find({}, { projection: { _id: 1, name: 1 } })
+            .toArray();
 
-    // 2️⃣ Pour chaque worker, récupérer ses entrées via getEntriesFromDB
-    // Ici on doit passer worker._id
-    const entriesWithWorkers = await Promise.all(
-      workers.map(async (w) => {
-        const entries = await getEntriesFromDB(w._id); // ✅ ta fonction existante
-        return {
-          worker: w,
-          entries,
-        };
-      })
-    );
+        // 2️⃣ Pour chaque worker, récupérer ses entrées via getEntriesFromDB
+        // Ici on doit passer worker._id
+        const entriesWithWorkers = await Promise.all(
+            workers.map(async (w) => {
+                const entries = await getEntriesFromDB(w._id); // ✅ ta fonction existante
+                return {
+                    worker: w,
+                    entries,
+                };
+            })
+        );
 
-    return entriesWithWorkers;
-  } catch (err) {
-    console.error("Error in getEveryEntriesWithWorkersFromDB:", err);
-    return null;
-  } finally {
-    if (client) await client.close();
-  }
+        return entriesWithWorkers;
+    } catch (err) {
+        console.error("Error in getEveryEntriesWithWorkersFromDB:", err);
+        return null;
+    } finally {
+        if (client) await client.close();
+    }
 }
 

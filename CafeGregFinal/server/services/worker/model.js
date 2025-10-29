@@ -7,8 +7,8 @@ import {
 } from './db.js';
 
 export default class Worker {
-    static async getWorker(id) {
-        return await getWorkerFromDB(id);
+    static async getWorker(profile, workerId) {
+        return await getWorkerFromDB(profile, workerId);
     }
 
     static async entry(id, clickerId){

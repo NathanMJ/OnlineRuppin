@@ -1,29 +1,82 @@
 
 const serverUrl = 'http://localhost:5500/api'
 
+//CORRECT FOR EASY DINNER
+
 export async function getTables(profile) {
     const data = await callAPI(`table`, 'POST', { profile })
     return data
 }
 
-export async function getOrderOfTable(tableId, profile) {
+export async function getOrderOfTable(profile, tableId) {
     const data = await callAPI(`table/getOrders`, 'POST', { profile, tableId })
     return data
 }
-
 
 export async function getFromSection(sectionId, profile) {
     const data = await callAPI(`section`, 'POST', { sectionId, profile })
     return data
 }
 
-
-
 export async function getPreviousSectionId(sectionId, profile) {
     const data = await callAPI(`section/previousId`, 'POST', { sectionId, profile })
     return data
 }
 
+export async function getProductByName(profile, research) {
+    const data = await callAPI(`product/byName`, 'POST', { research, profile })
+    return data
+}
+
+export async function getProductById(productId, profile) {
+    const data = await callAPI(`product/byId`, 'POST', { productId, profile })
+    return data
+}
+
+export async function sendOrder(profile, tableId, order) {
+    const data = await callAPI(`table/addOrder`, 'POST', { profile, tableId, order })
+    return data
+}
+
+export async function setToken(profile, token) {
+    const data = await callAPI(`website/addToken`, 'POST', { profile, token })
+    return data
+}
+
+export async function getToken(profile, token) {
+    const data = await callAPI(`website/getToken`, 'POST', { profile, token })
+    return data
+}
+
+export async function removeToken(profile, token) {
+    const data = await callAPI(`website/removeToken`, 'POST', { profile, token })
+    return data
+}
+
+export async function removeOrderById(profile, orderId) {
+    const data = await callAPI(`order/removeById`, 'POST', { profile, orderId })
+    return data
+}
+
+
+export async function changeStatusOfOrder(profile, orderId, status, tableId, destinationId) {
+    const data = await callAPI(`order/changeOrderStatus`, 'POST', { profile, orderId, status, tableId, destinationId })
+    return data
+}
+
+
+export async function getWorkerByIdFromDB(profile, workerId) {
+    return await callAPI(`worker/byId`, "POST", { profile, workerId })
+}
+
+
+export async function changeStatusOfTable(profile, tableId, statusId) {
+    return await callAPI(`table/changeStatus`, "POST", { profile, tableId, statusId })
+}
+
+
+
+//CORRECT FOR CAFE GREG ONLY
 
 
 export async function addTableById(id) {
@@ -40,35 +93,6 @@ export async function addTableById(id) {
 
         console.log(data.message);
 
-        return data; // { success: true/false, message: "...", table?: {...} }
-
-    } catch (error) {
-        console.error("❌ Erreur réseau:", error);
-        return { success: false, message: "Erreur réseau" };
-    }
-}
-
-export async function sendOrder(tableId, order) {
-    try {
-        const response = await fetch(`${serverUrl}/table/${tableId}/order`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                order
-            })
-        });
-
-        const data = await response.json().catch(() => ({
-            success: false,
-            message: "Réponse serveur invalide"
-        }));
-
-        if (!response.ok || !data.success) {
-            console.error("❌ Erreur API:", data.message);
-            return { success: false, message: data.message };
-        }
-
-        console.log("✅ Commande ajoutée:", data);
         return data;
 
     } catch (error) {
@@ -77,56 +101,7 @@ export async function sendOrder(tableId, order) {
     }
 }
 
-export async function getProduct(productId) {
 
-    try {
-        const response = await fetch(`${serverUrl}/product/${Number(productId)}`);
-
-        const data = await response.json();
-        return data
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
-
-export async function getProductByName(research) {
-
-    try {
-
-        const response = await fetch(`${serverUrl}/product/byName/${research}`);
-
-        const data = await response.json();
-        console.log(data);
-        return data
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
-
-export async function removeOrderById(orderId) {
-
-    try {
-        const response = await fetch(`${serverUrl}/order/remove/${orderId}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }
-        });
-        return response
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
-
-export async function changeStatusOfOrder(orderId, statusId, tableId, destinationId) {
-    try {
-        const response = await fetch(`${serverUrl}/order/changeOrderStatus/${orderId}/${statusId}/${tableId}/${destinationId}`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" }
-        });
-        return response
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
 
 export async function getCustomersFromTable(tableId) {
     try {
@@ -188,18 +163,6 @@ export async function deleteTableDB(tableId) {
     try {
         const response = await fetch(`${serverUrl}/table/${tableId}/delete`, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" }
-        });
-        return response
-    } catch (error) {
-        console.error("Erreur réseau :", error);
-    }
-}
-
-export async function changeStatusOfTable(tableId, statusId) {
-    try {
-        const response = await fetch(`${serverUrl}/table/${tableId}/status/${statusId}`, {
-            method: "POST",
             headers: { "Content-Type": "application/json" }
         });
         return response
@@ -280,9 +243,6 @@ export async function getOrdersFromDestionation(destinationId) {
     return await callAPI(`order/fromDestination/${destinationId}`, 'GET')
 }
 
-export async function getWorkerById(workerId) {
-    return await callAPI(`worker/${workerId}`)
-}
 
 export async function connectToWebsite(login, password, token) {
     return await callAPI(`website/connect`, 'POST', { login, password, token })
@@ -319,22 +279,3 @@ export async function getEveryStatus() {
     const data = await callAPI(`status`, 'GET')
     return data
 }
-
-
-export async function setToken(profile, token) {
-    const data = await callAPI(`website/addToken`, 'POST', { profile, token })
-    return data
-}
-
-
-export async function getToken(profile, token) {
-    const data = await callAPI(`website/getToken`, 'POST', { profile, token })
-    return data
-}
-
-export async function removeToken(profile, token) {
-    const data = await callAPI(`website/removeToken`, 'POST', { profile, token })
-    return data
-}
-
-
