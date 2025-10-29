@@ -1,0 +1,129 @@
+[{
+  "_id": {
+    "$oid": "68fa13eb1e019a4699987077"
+  },
+  "profile": "cafe-greg-hadera",
+  "sections": [
+    {
+      "_id": 0,
+      "name": "Main",
+      "child_sections": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "_id": 1,
+      "name": "Most ordered",
+      "img": "https://res.cloudinary.com/ybmedia/image/upload/c_crop,h_1125,w_2000,x_0,y_59/c_fill,f_auto,h_900,q_auto,w_1600/v1/m/b/4/b43a7777e99bf5dca7dfa2ae34e97eb3391ae2c6/GettyImages-459053815.jpg",
+      "products": [
+        0
+      ]
+    },
+    {
+      "_id": 2,
+      "name": "Starters",
+      "img": "https://realfood.tesco.com/media/images/1400x919-CHRISTMAS-SALAD-WINTER-WREATH-TRF-d8c3c0d1-316c-4e0e-a936-26dc81f429df-0-1400x919.jpg",
+      "products": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "_id": 3,
+      "name": "Meals",
+      "img": "https://media.istockphoto.com/id/450705255/photo/homemade-turkey-thanksgiving-dinner.jpg?s=612x612&w=0&k=20&c=Bul88e51JYCw6o2JaLyvPKCZpg2R-qd2621978t7HRI=",
+      "child_sections": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "_id": 4,
+      "name": "Desserts",
+      "img": "https://cdn.hswstatic.com/gif/desserts-update.jpg",
+      "child_sections": [
+        11,
+        12
+      ]
+    },
+    {
+      "_id": 5,
+      "name": "Drinks",
+      "img": "https://i.redd.it/yyr6vtruhzbb1.jpg",
+      "child_sections": [
+        13,
+        14
+      ]
+    },
+    {
+      "_id": 6,
+      "name": "Main Courses",
+      "img": "image.png"
+    },
+    {
+      "_id": 7,
+      "name": "Breakfasts",
+      "img": "image.png",
+      "products": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "_id": 8,
+      "name": "Italians",
+      "img": "image.png"
+    },
+    {
+      "_id": 9,
+      "name": "Sandwichs",
+      "img": "image.png"
+    },
+    {
+      "_id": 10,
+      "name": "Salads",
+      "img": "image.png"
+    },
+    {
+      "_id": 11,
+      "name": "Pancakes",
+      "img": "https://img-3.journaldesfemmes.fr/X0OTQK0WZewmENXV5B9t_uhBh8o=/750x500/27400ba5c3d24e96b0cdc34494ddb668/ccmcms-jdf/40030649.jpg"
+    },
+    {
+      "_id": 12,
+      "name": "Waffles",
+      "img": "https://images.getrecipekit.com/20230327191314-Rise%2520Waffle_Chocolate%2520Waffles.jpg?aspect_ratio=4:3&quality=90&"
+    },
+    {
+      "_id": 13,
+      "name": "Bottles/Cans",
+      "img": "image.png",
+      "products": [
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "_id": 14,
+      "name": "Beers",
+      "img": "image.png"
+    }
+  ]
+}]

@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "68fe7b401ca7197ce1a039da"
+  },
+  "profile": "cafe-greg-hadera",
+  "orders": [
+    {
+      "productId": 0,
+      "_id": 0
+    },
+    {
+      "productId": 0,
+      "_id": 2
+    }
+  ]
+}]

@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "68fe4c24d7cdffb35bcf1e8f"
+  },
+  "profile": "cafe-greg-hadera",
+  "salads": [
+    {
+      "_id": 0,
+      "name": "No salad"
+    },
+    {
+      "_id": 1,
+      "name": "Chopped salad",
+      "description": "tomato, cucumber, onion, parsley, olive oil & lemon"
+    },
+    {
+      "_id": 2,
+      "name": "Green salad",
+      "description": "lettuce mix, sliced cucumber, cherry tomatoes, citrus vinaigrette, rice crisps, red & white cabbage"
+    },
+    {
+      "_id": 3,
+      "name": "Galilee salad",
+      "description": "red quinoa, black lentils, greens, cranberries, almonds"
+    }
+  ]
+}]

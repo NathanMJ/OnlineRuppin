@@ -1,0 +1,43 @@
+[{
+  "_id": {
+    "$oid": "68f7a1310d7f87155dc291fd"
+  },
+  "profile": "cafe-greg-hadera",
+  "tables": [
+    {
+      "_id": 12,
+      "orders": [
+        0
+      ],
+      "status": 1,
+      "customers": 6,
+      "loggedCustomers": [
+        "345538268"
+      ]
+    },
+    {
+      "_id": 13,
+      "orders": []
+    },
+    {
+      "_id": 55,
+      "orders": [
+        2
+      ]
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68f7a5e70d7f87155dc29205"
+  },
+  "profile": "cafe-greg-ashkelon",
+  "tables": [
+    {
+      "_id": 25
+    }
+  ]
+},
+{
+  "_id": 12
+}]

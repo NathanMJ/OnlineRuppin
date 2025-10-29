@@ -1,0 +1,39 @@
+[{
+  "_id": {
+    "$oid": "6901f3c52ce1728228965712"
+  },
+  "profile": "cafe-greg-hadera",
+  "workers": [
+    {
+      "_id": "345538268",
+      "name": "Nathan Mimoun",
+      "authorizations": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "_id": "123",
+      "name": "testWaiter",
+      "authorizations": [
+        1
+      ]
+    },
+    {
+      "_id": "124",
+      "name": "testManager",
+      "authorizations": [
+        0
+      ]
+    },
+    {
+      "_id": "125",
+      "name": "testBar",
+      "authorizations": [
+        2
+      ]
+    }
+  ]
+}]

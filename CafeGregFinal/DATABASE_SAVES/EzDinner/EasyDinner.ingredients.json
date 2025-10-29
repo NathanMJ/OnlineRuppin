@@ -1,0 +1,145 @@
+[{
+  "_id": {
+    "$oid": "68fdec9f1b7d03560eaef529"
+  },
+  "profile": "cafe-greg-hadera",
+  "ingredients": [
+    {
+      "_id": -1,
+      "name": "basic_ingredient",
+      "changes_detail": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "_id": 0,
+      "name": "labneh"
+    },
+    {
+      "_id": 1,
+      "name": "lehina"
+    },
+    {
+      "_id": 2,
+      "name": "spiced chickpeas"
+    },
+    {
+      "_id": 3,
+      "name": "egg",
+      "changes_detail": [
+        0,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "_id": 4,
+      "name": "spicy jalapeño spread"
+    },
+    {
+      "_id": 5,
+      "name": "crushed tomatoes"
+    },
+    {
+      "_id": 6,
+      "name": "pickles"
+    },
+    {
+      "_id": 7,
+      "name": "onions"
+    },
+    {
+      "_id": 8,
+      "name": "mushroom"
+    },
+    {
+      "_id": 9,
+      "name": "green onion"
+    },
+    {
+      "_id": 10,
+      "name": "smoked salmon",
+      "changes_detail": [
+        0,
+        1,
+        {
+          "change_code": 2,
+          "price": 15
+        }
+      ]
+    },
+    {
+      "_id": 11,
+      "name": "spinach"
+    },
+    {
+      "_id": 12,
+      "name": "cheese"
+    },
+    {
+      "_id": 13,
+      "name": "tomato salsa"
+    },
+    {
+      "_id": 14,
+      "name": "ricotta with peppers"
+    },
+    {
+      "_id": 15,
+      "name": "hollandaise"
+    },
+    {
+      "_id": 16,
+      "name": "onion jam"
+    },
+    {
+      "_id": 17,
+      "name": "black pepper"
+    },
+    {
+      "_id": 18,
+      "name": "mushroom Alfredo sauce"
+    },
+    {
+      "_id": 19,
+      "name": "mozzarella cheese"
+    },
+    {
+      "_id": 20,
+      "name": "mushroom and onions"
+    },
+    {
+      "_id": 21,
+      "name": "straw",
+      "changes_detail": [
+        0,
+        1
+      ]
+    },
+    {
+      "_id": 22,
+      "name": "glass",
+      "changes_detail": [
+        0,
+        1
+      ]
+    },
+    {
+      "_id": 23,
+      "name": "ice"
+    },
+    {
+      "_id": 24,
+      "name": "lemon"
+    },
+    {
+      "_id": 25,
+      "name": "mint"
+    }
+  ]
+}]

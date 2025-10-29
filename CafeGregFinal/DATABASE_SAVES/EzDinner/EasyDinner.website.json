@@ -1,0 +1,34 @@
+[{
+  "_id": {
+    "$oid": "68235df99cbf230e9edf362f"
+  },
+  "login": "CafeGreg",
+  "password": "123",
+  "recovery_email": "nathanmimoun2001@gmail.com",
+  "profile": "cafe-greg-hadera",
+  "tokens": [
+    "viXC-BFfh-YHYO-KDe7",
+    "dDTa-7s5a-KGRv-iVvW",
+    "vbKq-Q3lP-au3U-FjBY",
+    "Sd13-wxXB-SGMD-bxV0",
+    "bgxD-twWW-lq3w-YgAK",
+    "UoAP-JNoB-8lFE-BuQJ",
+    "Kt35-qlY6-KNIp-KuUi",
+    "LfSu-rNNm-OB7L-A6MJ",
+    "V6RM-pjnW-qliw-GcRu",
+    "7Vww-D52Z-xz39-duyn"
+  ]
+},
+{
+  "_id": {
+    "$oid": "68f7a5c60d7f87155dc29202"
+  },
+  "login": "CafeGreg",
+  "password": "124",
+  "recovery_email": "nathanmimoun2001@gmail.com",
+  "profile": "cafe-greg-ashkelon",
+  "tokens": [
+    "v8mX-gliq-HRhN-1U7S",
+    "lnQT-k53Y-eOff-yODy"
+  ]
+}]
