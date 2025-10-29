@@ -1,0 +1,117 @@
+A reflechir : 
+		Pouvoir imprimer le qr code pour les coller sur ses tables avec le numéro de la table pour savoir où livrer 
+		Faire un abonnement mensuel pour accéder au site 
+		Rajouter les macronutriments et calorie  dans la description si jamais les gens veulent et quand il y a un changement dans les ingrédients afficher la jour des macronutriments 
+		Rajoutez des jeux pour les clients pour faire patienter les personnes, on peut accéder à tous les jeux des autres sociétés (pour les changement de commandes tu es quand même prévenu)
+		Si un client clique/commande sur un produit sur la tablette si sur une autre tablette il voit ce produit il y a une notif : ordered now
+
+	Commerce : 
+		Faire l'application ezdinner gratuite pour se connecter en tant que table ou manager side avec le qr code 
+	
+	Global :	
+		Gerer un emploi du temps avec les travailleurs et leur emplacement 
+			(serveur, manager, barman, chef)
+		Ajouter telephone aux workers pour pouvoir leur envoyer un message 30 min avant de commencer a travailler
+		Ajouter des réservations 
+		Rajouter la possibilité de rajouter d'autres langue et si y'a pas alors une IA traduit 
+		Il y a un frigo avec tous les ingrédients et si il n'y a plus ingredient il n'y a que without qui est sélectionné avec un message rouge au dessus en disant qu'il n'y a plus le produit mais que tu peux quand même le commande sans si tu veux, pour le côté restaurant on a un frigo pour dire si il n'y a plus de produits, bientôt plus ou si il y en a encore quand tu rentres dans la cuisine il te dit si des ingrédients manquent ou sont bientôt en rupture, et avoir aussi un endroit pour savoir qu'est-ce qu'il n'y a plus ou plus beaucoup 
+		Ajouter une date au token, toutes les 15 minutes alors envoyer une vérification de token pour que chaque token update l'heure de son token, au bout de 3 secondes tous les token qui auront une difference de plus de 20 secondes seront supprimés 
+		Faire une page d'accueil credible	
+X		rajouter les travailleurs avec leurs autorisations	
+X		faire une verification de token a chaque changement de page
+X		rajouter la fonction de faire des messages	
+		avoir les photos sur un cloud et les avoir de la bas
+	
+	Login :
+X		faire fonctionner la page principale pour se connecter avec token
+	
+	Bar/Kitchen Page
+		avoir les commandes selon la destination
+			en temps reel
+		avoir plutot un preparation page et quand je clique sur
+			preparation il me mets tous les type de destination
+			mais si il n'y en a qu'un alors passer a getWorkerById 
+			direct
+	
+	Manager Page : 
+		Faire en sorte que tout soit modifiable depuis manager side 
+		Pouvoir customiser toutes les couleurs de la DA du site 
+		Pouvoir customiser les boutons dans product page
+		Rajouter les réductions a des produits
+		permettre au manager de changer les heures manuellement des travailleurs
+		rajouter le controle des ingredients des commandes et de leurs changes
+	
+	Cafe main :
+		rajouter les reductions
+		rajouter le remove an order de la table	
+X		avoir les tables 
+X		avoir le status des tables en temps reel
+X		changer le status de la table
+X		mettre le reel cout d'une table pour le payement
+		avoir le prochain id libre pour une table
+		payer une table
+			si il y a des customers
+				mettre dans les commandes dans customers history
+		rajouter les tips dans le total de la table	
+		rajouter le switch tables
+		pouvoir mettre un emplacement aux tables pour ouvrir une table
+			(en cliquant sur une table vide on ouvre le panneau de combien 
+			 de customer il y a et ouvrir la table)
+X		Voir le status des orders des tables
+X		Voir le nombre de customers a une table
+		Changer le nombre de customers a une table
+		Rajouter un temps de verification de tables
+			(si le manager le veux il peux mettre un timer pour
+			 que toutes les X minutes on aille voir les clients,
+			 si le temps est depasse alors il devient rouge et on recoit
+			 un message)
+	
+	Menu :	
+X		Enlever le timer de received		
+X		avoir les commandes de la table en temps reel	
+X		changer le status d'une commande 	
+X		supprimer une commande d'une table	
+X		faire retour dans les sections
+X		avoir les sections et les produits	
+X		avoir le total d'une table
+X		mettre les prix des ajouts et le montrer dans les commandes
+X		avoir un produit selon le nom		
+X		changer le status de la table avec ask a waiter ou payement
+		see details dans menu avec une animation
+		qr code dynamique
+		Rajouter les promotions dans les produits et 
+			si c'est un pourcentage "beau" en % le mettre
+		Générer un token qui sera rajouter au qr code qui sera donc {tableId, token }, quand il y a un payement sur cette table supprimer le token et quand il y aura de nouveau des personnes qui veulent se connecter à la table avec l'application 
+		faire fonctionner le "enter your ID" dans greg pour sortir
+		donner loption de suivre un tutoriel si la personne n'a jamais utilise la tablette
+		
+	Product Page :
+X		ajouter une commande pour une table
+X		avoir le produit 
+		pouvoir changer la salade si il y en a une
+		
+	Register Login Customers :	
+		register customers
+		login customers
+		avoir les customers selon la table en temps reel
+		unlog customers	
+	
+	History customers : 	
+		avoir l'historique de commandes selon :
+			les id de customers
+			deux dates
+			une date
+			
+	Enter service :
+		Pouvoir se connecter
+		Pouvoir se deconnecter
+		Voir ses jour precedents de travails
+		Avoir un message d'erreur si jamais je ne suis pas sorti la derniere fois 
+			pour que le manager puisse te rajouter manuellement une heure de sorti
+		
+		
+	
+
+		
+		
+
