@@ -1,22 +1,11 @@
 import { useState } from "react";
+import FCOrdersPannel from "./FCOrdersPannel";
 
 export default function FCTable(props) {
 
-    const { table, clickOnTable, showOrdersIcon } = props;
-
-    const setShowOrdersIcon = props.setShowOrdersIcon;
-
+    const { table, clickOnTable, clickOnPlate } = props;
 
     //TODO: get logos from database
-
-    const everyStatus = [
-        { name: "pending", _id: 0 },
-        { name: "ordered", _id: 1 },
-        { name: "in preparation", _id: 2 },
-        { name: "ready", _id: 3 },
-        { name: "sended", _id: 4 },
-        { name: "received", _id: 5 }
-    ];
 
     const getAskLogo = (statusCode) => {
         //TODO: get the logo from the database/cloud
@@ -29,6 +18,7 @@ export default function FCTable(props) {
                 return <img className="statusLogo" src="/Pictures/Pay-logo.png" />
         }
     }
+
 
     return (
         <div key={table._id} className="table">
@@ -43,26 +33,11 @@ export default function FCTable(props) {
                 {table.orders?.length > 0 &&
                     < >
                         <p>{table.orders.length}</p>
-                        <img onClick={() => setShowOrdersIcon(true)} src="/Pictures/Plate.png" alt="plate-logo" className="plateLogo" />
+                        <img onClick={clickOnPlate} src="/Pictures/Plate.png" alt="plate-logo" className="plateLogo" />
                     </>
                 }
                 {table.status ? getAskLogo(table.status) : ''}
 
-                {showOrdersIcon && table.orders?.length > 0 && <div className="orderIcons">
-                    <img src="/Pictures/Cross.png" className="cross" onClick={() => setShowOrdersIcon(false)} />
-                    {everyStatus.map((status) => {
-                        //TODO: improve performance by calculation this outside of the return and by id 
-                        const ordersWithThisStatus = table.orders.filter(order => order.status._id === status._id).length;
-                        return (
-                            <div className="countContainer" key={status._id}>
-                                <div className="numberContainer">
-                                    <p>{ordersWithThisStatus}</p>
-                                </div>
-                                <img key={status._id} src={`/Pictures/TableStatusIcon/${status.name.replace(' ', '_')}.png`} />
-                            </div>
-                        )
-                    })}
-                </div>}
 
             </div>
 
@@ -71,6 +46,8 @@ export default function FCTable(props) {
                 <div className="shadow"></div>
                 <p className="tableId">{table._id}</p>
             </div>
+
+
         </div >
     )
 }

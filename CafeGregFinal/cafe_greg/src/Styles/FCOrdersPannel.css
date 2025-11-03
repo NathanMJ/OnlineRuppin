@@ -1,0 +1,155 @@
+:root {
+    --time-transition: 0.1s;
+}
+
+.FCOrdersPannel {
+    background-color: aliceblue;
+    padding: 20px;
+    border-radius: 20px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .changeOrderContainer {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%);
+
+        .switch {
+            background-color: rgb(168, 212, 205);
+            display: flex;
+            flex-direction: row;
+            width: 600px;
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+
+            button {
+                flex: 1;
+                border: none;
+                background: none;
+                font-size: 30px;
+                padding: 20px;
+                z-index: 2;
+                transition: color var(--time-transition) ease-in-out;
+
+                &.selected {
+                    color: white;
+                }
+            }
+
+            .selectSwitch {
+                position: absolute;
+                border-radius: 30px;
+                background-color: green;
+                left: 0px;
+                top: 0px;
+                height: 100%;
+
+                z-index: 1;
+                width: calc(100%/3);
+                transition: transform var(--time-transition) ease-in-out;
+            }
+        }
+
+        .changeOrder {
+            background-color: rgb(157, 199, 199);
+            position: relative;
+            height: 40px;
+            margin-top: 20px;
+            border-radius: 10px;
+
+            .cross{
+                z-index: 4;
+                right: 0px;
+                top: 0px;
+                width: 70px;
+                position: absolute;
+            }
+        }
+
+    }
+
+
+    .cross {
+        width: 70px;
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(50%, -50%);
+        cursor: pointer;
+    }
+
+    .loading {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            width: 100px;
+            animation: loadingAnimation 1s infinite ease-in-out;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+    }
+
+    .order {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+        padding-block: 10px;
+
+        &:not(.lastOrder) {
+            border-bottom: rgba(0, 0, 0, 0.452) 1px solid;
+        }
+
+        p {
+            font-size: 30px;
+            text-align: center;
+        }
+
+        img {
+            width: 100px;
+        }
+
+        .statusContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+
+            p {
+                font-size: 30px;
+                padding: 10px;
+                border-radius: 10px;
+            }
+
+            .timer {
+                background-color: white;
+                border: black 1px solid;
+                border-radius: 10px;
+                padding: 10px;
+            }
+
+        }
+    }
+
+}
+
+
+@keyframes loadingAnimation {
+    0% {
+        rotate: 0deg;
+    }
+
+    100% {
+        rotate: 360deg;
+    }
+}

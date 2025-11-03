@@ -1,0 +1,136 @@
+.FCOrdersDetails {
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    z-index: 2;
+    padding: 20px;
+    width: fit-content;
+
+
+    .cross {
+        width: 75px;
+        position: absolute;
+        z-index: 5;
+        right: 0px;
+        top: 0px;
+        transform: translate(50%, -50%);
+        cursor: pointer;
+    }
+
+    .FCOrdersPannel {
+        max-height: 600px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* WebKit */
+    }
+
+    .switchContainer {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translate(-50%, -100%);
+        padding-bottom: 30px;
+        width: 100%;
+
+        .switch {
+            position: relative;
+            display: flex;
+            background-color: aliceblue;
+            justify-content: center;
+            align-items: center;
+            border-radius: 40px;
+            overflow: hidden;
+            width: 100%;
+            height: 80px;
+
+            .slider {
+                border-radius: 40px;
+                background-color: rgb(69, 185, 69);
+                z-index: 1;
+                top: 0;
+                left: 0;
+                position: absolute;
+                width: 50%;
+                height: 100%;
+                transition: transform 0.3s ease-in-out;
+
+                &.slide-right {
+                    transform: translateX(100%);
+                }
+            }
+
+            p {
+                text-align: center;
+                z-index: 2;
+                font-size: 40px;
+                border-radius: 40px;
+                flex: 1;
+                cursor: pointer;
+
+                background: none;
+                font-weight: bold;
+                transition: color 0.3s ease-in-out;
+
+                color: black;
+
+                &.selected {
+                    color: aliceblue;
+                }
+            }
+        }
+    }
+
+    .ordersIcons {
+
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 30px;
+        justify-items: center;
+        align-items: center;
+
+        .countContainer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+
+            img {
+                width: 120px;
+                /* animation: blinkAnimation 5s alternate infinite; */
+            }
+
+            .numberContainer {
+                aspect-ratio: 1/1;
+                position: absolute;
+
+                top: 0px;
+                left: 0px;
+                transform: translate(-50%, -50%);
+                z-index: 4;
+
+                background-color: yellow;
+                width: 60px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border: black solid 2px;
+
+                p {
+                    font-size: 50px;
+
+                }
+            }
+        }
+    }
+
+
+}

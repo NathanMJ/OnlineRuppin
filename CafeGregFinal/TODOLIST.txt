@@ -4,7 +4,16 @@ A reflechir :
 		Rajouter les macronutriments et calorie  dans la description si jamais les gens veulent et quand il y a un changement dans les ingrédients afficher la jour des macronutriments 
 		Rajoutez des jeux pour les clients pour faire patienter les personnes, on peut accéder à tous les jeux des autres sociétés (pour les changement de commandes tu es quand même prévenu)
 		Si un client clique/commande sur un produit sur la tablette si sur une autre tablette il voit ce produit il y a une notif : ordered now
-
+		Mettre salads en product et le mettre en accompagnement dans les produits si voulu
+		Mettre sauces en product et le mettre en accompagnement aux products
+		Pour le menu faire en sorte que la premiere salve de commandes 
+			on ne voit pas de timer
+			on ne peut pas confirmer qu'une commande
+			on dit (dans le tuto) que la on peut commander et apres on pourra encore ajouter des commandes et voir leur temps d'attente
+		
+	Database :
+		
+		
 	Commerce : 
 		Faire l'application ezdinner gratuite pour se connecter en tant que table ou manager side avec le qr code 
 	
@@ -21,6 +30,7 @@ X		rajouter les travailleurs avec leurs autorisations
 X		faire une verification de token a chaque changement de page
 X		rajouter la fonction de faire des messages	
 		avoir les photos sur un cloud et les avoir de la bas
+		rajoute a page pour rank les produits
 	
 	Login :
 X		faire fonctionner la page principale pour se connecter avec token
@@ -42,19 +52,24 @@ X		faire fonctionner la page principale pour se connecter avec token
 		rajouter le controle des ingredients des commandes et de leurs changes
 	
 	Cafe main :
-		rajouter les reductions
-		rajouter le remove an order de la table	
+	
+		Settings:
+			Waiter: 
+X				changer le status de la table
+				rajouter le switch tables
+				rajouter le change the id of the table
+				payer une table
+					si il y a des customers connectes mettre dans les commandes dans customers history
+					rajouter les tips dans le total de la table	
+					mettre le reel cout d'une table pour le payement					
+			Manager:
+				Voir les status des orders pour en enlever ou changer de status
+				Rajouter les reductions
 X		avoir les tables 
 X		avoir le status des tables en temps reel
-X		changer le status de la table
-X		mettre le reel cout d'une table pour le payement
-		avoir le prochain id libre pour une table
-		payer une table
-			si il y a des customers
-				mettre dans les commandes dans customers history
-		rajouter les tips dans le total de la table	
-		rajouter le switch tables
-		pouvoir mettre un emplacement aux tables pour ouvrir une table
+		mettre un nombre de customers et il me dit si il y a une table de libre pour ce nombre de personnes, si il n'y en n'a pas
+			si il y a des tables avec plus de places il me propose avec un message discret une table avec plus de places 
+		pouvoir mettre un des tables par defauts et ouvrir une table
 			(en cliquant sur une table vide on ouvre le panneau de combien 
 			 de customer il y a et ouvrir la table)
 X		Voir le status des orders des tables

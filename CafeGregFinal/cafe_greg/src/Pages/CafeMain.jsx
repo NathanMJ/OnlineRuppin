@@ -9,8 +9,13 @@ import {
 import { useMessageContext } from "../Contexts/messageContext.jsx";
 import { socket } from "../App.jsx";
 import FCTable from "../FComponents/FCTable.jsx";
+import FCOrdersPannel from "../FComponents/FCOrdersPannel.jsx";
+import FCOrdersDetails from "../FComponents/FCOrdersDetails.jsx";
 
 export default function CafeMain(props) {
+
+    //TODO: set payment in an another FC
+    //TODO: set settings in an another FC
 
     const { addMessage } = useMessageContext();
     const storeAccess = props.storeAccess
@@ -59,7 +64,7 @@ export default function CafeMain(props) {
                         switch (newTable.status) {
                             case 0:
                                 if (oldTable.status === 1) {
-                                    addMessage(`Table ${newTable._id} status has been checked.`, "info", 5000);
+                                    addMessage(`Table ${newTable._id} status has been checked.`, "success", 5000);
                                 }
                                 break;
                             case 1:
@@ -75,7 +80,7 @@ export default function CafeMain(props) {
                     newTable.orders?.forEach((newOrder) => {
                         const oldOrder = oldTable ? oldTable.orders.find(o => o._id === newOrder._id) : null;
                         if (oldOrder && oldOrder.status._id !== newOrder.status._id) {
-                            if (newOrder.status._id === 3) { 
+                            if (newOrder.status._id === 3) {
                                 addMessage(`An order for table ${newTable._id} is ready in the ${destinations.find(d => d._id == newOrder.destination).name}.`, "info", 5000);
                                 //TODO: add sound of ringing bell
                                 //TODO: be able of disabling this message/sound in settings
@@ -132,8 +137,16 @@ export default function CafeMain(props) {
         //TODO: make the real function of each one
         switch (clickOnTableMode) {
             case 'goto':
+                //WORK
                 props.goto(`/menu`, { tableId: id })
                 return
+            case 'checkTable':
+                changeStatusOfTable(profile, id, 0)
+                break
+            case 'detailsOrders':
+                setTableIdShowOrdersPannel(id)
+                return
+
             case 'payment':
                 //get the total price of the table from the db
                 const totalPrice = await getPriceOfTable(id)
@@ -153,9 +166,6 @@ export default function CafeMain(props) {
                 break
             case 'removeAnOrder':
                 console.log('open the orders of table ', id);
-                break
-            case 'checkTable':
-                await changeStatusOfTable(profile, id, 0)
                 break
             case 'reduction':
                 //TODO: make a reduction on the total price of the table
@@ -200,6 +210,7 @@ export default function CafeMain(props) {
     };
 
 
+    //TODO: set in a Functionnal component
     //Here concern the open a new table
 
     const [addTablePannel, setAddTablePannel] = useState({
@@ -353,35 +364,42 @@ export default function CafeMain(props) {
     }
 
 
-    /**<div key={table._id} className="table" onClick={() => clickOnTable(table._id)}>
-                            <div className="customersCount">
-                                <p> {table.customers?.length > 0 ? table.customers.length : '0'} </p>
-                                <img src="/Pictures/Person-logo.png" alt="person-logo" className="personLogo" />
-                            </div>
 
-                            <img src="/Pictures/Table.png" alt="table" className="tablePicture" />
+    const [tableIdShowOrdersDetails, setTableIdShowOrdersDetails] = useState(null);
+    const [tableIdShowOrdersPannel, setTableIdShowOrdersPannel] = useState(55)
 
-                            <div className="shadow"></div>
-                            <p className="tableId">{table._id}</p>
-                            {table.status ? getAskLogo(table.status) : ''}
-                        </div> */
+    //TODO: if a pannel is opened, close the others one
 
-    const [tableIdshowOrdersIcon, setTableIdshowOrdersIcon] = useState(false);
+    useEffect(() => {
+
+
+    }, [tableIdShowOrdersDetails])
+
 
     return (
         <div className="cafeMain">
+            {tableIdShowOrdersDetails !== null && <FCOrdersDetails
+                table={tables.find(t => t._id == tableIdShowOrdersDetails)}
+                close={() => setTableIdShowOrdersDetails(null)}
+                showOrdersDetails={tableIdShowOrdersDetails !== null} />}
+
+            {tableIdShowOrdersPannel !== null && 
+            <div className="FCOrdersPannelContainer"><FCOrdersPannel
+                changeAllowed={true}
+                closePannel={() => setTableIdShowOrdersPannel(null)}
+                orders={tableIdShowOrdersPannel ?
+                    tables.find(t => t._id == tableIdShowOrdersPannel)?.orders : null
+                } />
+                </div>}
+
             <div className="tables">
                 {tables.map((table) => {
                     return (<FCTable key={table._id}
                         table={table}
                         clickOnTable={clickOnTable}
-                        showOrdersIcon={tableIdshowOrdersIcon == table._id}
-                        setShowOrdersIcon={(boolean) => {
-                            if (boolean) {
-                                setTableIdshowOrdersIcon(table._id)
-                            } else {
-                                setTableIdshowOrdersIcon(null)
-                            }
+                        clickOnPlate={() => {
+                            setTableIdShowOrdersDetails(table._id === tableIdShowOrdersPannel
+                                ? null : table._id)
                         }}></FCTable>
                     )
                 })}

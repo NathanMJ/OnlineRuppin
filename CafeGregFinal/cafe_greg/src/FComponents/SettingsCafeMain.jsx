@@ -17,21 +17,26 @@ export default function SettingsCafeMain(props) {
         if (props.isManager) {
             return <div className='managerSections'>
 
-                <div className='reduction' onClick={() => clickOnSection('reduction')}>
+
+                <div onClick={() => clickOnSection('detailsOrders')}>
+                    <img src="https://static.vecteezy.com/system/resources/previews/023/171/828/non_2x/percent-down-icon-discount-illustration-sign-reduction-of-royalties-symbol-or-logo-vector.jpg" />
+                    <p>Details orders</p>
+                </div>
+
+                <div onClick={() => clickOnSection('reduction')}>
                     <img src="https://static.vecteezy.com/system/resources/previews/023/171/828/non_2x/percent-down-icon-discount-illustration-sign-reduction-of-royalties-symbol-or-logo-vector.jpg" />
                     <p>Reduction</p>
                 </div>
 
-                <div className='removeATable' onClick={() => clickOnSection('removeATable')}>
+                <div onClick={() => clickOnSection('removeATable')}>
                     <img src="https://png.pngtree.com/png-vector/20190927/ourmid/pngtree-trash-icon-png-image_1753315.jpg" />
                     <p>Remove a table</p>
                 </div>
 
-                <div className='removeAnOrder' onClick={() => clickOnSection('removeAnOrder')}>
+                <div onClick={() => clickOnSection('removeAnOrder')}>
                     <img src="https://cdn-icons-png.flaticon.com/512/3687/3687412.png" />
                     <p>Remove an order</p>
                 </div>
-
             </div>
         }
     }
