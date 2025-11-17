@@ -1,16 +1,25 @@
 A reflechir : 
-		Pouvoir imprimer le qr code pour les coller sur ses tables avec le numéro de la table pour savoir où livrer 
-		Faire un abonnement mensuel pour accéder au site 
-		Rajouter les macronutriments et calorie  dans la description si jamais les gens veulent et quand il y a un changement dans les ingrédients afficher la jour des macronutriments 
-		Rajoutez des jeux pour les clients pour faire patienter les personnes, on peut accéder à tous les jeux des autres sociétés (pour les changement de commandes tu es quand même prévenu)
-		Si un client clique/commande sur un produit sur la tablette si sur une autre tablette il voit ce produit il y a une notif : ordered now
-		Mettre salads en product et le mettre en accompagnement dans les produits si voulu
-		Mettre sauces en product et le mettre en accompagnement aux products
-		Pour le menu faire en sorte que la premiere salve de commandes 
-			on ne voit pas de timer
-			on ne peut pas confirmer qu'une commande
-			on dit (dans le tuto) que la on peut commander et apres on pourra encore ajouter des commandes et voir leur temps d'attente
-		
+	Pouvoir imprimer le qr code pour les coller sur ses tables avec le numéro de la table pour savoir où livrer 
+	Faire un abonnement mensuel pour accéder au site 
+	Rajouter les macronutriments et calorie  dans la description si jamais les gens veulent et quand il y a un changement dans les ingrédients afficher la jour des macronutriments 
+	Rajoutez des jeux pour les clients pour faire patienter les personnes, on peut accéder à tous les jeux des autres sociétés (pour les changement de commandes tu es quand même prévenu)
+	Si un client clique/commande sur un produit sur la tablette si sur une autre tablette il voit ce produit il y a une notif : ordered now
+	Mettre salads en product et le mettre en accompagnement dans les produits si voulu
+	Mettre sauces en product et le mettre en accompagnement aux products
+	Pour le menu faire en sorte que la premiere salve de commandes 
+		on ne voit pas de timer
+		on ne peut pas confirmer qu'une commande
+		on dit (dans le tuto) que la on peut commander et apres on pourra encore ajouter des commandes et voir leur temps d'attente
+	Si on veut un repas d'une autre table on peut voir
+	Rajouter le fait que tout soit dynamique dans les contenu de produit
+		one choice : salads choisir une salade
+		multiple choice : ingredients a rajouter
+		multiple choice + changes : ingredients a rajouter avec un choix
+	Scanner une tehoudat zehout pour connecter les personnes a lentree
+	Rajouter un tchat public ou des rooms pour deux tables 
+		possibilite pour la table de les couper 
+	Quand quelquun se connecte a la table en QR code on recoit un message pour confirmer que c'est bien nous qui nous connectons
+	
 	Database :
 		
 		
@@ -52,6 +61,9 @@ X		faire fonctionner la page principale pour se connecter avec token
 		rajouter le controle des ingredients des commandes et de leurs changes
 	
 	Cafe main :
+		Voir uniquement les tables occupes
+	
+		Rajouter l'heure et la date dans cafe main
 	
 		Settings:
 			Waiter: 
@@ -63,7 +75,10 @@ X				changer le status de la table
 					rajouter les tips dans le total de la table	
 					mettre le reel cout d'une table pour le payement					
 			Manager:
-				Voir les status des orders pour en enlever ou changer de status
+X				Voir le status des commandes
+X				Changer le status d'une commandes
+X				Supprimer une commande
+/				Modifier une commande
 				Rajouter les reductions
 X		avoir les tables 
 X		avoir le status des tables en temps reel
@@ -99,10 +114,16 @@ X		changer le status de la table avec ask a waiter ou payement
 		Générer un token qui sera rajouter au qr code qui sera donc {tableId, token }, quand il y a un payement sur cette table supprimer le token et quand il y aura de nouveau des personnes qui veulent se connecter à la table avec l'application 
 		faire fonctionner le "enter your ID" dans greg pour sortir
 		donner loption de suivre un tutoriel si la personne n'a jamais utilise la tablette
-		
+		Rajouter un serveur IA pour nous proposer des selon ses envies
+		Quand une section contient des produits je veux un defilement de produit aleatoire
+		Rajouter des boutons a la place de Ask
+			where is my commande
+			call waiter 
+			
 	Product Page :
 X		ajouter une commande pour une table
 X		avoir le produit 
+		si il manque un ingredient il le dit et c'est selectionne sur without et opacity 50%
 		pouvoir changer la salade si il y en a une
 		
 	Register Login Customers :	
@@ -126,6 +147,8 @@ X		avoir le produit
 		
 		
 	
+	
+
 
 		
 		

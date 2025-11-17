@@ -1,0 +1,286 @@
+item
+
+	Regles :
+		Un produit est un product composé d'items
+		Un ingredient est un item unique
+		Un produit n'est pas forcement mis en avant il peut juste servir a etre dans un autre produit
+		Une commande est un produit possiblement accompagné de changements
+
+	item : ingredient - sauces - ice - straw - cup
+	
+	item : {
+		_id : 0,
+		img : '',
+		type : "ingredient"
+		changes : [
+			0,
+			1,
+			{
+				_id : 2,
+				price : 10
+			}
+		]
+	} 
+	
+	product : {
+		_id : 0,
+		img : "",
+		type : "product",
+		categories : [
+			{
+				_id: 0,		
+				name : "ingredients",
+				type_choice : 0,
+				choices : [ 0,
+					{ item_id : 1, change_selected : 0, changes : [ 0, 1 ] }, 
+					{ item_id : 2, change_selected : 0, change_disabled: true }
+				]
+			}
+		]
+	}
+
+	categorie.type_choice : 
+		integer qui donne le type de choice
+			0: changes_choice : on a les items et on choisi uniquement le change
+			1: one_choice : on a un item prechoisi et on choisi un seul 
+				on a aussi la possibilite si voulu de mettre un choix de ne pas faire de choix
+			2: mult_choice : on n'a aucun item prechoisi et on peut en choisir plusieurs
+	categorie.name : 
+		le nom de la categorie qui sera affiche
+	categorie.limit : 
+		annonce que c'est un counter et sa limite
+	categorie.price_border_index : 
+		la quantite max au premier prix
+		si il n'existe pas alors il est mis automatiquement a la limite
+	categorie.left_side.price : 
+		donne le prix reference pour le cote gauche
+	categorie.left_side.each : 
+		boolean qui dit si c'est prix pour chacun ou pour tout
+	categorie.right_side.price : 
+		donne le prix reference pour le cote droit
+	categorie.right_side.each : 
+		boolean qui dit si c'est prix pour chacun ou pour tout
+	categorie.choices : 
+		ce sont une liste de choix disponible dans cette categorie
+	categorie.choices.item_id/item_id :
+		integer qui donne l'id du item dans le doc items
+	categorie.choices.changes_avaible :
+		donner les changes pour le produit/item 
+	categorie.choices.changes :
+		une liste qui recupere les changes du item depuis le doc changes
+		on les recupere uniquement si ce n'est pas un counter
+			
+	
+Exemple/Test :
+
+1.	Les ingredients et adds dans un produit
+
+	MongoDB :
+	
+	categorie :	
+		{
+			_id: 0,		
+			name : "ingredients",
+			type_choice : 0,
+			choices : [ 0
+				{	
+					item_id : 1, change_selected : 0,
+					changes : [ 0 ,
+						{	_id : 1, price : 10	},
+						{	_id : 2, price : 15	},
+						{	_id : 3, price : 10	}
+					]
+				},
+				{	
+					item_id : 2, change_selected : 0, change_disable: true
+				}
+			]
+		}
+	
+	
+	REACT :
+	
+	categorie :	
+		{
+			_id: 0,		
+			name : "ingredients",
+			type_choice : 0,
+			choices : [
+				{	
+					item_id : 0, change_selected : 1,
+					changes : [
+						{	_id : 0, name: "without", price : 0	},
+						{	_id : 1, name: "with", price : 0	},
+						{	_id : 2, name: "a lot of", price : 0	},
+						{	_id : 3, name: "aside", price : 0	}
+					]
+				},
+				{	
+					item_id : 1, change_selected : 0,
+					changes : [
+						{	_id : 0, name: "without", price : 0	},
+						{	_id : 1, name: "with", price : 10	},
+						{	_id : 2, name: "a lot of", price : 15	},
+						{	_id : 3, name: "aside", price : 10	}
+					]
+				},
+				{	
+					item_id : 2, change_selected : 0, change_disable: true,
+					changes : [
+						{	_id : 0, name: "without", price : 0	},
+						{	_id : 1, name: "with", price : 0	},
+						{	_id : 2, name: "a lot of", price : 0	},
+						{	_id : 3, name: "aside", price : 0	}
+					]
+				}
+			]
+		}
+	
+	
+2.	Les salads dans un menu
+
+	MongoDB :
+	
+	categorie :		
+		{
+			_id: 0,		
+			name : "Salads",
+			type_choice : 1,
+			choices : [ 
+				{	item_id : 0	}, 
+				{	item_id : 1	} 
+			]					
+		}		
+	
+	REACT :
+
+	categorie :	
+		{
+			_id: 0,		
+			name : "Salads",
+			type_choice : 1,
+			choices : [
+				{ item_id : 0, name : "No salad", price : 0},
+				{ item_id : 1, name : "Salad 1", price : 0,
+					items : [
+						{	
+							item_id : 0, 
+							change_selected : 1,
+							changes : [
+								{	_id : 0, name: "without", price: 0	},
+								{	_id : 1, name: "with", price: 0	},
+								{	_id : 2 name: "a lot of", price: 0	},
+								{	_id : 3, name: "without", price: 0	},
+							]
+						}
+					]
+				}			
+			]
+			
+		}
+	
+
+
+3.	Les sauces accompagnatrice dans un repas
+
+	MongoDB :
+	
+	categorie : 
+	{
+		_id: 0,
+		name : "Sides sauces",
+		type_choice : 2,
+		limit : 5,
+		price_border_index : 3,
+		left_side : {	price : 10, each : true	},
+		right_side : {	price : 15 },
+		choices : [	5, 6, { item_id : 7, limit : 4 } ]
+	}
+
+	REACT :	
+	
+	categorie : 
+	{
+		_id: 0,	
+		name : "Sides sauces",
+		type_choice : 2,
+		choices : [	
+			{ item_id : 5, limit : 5, price_border_index : 3, 
+				left_side : {	price : 10, each : true	}, right_side : {	price : 15 } }, 
+			{ item_id : 6, limit : 5, price_border_index : 3, 
+				left_side : {	price : 10, each : true	}, right_side : {	price : 15 } },
+			{ item_id : 7, limit : 4, price_border_index : 3, 
+				left_side : {	price : 10, each : true	}, right_side : {	price : 15 } },
+	}
+
+
+4.	Les changements d'ingredients et adds dans une commande
+
+	MongoDB :
+		
+	order : 
+		{
+			_id : 0
+			product_id : 0,
+			categorie_changes : [
+				{
+					categorie_id : 0,
+					changes : [
+						{	item_id : 0, change_selected : 4	},
+						{	item_id : 3, change_selected : 2	}
+					]
+				}
+			]
+		}
+			
+	REACT
+	
+	order : 
+		{
+			_id : 0
+			product_id : 0,
+			categorie_changes : [
+				{
+					categorie_id : 0,
+					changes : [
+						{	item_id : 0, change_selected : 4	},
+						{	item_id : 3, change_selected : 2	}
+					]
+				}
+			],
+			categories : [
+				{
+					_id: 0,		
+					name : "ingredients",
+					type_choice : 0,
+					choices : [
+						{	
+							item_id : 0, change_selected : 1,
+							changes : [
+								{	_id : 0, name: "without", price : 0	},
+								{	_id : 1, name: "with", price : 0	},
+								{	_id : 2, name: "a lot of", price : 0	},
+								{	_id : 3, name: "aside", price : 0	}
+						]
+						}, {	
+							item_id : 1, change_selected : 0,
+						changes : [
+							{	_id : 0, name: "without", price : 0	},
+							{	_id : 1, name: "with", price : 10	},
+							{	_id : 2, name: "a lot of", price : 15	},
+							{	_id : 3, name: "aside", price : 10	}
+						]
+						}, {	
+							item_id : 2, change_selected : 0, change_disable: true,
+							changes : [
+								{	_id : 0, name: "without", price : 0	},
+								{	_id : 1, name: "with", price : 0	},
+								{	_id : 2, name: "a lot of", price : 0	},
+								{	_id : 3, name: "aside", price : 0	}
+							]
+						}
+					]
+				}			
+			]
+		}
+		

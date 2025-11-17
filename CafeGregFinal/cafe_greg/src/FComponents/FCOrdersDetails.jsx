@@ -6,10 +6,7 @@ export default function FCOrdersDetails(props) {
 
     const [shortDetails, setShortDetails] = useState(true)
 
-    if (changeAllowed) {
-        console.log('can change the status of the orders');
 
-    }
 
     const everyStatus = [
         { name: "pending", _id: 0 },
@@ -52,8 +49,8 @@ export default function FCOrdersDetails(props) {
                     })}
                 </div>) :
                 <div className="ordersDetailsPannel">
-                    <FCOrdersPannel show={true} orders={table.orders}
-                    ></FCOrdersPannel>
+                    <FCOrdersPannel
+                        orders={table.orders}></FCOrdersPannel>
                 </div>}
         </div>
     )

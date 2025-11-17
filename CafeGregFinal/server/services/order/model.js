@@ -1,8 +1,8 @@
 import { changeOrderStatusById, getOrderById, removeOrderById,getPriceByOrderId, getOrdersFromDestinationInDB} from './db.js';
 
 export default class Order {
-    static async getById(profile, orderId) {
-        return await getOrderById(profile, orderId);
+    static async getById(profile, orderId, fullDetail = false) {
+        return await getOrderById(profile, orderId, fullDetail);
     } 
     static async removeOrder(profile, orderId) {
         return await removeOrderById(profile, Number(orderId));

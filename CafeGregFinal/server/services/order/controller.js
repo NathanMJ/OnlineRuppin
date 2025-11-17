@@ -2,8 +2,8 @@ import { emitCafeTableUpdate, emitTableOrdersUpdate } from "../table/controller.
 import Order from "./model.js";
 
 export async function getOrder(req, res) {
-    const { orderId, profile } = req.body
-    let order = await Order.getById(profile, orderId);
+    const { orderId, profile, fullDetail} = req.body
+    let order = await Order.getById(profile, orderId, fullDetail);
     if (!order) {
         return res.status(404).json({ message: "No order were found" });
     }
@@ -26,6 +26,8 @@ export async function removeOrder(req, res) {
         return res.status(404).json({ message: response.message })
     }
     emitTableOrdersUpdate(req.io, profile, response.tableId);
+    emitCafeTableUpdate(req.io, profile);
+
     return res.status(200).json(response);
 }
 
@@ -33,7 +35,7 @@ export async function removeOrder(req, res) {
 export async function changeStatus(req, res) {
     const { orderId, status, tableId, destinationId, profile } = req.body
     console.log(req.body);
-    
+
     let response = await Order.changeStatus(profile, orderId, status);
     if (!response.ok) {
         return res.status(404).json({ message: response.message })

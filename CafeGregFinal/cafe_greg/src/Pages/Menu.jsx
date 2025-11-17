@@ -411,7 +411,6 @@ export default function Menu(props) {
                         mainContent.products &&
                         <div className='products'>
                             {mainContent.products.map((product, index) => {
-                                console.log(product);
                                 return (
                                     <div className='product' key={index}
                                         style={{ backgroundImage: `url(${product.img})` }}

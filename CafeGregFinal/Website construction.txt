@@ -1,0 +1,2 @@
+Page principale :
+	Presentation du site et de l'application et des tarifs

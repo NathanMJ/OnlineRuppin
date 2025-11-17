@@ -13,6 +13,12 @@ export async function getOrderOfTable(profile, tableId) {
     return data
 }
 
+
+export async function getOrderById(profile, orderId, fullDetail = false) {
+    const data = await callAPI(`order/byId`, 'POST', { profile, orderId, fullDetail })
+    return data
+}
+
 export async function getFromSection(sectionId, profile) {
     const data = await callAPI(`section`, 'POST', { sectionId, profile })
     return data
@@ -58,17 +64,14 @@ export async function removeOrderById(profile, orderId) {
     return data
 }
 
-
 export async function changeStatusOfOrder(profile, orderId, status, tableId, destinationId) {
     const data = await callAPI(`order/changeOrderStatus`, 'POST', { profile, orderId, status, tableId, destinationId })
     return data
 }
 
-
 export async function getWorkerByIdFromDB(profile, workerId) {
     return await callAPI(`worker/byId`, "POST", { profile, workerId })
 }
-
 
 export async function changeStatusOfTable(profile, tableId, statusId) {
     return await callAPI(`table/changeStatus`, "POST", { profile, tableId, statusId })

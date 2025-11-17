@@ -14,7 +14,7 @@
     .cross {
         width: 75px;
         position: absolute;
-        z-index: 5;
+        z-index: 3;
         right: 0px;
         top: 0px;
         transform: translate(50%, -50%);
@@ -28,8 +28,6 @@
         &::-webkit-scrollbar {
             display: none;
         }
-
-        /* WebKit */
     }
 
     .switchContainer {

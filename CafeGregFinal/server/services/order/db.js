@@ -11,7 +11,7 @@ import { getOrdersOfTable } from '../table/db.js';
 
 
 
-export async function getOrderById(profile, orderId) {
+export async function getOrderById(profile, orderId, fullDetail = false) {
   let client = null
   //TODO 
   try {
@@ -33,7 +33,6 @@ export async function getOrderById(profile, orderId) {
     const product = await findProductById(profile, order.productId)
 
     //of product we need just img, name, price
-
     order = {
       ...order,
       img: product.img,
@@ -73,7 +72,10 @@ export async function getOrderById(profile, orderId) {
       ]).next()
 
       const price = product.salads.find((s) => (s._id ?? s) == id).price ?? 0
-      order = { ...order, salad: { name: salad.name, price } }
+
+      if (fullDetail)
+        order.productSalads = product.salads
+      order = { ...order, salad: { name: salad.name, _id: salad._id, price } }
     }
 
     //
@@ -89,8 +91,10 @@ export async function getOrderById(profile, orderId) {
         const price = ingredient.changes.find(ch => ch._id == change)?.price || 0
 
         delete ingredient.changes
+        ingredient.changeId = ingredient._id
+        delete ingredient._id
 
-        tempChanges.push({ ...ingredient, change: realChange.change, price })
+        tempChanges.push({ ...ingredient, ingredientId, change: realChange.change, price })
       }
       order.changes = tempChanges
 
@@ -98,22 +102,25 @@ export async function getOrderById(profile, orderId) {
 
     //get the ingredients that is not in changes
 
-    let tempIngredients = []
-    if (order.changes) {
-      tempIngredients = product.ingredients
-        .filter(i => !order.changes.some(c => i._id == c._id))
-        .map((i) => ({ name: i.name, _id: i._id }))
-    }
-    else {
-      tempIngredients = product.ingredients.map(i => {
-        return { name: i.name, _id: i._id }
-      })
-    }
+    let tempIngredients = product.ingredients
+
+    // let tempIngredients = []
+    // if (order.changes)
+    //   tempIngredients = product.ingredients.filter(i => !order.changes.some(c => i._id == c._id))
+
+    tempIngredients = tempIngredients.map(i => {
+
+      if (!fullDetail) {
+        const changeSelected = i.changes.find(c => c._id === i.selected)
+        return { name: i.name, _id: i._id, change: changeSelected }
+      }
+      else
+        return i
+    })
+
 
     order.ingredients = tempIngredients
 
-
-    //TODO
 
     //get adds    
 
@@ -126,7 +133,10 @@ export async function getOrderById(profile, orderId) {
           return ingredientAdded
         })
       )
+      if (fullDetail)
+        order.productAdds = product.adds
       order.adds = tempAdds
+
     }
 
 
@@ -155,7 +165,7 @@ export async function removeOrderById(profile, orderId) {
     const tableId = (await db.collection("tables").aggregate([
       { $match: { profile } },
       { $unwind: "$tables" },
-      { $match: { "tables.orders": orderId }}
+      { $match: { "tables.orders": orderId } }
     ]).next()).tables._id;
 
 
@@ -199,7 +209,7 @@ export async function removeOrderById(profile, orderId) {
       }
     );
 
-    return { ok: true, message: `Order ${orderId} deleted`, tableId};
+    return { ok: true, message: `Order ${orderId} deleted`, tableId };
 
   } catch (error) {
     console.error('Error removing order:', error);

@@ -141,7 +141,12 @@ export default function CafeMain(props) {
                 props.goto(`/menu`, { tableId: id })
                 return
             case 'checkTable':
-                changeStatusOfTable(profile, id, 0)
+                //WORK
+                const res = changeStatusOfTable(profile, id, 0)
+                if(!res.ok){
+                    addMessage(res.message, 'error', 5000)
+                    break
+                }
                 break
             case 'detailsOrders':
                 setTableIdShowOrdersPannel(id)
@@ -163,9 +168,6 @@ export default function CafeMain(props) {
                 break
             case 'removeATable':
                 await deleteTableDB(id)
-                break
-            case 'removeAnOrder':
-                console.log('open the orders of table ', id);
                 break
             case 'reduction':
                 //TODO: make a reduction on the total price of the table
@@ -371,25 +373,34 @@ export default function CafeMain(props) {
     //TODO: if a pannel is opened, close the others one
 
     useEffect(() => {
+        //if I click on setting, open table, details, order pannel I want to close the other pannel
+        console.log({ tableIdShowOrdersDetails, tableIdShowOrdersPannel, showSettings });
+
+        return () => {
+            console.log({ tableIdShowOrdersDetails, tableIdShowOrdersPannel, showSettings });
+        }
 
 
-    }, [tableIdShowOrdersDetails])
+    }, [tableIdShowOrdersDetails, tableIdShowOrdersPannel, showSettings?.show])
 
 
     return (
         <div className="cafeMain">
             {tableIdShowOrdersDetails !== null && <FCOrdersDetails
+                profile={profile}
                 table={tables.find(t => t._id == tableIdShowOrdersDetails)}
                 close={() => setTableIdShowOrdersDetails(null)}
                 showOrdersDetails={tableIdShowOrdersDetails !== null} />}
 
-            {tableIdShowOrdersPannel !== null && 
-            <div className="FCOrdersPannelContainer"><FCOrdersPannel
-                changeAllowed={true}
-                closePannel={() => setTableIdShowOrdersPannel(null)}
-                orders={tableIdShowOrdersPannel ?
-                    tables.find(t => t._id == tableIdShowOrdersPannel)?.orders : null
-                } />
+            {tableIdShowOrdersPannel !== null &&
+                <div className="FCOrdersPannelContainer"><FCOrdersPannel
+                    profile={profile}
+                    tableId={tableIdShowOrdersPannel}
+                    ableToChange={true}
+                    closePannel={() => setTableIdShowOrdersPannel(null)}
+                    orders={tableIdShowOrdersPannel ?
+                        tables.find(t => t._id == tableIdShowOrdersPannel)?.orders : null
+                    } />
                 </div>}
 
             <div className="tables">
@@ -404,6 +415,7 @@ export default function CafeMain(props) {
                     )
                 })}
             </div>
+            
             <div className="options">
                 <img className="addTableLogo" src="/Pictures/Add-logo.png" onClick={startOpenTable} />
                 <img className="private" src="/Pictures/Settings-logo.png" onClick={openSetting} />

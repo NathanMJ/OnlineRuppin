@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { changeStatusOfOrder, removeOrderById, workerEntry } from "../connectToDB";
 import FCTimer from "./FCTimer";
+import { capitalFirstLetter, filterIngredientsOfChanges } from "../usefullFunction";
 
 export default function FCOrders(props) {
     const profile = props.profile
@@ -17,10 +18,6 @@ export default function FCOrders(props) {
         await changeStatusOfOrder(id, 5, props.tableId, destination);
     }
 
-    const capitalFirstLetter = (word) => {
-        if (!word) return '';
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-    };
 
     const writeTotalPrice = (order) => {
         let firstPrice = order.price
@@ -45,15 +42,20 @@ export default function FCOrders(props) {
 
     const writeAddPrice = (price) => {
         if (price == 0) {
-            return 'Free'
+            return ''
         }
-        return '+' + price + ' ₪'
+        return '(+' + price + ' ₪)'
     }
+
 
     return (
         <div className="orders">
             {props.orders.map((order, index) => {
+                const filteredIngredients = filterIngredientsOfChanges(order.ingredients, order.changes);
+
                 return (
+
+
 
                     <div className='order' key={order._id}>
                         <div className="mainOrderContainer">
@@ -92,23 +94,24 @@ export default function FCOrders(props) {
                             <div className="details">
                                 <p>{order.name} {order.price} ₪</p>
                                 {
-                                    order.ingredients?.length > 0 && <><h3>-- Ingredients: --</h3>
-                                        {order.ingredients.map((ingredient, idx) => (
-                                            <p key={idx}>{capitalFirstLetter(ingredient.name)}</p>
+                                    filteredIngredients?.length > 0 && <><h3>-- Ingredients: --</h3>
+                                        {filteredIngredients.map((ingredient, idx) => (
+                                            <p key={idx}>{capitalFirstLetter(`${ingredient.change.change} ${ingredient.name}`)}</p>
+                                        ))}</>
+                                }
+
+                                {
+                                    order.changes?.length > 0 && <>
+                                        {order.changes.map((change, idx) => (
+                                            <p key={idx}>{capitalFirstLetter(change.change)} {change.name} {writeAddPrice(change.price)}</p>
                                         ))}</>
                                 }
 
                                 {
                                     order.salad && <><h3>-- Salad: --</h3>
-                                        <p>{capitalFirstLetter(order.salad.name)} ({writeAddPrice(order.salad.price)})</p></>
+                                        <p>{capitalFirstLetter(order.salad.name)} {writeAddPrice(order.salad.price)}</p></>
                                 }
 
-                                {
-                                    order.changes?.length > 0 && <><h3>-- Changes: --</h3>
-                                        {order.changes.map((change, idx) => (
-                                            <p key={idx}>{capitalFirstLetter(change.change)} {change.name} ({writeAddPrice(change.price)})</p>
-                                        ))}</>
-                                }
 
                                 {
                                     order.adds?.length > 0 && <> <h3>-- Adds: --</h3>
@@ -117,12 +120,12 @@ export default function FCOrders(props) {
                                         ))}</>
                                 }
 
-                                {
+                                {/* {
                                     order.sauces?.length > 0 && <> <h3>-- Sauces: --</h3>
                                         {order.sauces.map((sauce, idx) => (
                                             <p key={idx}>{capitalFirstLetter(sauce.name)} x {sauce.quantity} ({writeAddPrice(sauce?.price || 0)})</p>
                                         ))}</>
-                                }
+                                } */}
                                 {
                                     order.notesForChanges?.length > 0 && <><h3>-- Notes for changes: --</h3>
                                         {order.notesForChanges && order.notesForChanges.map((note, idx) => (
